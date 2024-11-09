@@ -1,5 +1,7 @@
 package com.threeping.syncday.proj.command.application.service;
 
+import com.threeping.syncday.common.exception.CommonException;
+import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.command.aggregate.entity.Proj;
 import com.threeping.syncday.proj.command.domain.repository.ProjRepository;
@@ -28,5 +30,17 @@ public class AppProjServiceImpl implements AppProjService {
         log.info("newProj: {}", newProj);
         Proj addedProj = projRepository.save(newProj);
         return modelMapper.map(addedProj, ProjDTO.class);
+    }
+
+
+    @Override
+    public ProjDTO modifyProj(ProjDTO projDTO) {
+        Proj existingProj = projRepository.findByProjId(projDTO.getProjId());
+        if(existingProj == null) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        Proj updatedProj = projRepository.save(modelMapper.map(projDTO, Proj.class));
+
+        return modelMapper.map(updatedProj, ProjDTO.class);
     }
 }
