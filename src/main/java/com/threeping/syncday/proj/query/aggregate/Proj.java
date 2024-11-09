@@ -11,7 +11,7 @@ public class Proj {
     Timestamp startTime;
     Timestamp endTime;
     Timestamp createdAt;
-    byte progressStatus;
+    Byte progressStatus;
     Long userId;
 
 }
