@@ -1,6 +1,5 @@
 package com.threeping.syncday.common.exception;
 
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

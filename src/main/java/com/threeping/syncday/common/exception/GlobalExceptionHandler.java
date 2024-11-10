@@ -3,16 +3,16 @@ package com.threeping.syncday.common.exception;
 import com.threeping.syncday.common.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Slf4j
 //필기. 해당 패키지에서 에러 발생시 작동하는 Handler
-@RestControllerAdvice(basePackages = "com.threeping.mudium")
+@RestControllerAdvice(basePackages = "com.springcooler.sgma.problem", name = "problemRestControllerAdvice")
 public class GlobalExceptionHandler {
 
     // 지원되지 않는 HTTP 메소드를 사용할 때 발생하는 예외
@@ -24,12 +24,12 @@ public class GlobalExceptionHandler {
     }
 
     // 메소드의 인자 타입이 일치하지 않을 때 발생하는 예외
-//    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
-//    public ResponseDTO<?> handleArgumentNotValidException(MethodArgumentTypeMismatchException e) {
-//        log.error("handleArgumentNotValidException() in GlobalExceptionHandler throw MethodArgumentTypeMismatchException : {}"
-//                , e.getMessage());
-//        return ResponseDTO.fail(e);
-//    }
+    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
+    public ResponseDTO<?> handleArgumentNotValidException(MethodArgumentTypeMismatchException e) {
+        log.error("handleArgumentNotValidException() in GlobalExceptionHandler throw MethodArgumentTypeMismatchException : {}"
+                , e.getMessage());
+        return ResponseDTO.fail(e);
+    }
 
     // 필수 파라미터가 누락되었을 때 발생하는 예외
     @ExceptionHandler(value = {MissingServletRequestParameterException.class})
@@ -41,7 +41,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {CommonException.class})
     public ResponseDTO<?> handleCustomException(CommonException e) {
-        log.error("handleCustomException() in GlobalExceptionHandler: {}", e.getMessage());
         return ResponseDTO.fail(e);
     }
 
@@ -59,13 +58,4 @@ public class GlobalExceptionHandler {
         log.error("handleDataIntegrityViolationException() in GlobalExceptionHandler : {}", e.getMessage());
         return ResponseDTO.fail(new CommonException(ErrorCode.DATA_INTEGRITY_VIOLATION));
     }
-
-    //필기. 로그인 실패시 작동하는 에러
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseDTO<?> handleBadCredentialsException(BadCredentialsException e) {
-        log.error("handleBadCredentialsException() in GlobalExceptionHandler: {}", e.getMessage());
-        return ResponseDTO.fail(new CommonException(ErrorCode.LOGIN_FAILURE));
-    }
-
-
 }
