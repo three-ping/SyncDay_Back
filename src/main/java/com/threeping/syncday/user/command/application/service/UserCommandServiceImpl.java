@@ -2,7 +2,7 @@ package com.threeping.syncday.user.command.application.service;
 
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
-import com.threeping.syncday.user.command.domain.aggregate.User;
+import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.command.domain.repository.UserRepository;
 import com.threeping.syncday.user.query.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -35,14 +35,14 @@ public class UserCommandServiceImpl implements UserCommandService {
     @Transactional
     public void registUser(UserDTO newUser) {
         // 이미 존재하는지 확인
-        User existingUser = userRepository.findUserByEmail(newUser.getEmail());
+        UserEntity existingUser = userRepository.findUserByEmail(newUser.getEmail());
 
         if (existingUser != null) {
             throw new CommonException(ErrorCode.EXIST_USER_ID);
         }
 
         Timestamp joinYear = convertStringToTimeStamp(newUser.getJoinYear());
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setUserName(newUser.getUserName());
         user.setEmail(newUser.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));

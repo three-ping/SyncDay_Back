@@ -52,15 +52,24 @@ public class WebSecurity {
         http.authorizeHttpRequests((auth) ->
                 auth.requestMatchers(new AntPathRequestMatcher("/api/command/user/regist")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/query/user/health")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/query/user/login")).permitAll()
                         .anyRequest().authenticated()
         )
                 // manager 등록
                 .authenticationManager(authenticationManager)
                 // session 방식 사용 x
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilter(getAuthenticationFilter(authenticationManager));
 
         return http.build();
     }
 
     // 인증(Authentication) method, filter를 반환하는 메서드
+    private AuthenticationFilter getAuthenticationFilter(AuthenticationManager authenticationManager) {
+        AuthenticationFilter authenticationFilter =
+                new AuthenticationFilter(authenticationManager, userService, environment, bCryptPasswordEncoder);
+        authenticationFilter.setFilterProcessesUrl("/api/query/user/login");
+
+        return authenticationFilter;
+    }
 }
