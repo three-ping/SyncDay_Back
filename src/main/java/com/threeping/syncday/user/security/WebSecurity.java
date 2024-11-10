@@ -1,6 +1,6 @@
 package com.threeping.syncday.user.security;
 
-import com.threeping.syncday.user.query.service.UserService;
+import com.threeping.syncday.user.query.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +19,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurity {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final UserService userService;
+    private final UserQueryService userService;
     private final Environment environment;
 
     @Autowired
     public WebSecurity(BCryptPasswordEncoder bCryptPasswordEncoder,
-                       UserService userService,
+                       UserQueryService userService,
                        Environment environment) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
@@ -50,8 +50,8 @@ public class WebSecurity {
 
         // 회원가입만 열기
         http.authorizeHttpRequests((auth) ->
-                auth.requestMatchers(new AntPathRequestMatcher("/api/user/regist")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/api/user/health")).permitAll()
+                auth.requestMatchers(new AntPathRequestMatcher("/api/command/user/regist")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/query/user/health")).permitAll()
                         .anyRequest().authenticated()
         )
                 // manager 등록

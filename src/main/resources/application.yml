@@ -2,8 +2,8 @@ server:
   port: 5000
 
 spring:
-  application:
-    name: syncday-service
+  profiles:
+    active: syncday
 
 
 

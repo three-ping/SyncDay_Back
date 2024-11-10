@@ -1,38 +1,33 @@
-package com.threeping.syncday.user.query.controller;
+package com.threeping.syncday.user.command.application.controller;
 
 import com.threeping.syncday.common.ResponseDTO;
+import com.threeping.syncday.user.command.application.service.UserCommandService;
 import com.threeping.syncday.user.command.domain.vo.RegistRequestVO;
 import com.threeping.syncday.user.query.dto.UserDTO;
-import com.threeping.syncday.user.query.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.text.ParseException;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-public class UserController {
 
-    private final UserService userService;
+@RestController
+@RequestMapping("/api/command/user")
+public class UserCommandController {
+
+    private final UserCommandService userService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public UserController(UserService userService, ModelMapper modelMapper) {
+    public UserCommandController(UserCommandService userService, ModelMapper modelMapper) {
         this.userService = userService;
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("/health")
-    public String health(){
-        return "running on localhost:5000";
-    }
-
     @PostMapping("/regist")
-    public ResponseDTO<?> registNewUser(@RequestBody RegistRequestVO requestVO) throws ParseException {
+    public ResponseDTO<?> registNewUser(@RequestBody RegistRequestVO requestVO) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         UserDTO newUser = modelMapper.map(requestVO, UserDTO.class);
@@ -40,5 +35,4 @@ public class UserController {
 
         return ResponseDTO.ok(newUser);
     }
-    
 }
