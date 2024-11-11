@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ProjService {
     List<ProjDTO> getAllProjs();
+
+    List<ProjDTO> getProjsByUserId(Long userId);
 }

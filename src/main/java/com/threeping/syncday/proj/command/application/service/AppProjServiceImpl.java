@@ -5,6 +5,8 @@ import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.command.aggregate.entity.Proj;
 import com.threeping.syncday.proj.command.domain.repository.ProjRepository;
+import com.threeping.syncday.proj.command.infrastructure.service.InfraProjService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,29 +20,50 @@ public class AppProjServiceImpl implements AppProjService {
 
     private final ProjRepository projRepository;
     private final ModelMapper modelMapper;
+    private final InfraProjService infraProjService;
+
     @Autowired
-    public AppProjServiceImpl(ProjRepository projRepository, ModelMapper modelMapper) {
+    public AppProjServiceImpl(ProjRepository projRepository
+            , ModelMapper modelMapper
+            , InfraProjService infraProjService) {
         this.projRepository = projRepository;
         this.modelMapper = modelMapper;
+        this.infraProjService = infraProjService;
     }
+
+    @Transactional
     @Override
     public ProjDTO addProj(ProjDTO newProjDTO) {
 
         Proj newProj = modelMapper.map(newProjDTO, Proj.class);
         log.info("newProj: {}", newProj);
+
         Proj addedProj = projRepository.save(newProj);
+        Boolean isUserAdded = infraProjService.requestAddProjOwner(addedProj.getProjId(), addedProj.getUserId());
+        log.debug("isUserAdded: {}", isUserAdded);
         return modelMapper.map(addedProj, ProjDTO.class);
     }
 
-
+    @Transactional
     @Override
     public ProjDTO modifyProj(ProjDTO projDTO) {
         Proj existingProj = projRepository.findByProjId(projDTO.getProjId());
         if(existingProj == null) {
             throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        Proj updatedProj = projRepository.save(modelMapper.map(projDTO, Proj.class));
+        existingProj.setProjName(projDTO.getProjName());
+        Proj updatedProj = projRepository.save(existingProj);
 
         return modelMapper.map(updatedProj, ProjDTO.class);
+    }
+    @Transactional
+    @Override
+    public ProjDTO deleteProj(Long projId) {
+        Proj existingProj = projRepository.findByProjId(projId);
+        if(existingProj == null) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        projRepository.delete(existingProj);
+        return modelMapper.map(existingProj, ProjDTO.class);
     }
 }
