@@ -7,10 +7,7 @@ import com.threeping.syncday.user.query.dto.UserDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -25,6 +22,8 @@ public class UserCommandController {
         this.userService = userService;
         this.modelMapper = modelMapper;
     }
+
+
 
     @PostMapping("/regist")
     public ResponseDTO<?> registNewUser(@RequestBody RegistRequestVO requestVO) {
