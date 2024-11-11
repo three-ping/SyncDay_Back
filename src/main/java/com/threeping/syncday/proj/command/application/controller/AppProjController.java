@@ -19,7 +19,7 @@ public class AppProjController {
     }
 
     @PostMapping("/")
-    public ResponseDTO<?> addProj(@RequestBody ProjDTO newProj){
+    public ResponseDTO<?> createProj(@RequestBody ProjDTO newProj){
         log.info("newProj: {}", newProj);
         return ResponseDTO.ok(appProjService.addProj(newProj));
     }
