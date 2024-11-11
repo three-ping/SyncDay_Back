@@ -8,4 +8,5 @@ public class ProjMember {
     private Long projId;
     private String bookmarkStatus;
     private String participationStatus;
+    private String role;
 }
