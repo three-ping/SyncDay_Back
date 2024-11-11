@@ -17,4 +17,7 @@ public class ProjMemberDTO {
 
     @JsonProperty("participation_status")
     private String participationStatus;
+
+    @JsonProperty("role")
+    private String role;
 }

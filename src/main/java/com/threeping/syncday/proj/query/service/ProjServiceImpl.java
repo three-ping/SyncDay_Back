@@ -15,6 +15,7 @@ public class ProjServiceImpl implements ProjService {
 
     private final ProjMapper projMapper;
     private final ModelMapper modelMapper;
+
     @Autowired
     public ProjServiceImpl(ProjMapper projMapper, ModelMapper modelMapper) {
         this.projMapper = projMapper;
@@ -26,5 +27,14 @@ public class ProjServiceImpl implements ProjService {
         List<ProjDTO> projDTOs =
                 projs.stream().map(proj -> modelMapper.map(proj, ProjDTO.class)).collect(Collectors.toList());
         return projDTOs;
+    }
+
+
+    @Override
+    public List<ProjDTO> getProjsByUserId(Long userId) {
+        List<Proj> projs = projMapper.selectProjsByUserId(userId);
+        List<ProjDTO> projDTOS
+                 = projs.stream().map(proj -> modelMapper.map(proj, ProjDTO.class)).collect(Collectors.toList());
+        return projDTOS;
     }
 }

@@ -8,4 +8,6 @@ import java.util.List;
 @Mapper
 public interface ProjMapper {
     List<Proj> selectAllProjs();
+
+    List<Proj> selectProjsByUserId(Long userId);
 }

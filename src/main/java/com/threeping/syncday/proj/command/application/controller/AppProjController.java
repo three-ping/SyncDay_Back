@@ -29,4 +29,9 @@ public class AppProjController {
         log.info("projDTO: {}", projDTO);
         return ResponseDTO.ok(appProjService.modifyProj(projDTO));
     }
+
+    @DeleteMapping("/{projId}")
+    public ResponseDTO<?> deleteProj(@PathVariable("projId") Long projId){
+        return ResponseDTO.ok(appProjService.deleteProj(projId));
+    }
 }

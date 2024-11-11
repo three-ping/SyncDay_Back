@@ -19,12 +19,30 @@ class ProjServiceTests {
 
     @DisplayName("프로젝트 전체 조회")
     @Test
-    public void testGetAllProjs(){
+    void testGetAllProjs(){
 
         //given
 
         // when
         List<ProjDTO> projList = projService.getAllProjs();
+
+        // then
+        assertNotNull(projList);
+        projList.forEach(projDTO -> {
+            log.info("projDTO: {}", projDTO);
+        });
+    }
+
+
+    @DisplayName("유저 아이디로 프로젝트 조회")
+    @Test
+    void testGetProjsByUserId(){
+
+        // given
+        Long userId = 1L;
+
+        // when
+        List<ProjDTO> projList = projService.getProjsByUserId(userId);
 
         // then
         assertNotNull(projList);

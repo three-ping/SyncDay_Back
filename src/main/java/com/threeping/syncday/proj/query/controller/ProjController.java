@@ -5,6 +5,7 @@ import com.threeping.syncday.common.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,5 +24,10 @@ public class ProjController {
     @GetMapping("/")
     public ResponseDTO<?> getAllProjs(){
         return ResponseDTO.ok(projService.getAllProjs());
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseDTO<?> getProjByUserId(@PathVariable("userId") Long userId){
+        return ResponseDTO.ok(projService.getProjsByUserId(userId));
     }
 }

@@ -8,7 +8,7 @@
         <id property="projId" column="proj_id"></id>
         <id property="userId" column="user_id"></id>
         <result property="bookmarkStatus" column="bookmark_status"></result>
-        <result property="participationStauts" column="participation_status"></result>
+        <result property="participationStatus" column="participation_status"></result>
     </resultMap>
 
     <select id="selectAllProjMembers" resultMap="projMemberResultMap">
