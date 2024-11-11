@@ -1,4 +1,4 @@
-package com.threeping.syncday.vcs_repo.command.application.service;
+package com.threeping.syncday.vcsrepo.command.application.service;
 
 import org.springframework.stereotype.Service;
 
