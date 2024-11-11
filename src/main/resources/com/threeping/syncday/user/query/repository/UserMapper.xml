@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.threeping.syncday.user.query.repository.UserMapper">
+    <resultMap id="userResultMap" type="com.threeping.syncday.user.command.domain.aggregate.UserEntity">
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="username"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="profilePhoto" column="profile_photo"/>
+        <result property="joinYear" column="join_year"/>
+        <result property="position" column="position"/>
+        <result property="teamId" column="team_id"/>
+    </resultMap>
+
+    <select id="findByEmail" resultMap="userResultMap" parameterType="String">
+        SELECT
+                user_id,
+                username,
+                email,
+                password,
+                phone_number,
+                profile_photo,
+                join_year,
+                position,
+                team_id
+                FROM
+                TBL_USER
+                WHERE
+        email = '${email}'
+    </select>
+</mapper>
