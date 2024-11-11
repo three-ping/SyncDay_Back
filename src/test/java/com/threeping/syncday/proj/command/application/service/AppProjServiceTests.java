@@ -20,7 +20,7 @@ class AppProjServiceTests {
 
     @DisplayName("프로젝트 생성 테스트")
     @Test
-    void testAddProject(){
+    void testAddProj(){
 
         // given
         Long userId = 1L;
@@ -40,7 +40,7 @@ class AppProjServiceTests {
 
     @DisplayName("프로젝트 수정 테스트")
     @Test
-    void testModifyProject(){
+    void testModifyProj(){
 
         // given
         Long projId = 5L;
@@ -55,5 +55,21 @@ class AppProjServiceTests {
         // then
         assertEquals(modifyProjName, modifiedProj.getProjName());
         log.info("modifiedProj: {}", modifiedProj);
+    }
+
+    @DisplayName("프로젝트 삭제 테스트")
+    @Test
+    void testDeleteProj(){
+
+        // given
+        Long projId = 5L;
+
+        // when
+        ProjDTO projDTO = appProjService.deleteProj(projId);
+
+        // then
+        assertEquals(projId, projDTO.getProjId());
+
+        log.info("deleteProj: {}", projDTO);
     }
 }

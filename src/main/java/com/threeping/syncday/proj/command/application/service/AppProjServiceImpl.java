@@ -43,4 +43,14 @@ public class AppProjServiceImpl implements AppProjService {
 
         return modelMapper.map(updatedProj, ProjDTO.class);
     }
+
+    @Override
+    public ProjDTO deleteProj(Long projId) {
+        Proj existingProj = projRepository.findByProjId(projId);
+        if(existingProj == null) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        projRepository.delete(existingProj);
+        return modelMapper.map(existingProj, ProjDTO.class);
+    }
 }
