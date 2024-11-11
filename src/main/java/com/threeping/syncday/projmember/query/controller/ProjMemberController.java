@@ -20,7 +20,7 @@ public class ProjMemberController {
 
 
     @GetMapping("/")
-    public ResponseDTO<?> getAllProjMember() {
+    public ResponseDTO<?> findAllProjMember() {
         return ResponseDTO.ok(projMemberService.getAllProjMembers());
     }
 }

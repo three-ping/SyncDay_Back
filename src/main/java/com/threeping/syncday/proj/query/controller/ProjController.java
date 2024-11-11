@@ -22,12 +22,12 @@ public class ProjController {
     }
 
     @GetMapping("/")
-    public ResponseDTO<?> getAllProjs(){
+    public ResponseDTO<?> findAllProjs(){
         return ResponseDTO.ok(projService.getAllProjs());
     }
 
     @GetMapping("/{userId}")
-    public ResponseDTO<?> getProjByUserId(@PathVariable("userId") Long userId){
+    public ResponseDTO<?> findProjByUserId(@PathVariable("userId") Long userId){
         return ResponseDTO.ok(projService.getProjsByUserId(userId));
     }
 }
