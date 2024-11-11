@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
-//@Transactional
+@Transactional
 class AppProjServiceTests {
     @Autowired
     AppProjService appProjService;
@@ -43,7 +43,7 @@ class AppProjServiceTests {
     void testModifyProj(){
 
         // given
-        Long projId = 11L;
+        Long projId = 10L;
         String modifyProjName = "프로젝트 수정 테스트";
 
         // when
@@ -62,7 +62,7 @@ class AppProjServiceTests {
     void testDeleteProj(){
 
         // given
-        Long projId = 11L;
+        Long projId = 10L;
 
         // when
         ProjDTO projDTO = appProjService.deleteProj(projId);

@@ -9,7 +9,6 @@
         <id property="userId" column="user_id"></id>
         <result property="bookmarkStatus" column="bookmark_status"></result>
         <result property="participationStatus" column="participation_status"></result>
-        <result property="role" column="role"></result>
     </resultMap>
 
     <select id="selectAllProjMembers" resultMap="projMemberResultMap">
@@ -18,7 +17,6 @@
                ,PROJ_ID
                ,BOOKMARK_STATUS
                ,PARTICIPATION_STATUS
-               ,ROLE
           FROM TBL_PROJ_MEMBER
     </select>
 </mapper>

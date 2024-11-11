@@ -25,13 +25,9 @@ public class ProjMember {
     @Column(name="participation_status")
     private ParticipationStatus participationStatus;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="ProjRole")
-    private ProjRole projRole;
 
     @PrePersist
     public void prePersist() {
         this.bookmarkStatus = BookmarkStatus.NONE;
-        this.participationStatus = ParticipationStatus.PARTICIPATING;
     }
 }

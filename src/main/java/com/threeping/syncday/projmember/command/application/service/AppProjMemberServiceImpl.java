@@ -1,6 +1,6 @@
 package com.threeping.syncday.projmember.command.application.service;
 
-import com.threeping.syncday.projmember.command.aggregate.entity.ProjRole;
+import com.threeping.syncday.projmember.command.aggregate.entity.ParticipationStatus;
 import com.threeping.syncday.projmember.command.aggregate.entity.ProjMember;
 import com.threeping.syncday.projmember.command.domain.repository.ProjMemberRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
         ProjMember newMember = new ProjMember();
         newMember.setProjId(projId);
         newMember.setUserId(userId);
-        newMember.setProjRole(ProjRole.OWNER);
+        newMember.setParticipationStatus(ParticipationStatus.OWNER);
         log.debug("newMember: {}", newMember);
         ProjMember addedOwner =projMemberRepository.save(newMember);
         return addedOwner != null;
