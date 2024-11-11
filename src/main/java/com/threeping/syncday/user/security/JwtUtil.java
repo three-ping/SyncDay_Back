@@ -72,7 +72,6 @@ public class JwtUtil {
     // accessToken으로부터 Claims추출
     public Claims parseClaims(String accessToken) {
         log.info("Claim 추출하기 위한 accessToken: {}", accessToken);
-        accessToken = accessToken.replace("Bearer ", "");
         Claims claims = Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(accessToken).getBody();
         return claims;
     }

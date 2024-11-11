@@ -4,4 +4,6 @@ import com.threeping.syncday.user.query.dto.UserDTO;
 
 public interface UserCommandService {
     void registUser(UserDTO newUser);
+
+    void updatePassword(Long userId, String currentPwd, String newPwd);
 }
