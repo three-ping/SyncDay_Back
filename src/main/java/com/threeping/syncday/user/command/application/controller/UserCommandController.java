@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/command/user")
+@RequestMapping("/api/user")
 public class UserCommandController {
 
     private final UserCommandService userService;

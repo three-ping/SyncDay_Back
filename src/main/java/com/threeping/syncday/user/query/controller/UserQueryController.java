@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/query/user")
+@RequestMapping("/api/user")
 public class UserQueryController {
 
     private final UserQueryService userService;
