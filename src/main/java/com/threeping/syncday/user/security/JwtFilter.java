@@ -34,6 +34,14 @@ public class JwtFilter extends OncePerRequestFilter {
         this.redisTemplate = redisTemplate;
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.startsWith("/api/user/login")
+                || path.startsWith("/api/user/regist")
+                || path.startsWith("/api/user/health");
+    }
+
     // authentication filter 전에 동작하는 필터(토큰 유효성 검사)
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -41,6 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String accessToken = request.getHeader("Authorization");
 
+        log.info("Access token(JWT 내부 필터): {}", accessToken);
         // 1 ) AT Check
         if(accessToken == null || !accessToken.startsWith("Bearer ")) {
             log.info("access Token이 만료되거나 형식이 이상한 경우의 예외");
@@ -51,10 +60,12 @@ public class JwtFilter extends OncePerRequestFilter {
             // AT 유효성 검사
             if(jwtUtil.validateToken(accessToken)) {
                 // 유효하다면 인증
+                log.info("AT 유효성 통과 후 로그");
                 Authentication auth = getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } else {
                 // 2 ) AT Expired
+                log.info("AT 만료된 로그");
                 handleExpiredAccessToken(request, response);
             }
         } catch (Exception e) {
@@ -66,9 +77,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
     public Authentication getAuthentication(String accessToken) {
         // 토큰에서 Claims 추출
+        log.info("getAuthentication method 시작");
         Claims claims = jwtUtil.parseClaims(accessToken);
         String email = claims.getSubject();
-
+        log.info("추출된 유저 email: {}", email);
         List<String> roles = claims.get("auth", List.class);
         List<SimpleGrantedAuthority> authorities = roles.stream()
                 .map(SimpleGrantedAuthority::new)

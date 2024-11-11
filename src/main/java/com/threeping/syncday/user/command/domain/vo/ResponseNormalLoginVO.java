@@ -1,12 +1,9 @@
 package com.threeping.syncday.user.command.domain.vo;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor

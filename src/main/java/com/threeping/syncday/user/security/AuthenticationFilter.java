@@ -22,10 +22,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,18 +37,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final UserQueryService userService;
     private final Environment env;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RedisTemplate<String, String> redisTemplate;
 
     public AuthenticationFilter(AuthenticationManager authenticationManager,
                                 UserQueryService userService,
                                 Environment env,
-                                BCryptPasswordEncoder bCryptPasswordEncoder,
                                 RedisTemplate<String, String> redisTemplate) {
         super(authenticationManager);
         this.userService = userService;
         this.env = env;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.redisTemplate = redisTemplate;
     }
 
@@ -88,7 +85,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         // 토큰 만료 시간 설정
         long accessExpiration =
                 System.currentTimeMillis() + getExpirationTime(env.getProperty("token.access-expiration-time"));
-        // refresh는 추후에 설정할 예정
         long refreshExpiration =
                 System.currentTimeMillis() + getExpirationTime(env.getProperty("token.refresh-expiration-time"));
 
@@ -123,6 +119,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         // user 상세 정보 조회
         UserDTO userDetails = userService.findByEmail(email);
 
+        // 로그인 성공 후 바로 보여줄 응답객체, 아마 nav바에 들어갈 정보를 담을 듯?
         ResponseNormalLoginVO responseNormalLoginVO = new ResponseNormalLoginVO(
                 userDetails.getUserId(),
                 userDetails.getUserName(),
