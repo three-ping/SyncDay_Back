@@ -29,6 +29,23 @@
                 FROM
                 TBL_USER
                 WHERE
-        email = '${email}'
+        email = #{email}
+    </select>
+
+    <select id="findByUserId" resultMap="userResultMap" parameterType="long">
+        SELECT
+                user_id,
+                username,
+                email,
+                password,
+                phone_number,
+                profile_photo,
+                join_year,
+                position,
+                team_id
+                FROM
+                TBL_USER
+                WHERE
+        user_id = #{userId}
     </select>
 </mapper>

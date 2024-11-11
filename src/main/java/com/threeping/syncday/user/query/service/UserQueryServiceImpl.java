@@ -32,6 +32,7 @@ class UserQueryServiceImpl implements UserQueryService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("loadUserByUsername: {}", username);
         UserEntity existingUser = userMapper.findByEmail(username);
 
         if (existingUser == null) {
@@ -64,12 +65,30 @@ class UserQueryServiceImpl implements UserQueryService {
         userDTO.setUserId(user.getUserId());
         userDTO.setUserName(user.getUserName());
         userDTO.setEmail(user.getEmail());
-        userDTO.setPassword(user.getPassword());
         userDTO.setProfilePhoto(user.getProfilePhoto());
-        userDTO.setPhoneNumber(user.getPhoneNumber());
         userDTO.setPosition(user.getPosition());
         userDTO.setJoinYear(timeStampToString(user.getJoinYear()));
         userDTO.setTeamId(user.getTeamId());
+
+        return userDTO;
+    }
+
+    @Override
+    public UserDTO findByUserId(Long userId) {
+        UserEntity user = userMapper.findByUserId(userId);
+
+        if (user == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_USER);
+        }
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(user.getUserId());
+        userDTO.setUserName(user.getUserName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPhoneNumber(user.getPhoneNumber());
+        userDTO.setProfilePhoto(user.getProfilePhoto());
+        userDTO.setPosition(user.getPosition());
+        userDTO.setJoinYear(timeStampToString(user.getJoinYear()));
 
         return userDTO;
     }

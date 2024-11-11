@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -23,16 +24,19 @@ public class WebSecurity {
     private final UserQueryService userService;
     private final Environment environment;
     private final RedisTemplate<String, String> redisTemplate;
+    private final JwtUtil jwtUtil;
 
     @Autowired
     public WebSecurity(BCryptPasswordEncoder bCryptPasswordEncoder,
                        UserQueryService userService,
                        Environment environment,
-                       RedisTemplate<String, String> redisTemplate) {
+                       RedisTemplate<String, String> redisTemplate,
+                       JwtUtil jwtUtil) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
         this.environment = environment;
         this.redisTemplate = redisTemplate;
+        this.jwtUtil = jwtUtil;
     }
 
     // 인가(Authorization) method, filter chain을 덧붙일 예정
@@ -63,7 +67,8 @@ public class WebSecurity {
                 .authenticationManager(authenticationManager)
                 // session 방식 사용 x
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilter(getAuthenticationFilter(authenticationManager));
+                .addFilter(getAuthenticationFilter(authenticationManager))
+                .addFilterBefore(new JwtFilter(userService, jwtUtil, redisTemplate), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -71,7 +76,7 @@ public class WebSecurity {
     // 인증(Authentication) method, filter를 반환하는 메서드
     private AuthenticationFilter getAuthenticationFilter(AuthenticationManager authenticationManager) {
         AuthenticationFilter authenticationFilter =
-                new AuthenticationFilter(authenticationManager, userService, environment, bCryptPasswordEncoder, redisTemplate);
+                new AuthenticationFilter(authenticationManager, userService, environment, redisTemplate);
         authenticationFilter.setFilterProcessesUrl("/api/user/login");
 
         return authenticationFilter;

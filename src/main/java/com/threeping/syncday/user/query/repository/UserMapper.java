@@ -6,4 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper {
     UserEntity findByEmail(String username);
+
+    UserEntity findByUserId(Long userId);
 }

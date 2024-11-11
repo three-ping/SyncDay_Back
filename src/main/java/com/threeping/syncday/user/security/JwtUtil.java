@@ -2,7 +2,6 @@ package com.threeping.syncday.user.security;
 
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
-import com.threeping.syncday.user.query.service.UserQueryService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 // Token의 유효성 검사
@@ -38,12 +38,22 @@ public class JwtUtil {
     public boolean validateToken(String accessToken) {
         try {
             if(accessToken == null) throw new CommonException(ErrorCode.TOKEN_TYPE_ERROR);
-
             if(accessToken.startsWith("Bearer ")) {
                 accessToken = accessToken.substring(7);
             }
+            // 디버깅을 위한 로그 추가
+            log.info("Token to validate: {}", accessToken);
+            log.info("Secret key being used: {}", Base64.getEncoder().encodeToString(secret.getEncoded()));
+
+            // 토큰의 각 부분 출력
+            String[] chunks = accessToken.split("\\.");
+            if(chunks.length == 3) {
+                log.info("Header: {}", new String(Base64.getDecoder().decode(chunks[0])));
+                log.info("Payload: {}", new String(Base64.getDecoder().decode(chunks[1])));
+            }
 
             Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(accessToken);
+            return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token: {}", e);
             throw new CommonException(ErrorCode.INVALID_TOKEN_ERROR);
@@ -57,12 +67,14 @@ public class JwtUtil {
             log.info("JWT claims string is empty: {}", e);
             throw new CommonException(ErrorCode.TOKEN_MALFORMED_ERROR);
         }
-        return true;
     }
 
     // accessToken으로부터 Claims추출
     public Claims parseClaims(String accessToken) {
-        return Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(accessToken).getBody();
+        log.info("Claim 추출하기 위한 accessToken: {}", accessToken);
+        accessToken = accessToken.replace("Bearer ", "");
+        Claims claims = Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(accessToken).getBody();
+        return claims;
     }
 
     // refreshToken으로부터 Email 추출
