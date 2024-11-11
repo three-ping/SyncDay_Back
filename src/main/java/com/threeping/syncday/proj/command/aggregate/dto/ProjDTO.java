@@ -1,4 +1,4 @@
-package com.threeping.syncday.proj.query.aggregate;
+package com.threeping.syncday.proj.command.aggregate.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class ProjDTO {
     @JsonProperty("created_at")
     Timestamp createdAt;
 
-    @JsonProperty("updated_at")
+    @JsonProperty("progress_status")
     Byte progressStatus;
 
     @JsonProperty("user_id")
