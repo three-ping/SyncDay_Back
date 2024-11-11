@@ -4,6 +4,8 @@ import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.user.query.service.UserQueryService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,38 +49,36 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = request.getHeader("Authorization");
 
-        log.info("Access token(JWT 내부 필터): {}", accessToken);
+        log.info("doFilterInternal method start");
         // 1 ) AT Check
-        if(accessToken == null || !accessToken.startsWith("Bearer ")) {
-            log.info("access Token이 만료되거나 형식이 이상한 경우의 예외");
-            throw new CommonException(ErrorCode.TOKEN_TYPE_ERROR);
-        }
-
         try {
-            // AT 유효성 검사
-            if(jwtUtil.validateToken(accessToken)) {
-                // 유효하다면 인증
-                log.info("AT 유효성 통과 후 로그");
-                Authentication auth = getAuthentication(accessToken);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } else {
-                // 2 ) AT Expired
-                log.info("AT 만료된 로그");
-                handleExpiredAccessToken(request, response);
+            String accessToken = extractAccessToken(request);
+            if(accessToken != null) {
+                // AT 존재한다면 유효성 검사
+                log.info("AT 유효성 검사 시작");
+                processAccessToken(accessToken, request, response);
             }
-        } catch (Exception e) {
-            log.info("accessToken 유효성 검사 실패 시 예외");
-            throw new CommonException(ErrorCode.TOKEN_MALFORMED_ERROR);
+        } catch (ExpiredJwtException e) {
+            // 2 ) AT Expired
+            log.info("AT 만료된 로그");
+            handleExpiredAccessToken(request, response);
+        } catch (JwtException e) {
+            throw new CommonException(ErrorCode.TOKEN_UNKNOWN_ERROR);
         }
         filterChain.doFilter(request, response);
     }
 
-    public Authentication getAuthentication(String accessToken) {
+    private void processAccessToken(String accessToken, HttpServletRequest request, HttpServletResponse response) {
+        log.info("processAccessToken method start");
+        Claims claims = jwtUtil.parseClaims(accessToken);
+        Authentication authentication = getAuthentication(claims);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    public Authentication getAuthentication(Claims claims) {
         // 토큰에서 Claims 추출
         log.info("getAuthentication method 시작");
-        Claims claims = jwtUtil.parseClaims(accessToken);
         String email = claims.getSubject();
         log.info("추출된 유저 email: {}", email);
         List<String> roles = claims.get("auth", List.class);
@@ -116,5 +116,13 @@ public class JwtFilter extends OncePerRequestFilter {
         // 2-3) 이전 ip와 비교 후, RT 새로 발급할지 말지 결정?
         String newAccessToken = jwtUtil.generateAccessToken(userEmail);
         response.addHeader("Authorization", "Bearer " + newAccessToken);
+    }
+
+    private String extractAccessToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }

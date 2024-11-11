@@ -73,26 +73,6 @@ class UserQueryServiceImpl implements UserQueryService {
         return userDTO;
     }
 
-    @Override
-    public UserDTO findByUserId(Long userId) {
-        UserEntity user = userMapper.findByUserId(userId);
-
-        if (user == null) {
-            throw new CommonException(ErrorCode.NOT_FOUND_USER);
-        }
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUserId(user.getUserId());
-        userDTO.setUserName(user.getUserName());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPhoneNumber(user.getPhoneNumber());
-        userDTO.setProfilePhoto(user.getProfilePhoto());
-        userDTO.setPosition(user.getPosition());
-        userDTO.setJoinYear(timeStampToString(user.getJoinYear()));
-
-        return userDTO;
-    }
-
     private String timeStampToString(Timestamp joinYear) {
         return joinYear.toLocalDateTime()
                 .format(DateTimeFormatter.ofPattern("yyyyMMdd"));

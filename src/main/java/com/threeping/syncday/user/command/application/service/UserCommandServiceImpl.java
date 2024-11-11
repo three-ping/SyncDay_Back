@@ -56,6 +56,26 @@ public class UserCommandServiceImpl implements UserCommandService {
         userRepository.save(user);
     }
 
+    @Override
+    public void updatePassword(Long userId, String currentPwd, String newPwd) {
+        UserEntity existingUser =
+                userRepository.findById(userId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_USER));
+
+        if (!bCryptPasswordEncoder.matches(currentPwd, existingUser.getPassword())) {
+            log.info("잘못된 현재 비밀번호 입력 시 나오는 예외");
+            throw new CommonException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        if(bCryptPasswordEncoder.matches(newPwd, existingUser.getPassword())) {
+            log.info("새 비밀번호가 현재 비밀번호랑 같은 경우 예외");
+            throw new CommonException(ErrorCode.EXIST_PASSWORD);
+        }
+
+        newPwd = bCryptPasswordEncoder.encode(newPwd);
+        existingUser.setPassword(newPwd);
+        userRepository.save(existingUser);
+    }
+
     private Timestamp convertStringToTimeStamp(String joinYear) {
         try {
             // 날짜만 파싱

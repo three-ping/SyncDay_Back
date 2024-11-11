@@ -5,6 +5,4 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserQueryService extends UserDetailsService {
     UserDTO findByEmail(String email);
-
-    UserDTO findByUserId(Long userId);
 }

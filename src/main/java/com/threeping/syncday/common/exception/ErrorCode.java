@@ -19,6 +19,8 @@ public enum ErrorCode {
     INVALID_REQUEST_BODY(40011, HttpStatus.BAD_REQUEST, "잘못된 요청 본문입니다."),
     MISSING_REQUIRED_FIELD(40012, HttpStatus.BAD_REQUEST, "필수 필드가 누락되었습니다."),
     EXIST_USER_ID(40013, HttpStatus.BAD_REQUEST, "이미 존재하는 회원입니다."),
+    INVALID_PASSWORD(40014, HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
+    EXIST_PASSWORD(40015, HttpStatus.BAD_REQUEST, "현재 비밀번호와 일치합니다."),
 
 
 
