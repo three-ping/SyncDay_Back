@@ -2,6 +2,7 @@ package com.threeping.syncday.user.command.application.controller;
 
 import com.threeping.syncday.user.command.application.service.OAuth2Service;
 import com.threeping.syncday.user.command.application.service.UserCommandService;
+import com.threeping.syncday.user.command.domain.vo.OAuth2LoginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,12 @@ public class OAuth2Controller {
     @GetMapping("/github")
     public RedirectView github(@RequestParam String code) {
         log.info("code: {}", code);
-        String githubAccessToken = oAuth2Service.getGithubAccessToken(code);
-        log.info("githubAccessToken: {}", githubAccessToken);
 
+        OAuth2LoginVO userVo = oAuth2Service.processGithubUser(code);
+        log.info("userVo: {}", userVo);
         RedirectView redirectView = new RedirectView("http://localhost:5173");
-        StringBuilder userInfo = new StringBuilder();
-        userInfo.append(githubAccessToken);
 
-        redirectView.setUrl(redirectView.getUrl() + "?" + userInfo);
+//        redirectView.setUrl(redirectView.getUrl() + "?" + userInfo);
         return redirectView;
     }
 
