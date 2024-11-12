@@ -1,4 +1,7 @@
 package com.threeping.syncday.schedule.command.domain.repository;
 
-public interface ScheduleRepository {
+import com.threeping.syncday.schedule.command.aggregate.entity.Schedule;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 }
