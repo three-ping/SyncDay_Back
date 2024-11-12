@@ -3,7 +3,7 @@ package com.threeping.syncday.user.query.service;
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
-import com.threeping.syncday.user.query.dto.UserDTO;
+import com.threeping.syncday.user.command.application.dto.UserDTO;
 import com.threeping.syncday.user.query.repository.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +32,7 @@ class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("loadUserByUsername: {}", username);
         UserEntity existingUser = userMapper.findByEmail(username);
@@ -54,6 +56,7 @@ class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDTO findByEmail(String email) {
         UserEntity user = userMapper.findByEmail(email);
 

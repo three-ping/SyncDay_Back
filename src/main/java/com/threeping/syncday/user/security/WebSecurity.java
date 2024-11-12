@@ -61,6 +61,12 @@ public class WebSecurity {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/user/regist")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/user/health")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/user/login")).permitAll()
+                        // Swagger UI 관련 경로 추가
+                        .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/swagger-resources/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/swagger-custom-ui.html")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/docs/login")).permitAll()
                         .anyRequest().authenticated()
         )
                 // manager 등록

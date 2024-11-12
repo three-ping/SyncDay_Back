@@ -11,7 +11,7 @@ spring:
 springdoc:
   swagger-ui:
     # swagger-ui ?? ??. default ?? /swagger-ui.html??.
-    path: /swagger-custom-ui.html
+    path: /swagger-ui/index.html
 
     # ? API? ?? ?? ??
     # path, query, body, response ??? ??
