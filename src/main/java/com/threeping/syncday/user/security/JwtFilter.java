@@ -106,20 +106,26 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // 2-1 ) RT null 체크
         if(refreshToken == null) {
+            log.info("refresh token이 존재하지 않은 경우의 예외");
+            throw new CommonException(ErrorCode.TOKEN_TYPE_ERROR);
+        }
+
+        String storesRefreshToken = redisTemplate.opsForValue().get("RT:" + userEmail);
+
+        // 2-2 ) Redis에 저장된 토큰 null 체크
+        if(storesRefreshToken == null) {
             // Redis에 TTL을 설정해놓았기 때문에 null == expired
             log.info("refresh token이 만료된 경우의 예외");
             throw new CommonException(ErrorCode.EXPIRED_TOKEN_ERROR);
         }
 
-        String storesRefreshToken = redisTemplate.opsForValue().get("RT:" + userEmail);
-
-        // 2-2) Redis에 저장된 Rt와 가져온 Rt 체크
+        // 2-3) Redis에 저장된 Rt와 가져온 Rt 체크
         if(!storesRefreshToken.equals(refreshToken)) {
             redisTemplate.delete("RT:" + userEmail);
             log.info("저장된 rt와 가져온 rt가 일치하지 않을 경우의 예외(재로그인할 것)");
             throw new CommonException(ErrorCode.ACCESS_DENIED);
         }
-        // 2-3) 이전 ip와 비교 후, RT 새로 발급할지 말지 결정?
+        // 2-4) 이전 ip와 비교 후, RT 새로 발급할지 말지 결정?
         String newAccessToken = jwtUtil.generateAccessToken(userEmail);
         response.addHeader("Authorization", "Bearer " + newAccessToken);
     }
