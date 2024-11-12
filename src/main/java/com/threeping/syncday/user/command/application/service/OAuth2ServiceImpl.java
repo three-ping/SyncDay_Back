@@ -3,7 +3,6 @@ package com.threeping.syncday.user.command.application.service;
 import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
-import com.threeping.syncday.user.command.domain.vo.OAuth2LoginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -24,7 +23,6 @@ public class OAuth2ServiceImpl implements OAuth2Service {
 
     private RestTemplate restTemplate;
     private Environment env;
-//    private final UserCommandService userCommandService;
 
     @Autowired
     public OAuth2ServiceImpl(RestTemplate restTemplate, Environment env) {
@@ -32,16 +30,8 @@ public class OAuth2ServiceImpl implements OAuth2Service {
         this.env = env;
     }
 
-    @Override
-    public OAuth2LoginVO processGithubUser(String code) {
-        log.info("code: {}", code);
-        String githubAccessToken = getGithubAccessToken(code);
-        Map<String, Object> githubUserInfo = getGithubUserInfo(githubAccessToken);
-        log.info("githubUserInfo: {}", githubUserInfo);
-        return null;
-    }
 
-    private String getGithubAccessToken(String code) {
+    public String getGithubAccessToken(String code) {
         String githubAuthUrl = "https://github.com/login/oauth/access_token";
 
 
