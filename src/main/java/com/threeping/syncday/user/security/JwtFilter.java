@@ -41,7 +41,13 @@ public class JwtFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         return path.startsWith("/api/user/login")
                 || path.startsWith("/api/user/regist")
-                || path.startsWith("/api/user/health");
+                || path.startsWith("/api/user/health")
+                // Swagger UI 관련 모든 경로 허용
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/api/docs/login")
+                || path.startsWith("/swagger-custom-ui.html");
     }
 
     // authentication filter 전에 동작하는 필터(토큰 유효성 검사)

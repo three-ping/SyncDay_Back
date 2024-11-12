@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.user.command.domain.vo.LoginRequestVO;
 import com.threeping.syncday.user.command.domain.vo.ResponseNormalLoginVO;
-import com.threeping.syncday.user.query.dto.UserDTO;
+import com.threeping.syncday.user.command.application.dto.UserDTO;
 import com.threeping.syncday.user.query.service.UserQueryService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -25,7 +25,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
