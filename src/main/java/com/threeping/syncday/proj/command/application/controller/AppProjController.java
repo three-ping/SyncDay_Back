@@ -19,7 +19,7 @@ public class AppProjController {
     }
 
     @PostMapping("/")
-    public ResponseDTO<?> addProj(@RequestBody ProjDTO newProj){
+    public ResponseDTO<?> createProj(@RequestBody ProjDTO newProj){
         log.info("newProj: {}", newProj);
         return ResponseDTO.ok(appProjService.addProj(newProj));
     }
@@ -28,5 +28,10 @@ public class AppProjController {
     public ResponseDTO<?> updateProj(@RequestBody ProjDTO projDTO){
         log.info("projDTO: {}", projDTO);
         return ResponseDTO.ok(appProjService.modifyProj(projDTO));
+    }
+
+    @DeleteMapping("/{projId}")
+    public ResponseDTO<?> deleteProj(@PathVariable("projId") Long projId){
+        return ResponseDTO.ok(appProjService.deleteProj(projId));
     }
 }

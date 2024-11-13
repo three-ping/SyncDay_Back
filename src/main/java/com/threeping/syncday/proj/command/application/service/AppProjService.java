@@ -8,4 +8,5 @@ public interface AppProjService {
 
     ProjDTO modifyProj(ProjDTO projDTO);
 
+    ProjDTO deleteProj(Long projId);
 }
