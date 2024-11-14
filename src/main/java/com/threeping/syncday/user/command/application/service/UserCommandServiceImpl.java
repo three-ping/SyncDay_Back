@@ -4,7 +4,7 @@ import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.command.domain.repository.UserRepository;
-import com.threeping.syncday.user.query.dto.UserDTO;
+import com.threeping.syncday.user.command.application.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -51,16 +51,51 @@ public class UserCommandServiceImpl implements UserCommandService {
         user.setPosition(newUser.getPosition());
         user.setPhoneNumber(newUser.getPhoneNumber());
         user.setTeamId(newUser.getTeamId());
+        user.setLastAccessTime(Timestamp.valueOf(LocalDateTime.now()));
         log.info("새로 등록되는 유저정보 registUser: {}", user);
 
         userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void updatePassword(Long userId, String currentPwd, String newPwd) {
+        UserEntity existingUser =
+                userRepository.findById(userId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_USER));
+
+        if (!bCryptPasswordEncoder.matches(currentPwd, existingUser.getPassword())) {
+            log.info("잘못된 현재 비밀번호 입력 시 나오는 예외");
+            throw new CommonException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        if(bCryptPasswordEncoder.matches(newPwd, existingUser.getPassword())) {
+            log.info("새 비밀번호가 현재 비밀번호랑 같은 경우 예외");
+            throw new CommonException(ErrorCode.EXIST_PASSWORD);
+        }
+
+        newPwd = bCryptPasswordEncoder.encode(newPwd);
+        existingUser.setPassword(newPwd);
+        userRepository.save(existingUser);
+    }
+
+    @Override
+    @Transactional
+    public void updateLastAccessTime(String email) {
+        UserEntity existingUser = userRepository.findUserByEmail(email);
+
+        if (existingUser == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_USER);
+        }
+
+        existingUser.setLastAccessTime(Timestamp.valueOf(LocalDateTime.now()));
+        userRepository.save(existingUser);
     }
 
     private Timestamp convertStringToTimeStamp(String joinYear) {
         try {
             // 날짜만 파싱
             LocalDate date = LocalDate.parse(joinYear,
-                    DateTimeFormatter.ofPattern("yyyyMMdd"));
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             // 원하는 시간 설정 (예: 오전 9시)
             LocalDateTime dateTime = date.atTime(9, 0, 0);
