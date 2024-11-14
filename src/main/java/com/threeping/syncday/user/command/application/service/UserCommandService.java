@@ -6,4 +6,6 @@ public interface UserCommandService {
     void registUser(UserDTO newUser);
 
     void updatePassword(Long userId, String currentPwd, String newPwd);
+
+    void updateLastAccessTime(String email);
 }

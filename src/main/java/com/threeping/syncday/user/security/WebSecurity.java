@@ -1,5 +1,6 @@
 package com.threeping.syncday.user.security;
 
+import com.threeping.syncday.user.command.application.service.UserCommandService;
 import com.threeping.syncday.user.query.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,19 +22,22 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurity {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final UserQueryService userService;
+    private final UserQueryService userQueryServiceService;
+    private final UserCommandService userCommandService;
     private final Environment environment;
     private final RedisTemplate<String, String> redisTemplate;
     private final JwtUtil jwtUtil;
 
     @Autowired
     public WebSecurity(BCryptPasswordEncoder bCryptPasswordEncoder,
-                       UserQueryService userService,
+                       UserQueryService userQueryService,
+                       UserCommandService userCommandService,
                        Environment environment,
                        RedisTemplate<String, String> redisTemplate,
                        JwtUtil jwtUtil) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.userService = userService;
+        this.userQueryServiceService = userQueryService;
+        this.userCommandService = userCommandService;
         this.environment = environment;
         this.redisTemplate = redisTemplate;
         this.jwtUtil = jwtUtil;
@@ -51,7 +55,7 @@ public class WebSecurity {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         // userDetails 클래스를 물려받은 우리 서비스 고유의 userService인식 + 암호화 방식 인식
-        authenticationManagerBuilder.userDetailsService(userService)
+        authenticationManagerBuilder.userDetailsService(userQueryServiceService)
                 .passwordEncoder(bCryptPasswordEncoder);
 
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
@@ -74,7 +78,7 @@ public class WebSecurity {
                 // session 방식 사용 x
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilter(getAuthenticationFilter(authenticationManager))
-                .addFilterBefore(new JwtFilter(userService, jwtUtil, redisTemplate), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtFilter(userQueryServiceService, jwtUtil, redisTemplate), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -82,7 +86,7 @@ public class WebSecurity {
     // 인증(Authentication) method, filter를 반환하는 메서드
     private AuthenticationFilter getAuthenticationFilter(AuthenticationManager authenticationManager) {
         AuthenticationFilter authenticationFilter =
-                new AuthenticationFilter(authenticationManager, userService, environment, redisTemplate);
+                new AuthenticationFilter(authenticationManager, userQueryServiceService, userCommandService, environment, redisTemplate);
         authenticationFilter.setFilterProcessesUrl("/api/user/login");
 
         return authenticationFilter;

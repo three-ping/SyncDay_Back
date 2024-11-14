@@ -77,11 +77,24 @@ public class UserCommandServiceImpl implements UserCommandService {
         userRepository.save(existingUser);
     }
 
+    @Override
+    @Transactional
+    public void updateLastAccessTime(String email) {
+        UserEntity existingUser = userRepository.findUserByEmail(email);
+
+        if (existingUser == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_USER);
+        }
+
+        existingUser.setLastAccessTime(Timestamp.valueOf(LocalDateTime.now()));
+        userRepository.save(existingUser);
+    }
+
     private Timestamp convertStringToTimeStamp(String joinYear) {
         try {
             // 날짜만 파싱
             LocalDate date = LocalDate.parse(joinYear,
-                    DateTimeFormatter.ofPattern("yyyyMMdd"));
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             // 원하는 시간 설정 (예: 오전 9시)
             LocalDateTime dateTime = date.atTime(9, 0, 0);

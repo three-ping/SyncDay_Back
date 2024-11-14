@@ -72,12 +72,14 @@ class UserQueryServiceImpl implements UserQueryService {
         userDTO.setPosition(user.getPosition());
         userDTO.setJoinYear(timeStampToString(user.getJoinYear()));
         userDTO.setTeamId(user.getTeamId());
+        userDTO.setLastAccessTime(user.getLastAccessTime()
+                .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         return userDTO;
     }
 
     private String timeStampToString(Timestamp joinYear) {
         return joinYear.toLocalDateTime()
-                .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 }

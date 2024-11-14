@@ -19,7 +19,7 @@ public class ResponseNormalLoginVO {
     private Long userId;
 
     @JsonProperty("username")
-    @Schema(description = "유저 이름", example = "김정모")
+    @Schema(description = "유저 이름", example = "장그래")
     private String userName;
 
     @JsonProperty("email")
@@ -31,7 +31,7 @@ public class ResponseNormalLoginVO {
     private String profilePhoto;
 
     @JsonProperty("joinyear")
-    @Schema(description = "입사연도", example = "20230120")
+    @Schema(description = "입사연도", example = "2023-01-20")
     private String joinYear;
 
     @JsonProperty("position")
@@ -42,4 +42,7 @@ public class ResponseNormalLoginVO {
     @Schema(description = "팀번호", example = "1")
     private Long teamId;
 
+    @JsonProperty("lastaccesstime")
+    @Schema(description = "마지막 로그인 시각", example = "2024-12-11 15:45:30")
+    private String lastAccessTime;
 }

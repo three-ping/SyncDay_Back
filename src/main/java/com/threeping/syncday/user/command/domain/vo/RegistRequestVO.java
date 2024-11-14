@@ -15,7 +15,7 @@ public class RegistRequestVO {
 
     @JsonProperty("username")
     @NotNull
-    @Schema(description = "유저 이름", required = true, example = "김정모")
+    @Schema(description = "유저 이름", required = true, example = "장그래")
     private String userName;
 
     @JsonProperty("password")
@@ -37,7 +37,7 @@ public class RegistRequestVO {
     private String profilePhoto;
 
     @JsonProperty("joinyear")
-    @Schema(description = "입사연도", example = "20230120")
+    @Schema(description = "입사연도", example = "2023-01-20")
     private String joinYear;
 
     @JsonProperty("position")
