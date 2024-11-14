@@ -1,8 +1,8 @@
 package com.threeping.syncday.schedule.command.aggregate.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.threeping.syncday.schedule.command.aggregate.entity.PublicStatus;
-import com.threeping.syncday.schedule.command.aggregate.entity.RepeatStatus;
+import com.threeping.syncday.common.enumtype.MeetingStatus;
+import com.threeping.syncday.common.enumtype.PublicStatus;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -31,15 +31,15 @@ public class ScheduleDTO {
     @JsonProperty("public_status")
     PublicStatus publicStatus;
 
-    @JsonProperty("repeat_status")
-    RepeatStatus repeatStatus;
+    @JsonProperty("schedule_repeat_id")
+    Long scheduleRepeatId;
 
-    @JsonProperty("repeat_property")
-    String repeatProperty;
+    @JsonProperty("repeat_order")
+    Long repeatOrder;
+
+    @JsonProperty("meeting_status")
+    MeetingStatus meetingStatus;
 
     @JsonProperty("meetingroom_id")
     Long meetingroomId;
-
-    @JsonProperty("user_id")
-    Long userID;
 }

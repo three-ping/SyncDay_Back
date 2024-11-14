@@ -1,7 +1,7 @@
 package com.threeping.syncday.schedule.query.aggregate;
 
-import com.threeping.syncday.schedule.command.aggregate.entity.PublicStatus;
-import com.threeping.syncday.schedule.command.aggregate.entity.RepeatStatus;
+import com.threeping.syncday.common.enumtype.MeetingStatus;
+import com.threeping.syncday.common.enumtype.PublicStatus;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -15,8 +15,9 @@ public class Schedule {
     Timestamp endTime;
     Timestamp updateTime;
     PublicStatus publicStatus;
-    RepeatStatus repeatStatus;
-    String repeatProperty;
+    Long scheduleRepeatId;
+    Long repeatOrder;
+    MeetingStatus meetingStatus;
     Long meetingroomId;
     Long userId;
 }

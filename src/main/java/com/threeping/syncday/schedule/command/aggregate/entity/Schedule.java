@@ -1,5 +1,7 @@
 package com.threeping.syncday.schedule.command.aggregate.entity;
 
+import com.threeping.syncday.common.enumtype.MeetingStatus;
+import com.threeping.syncday.common.enumtype.PublicStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -30,21 +32,24 @@ public class Schedule {
     private Timestamp updateTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "public_status")
-    private PublicStatus publicStatus;
+    @Column(name = "public_status", nullable = false)
+    private PublicStatus publicStatus = PublicStatus.PRIVATE;
+
+    @Column(name = "schedule_repeat_id")
+    private Long scheduleRepeatId;
+
+    @Column(name = "repeat_order")
+    private Long repeatOrder;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "repeat_status")
-    private RepeatStatus repeatStatus;
-
-    @Column(name = "repeat_property")
-    private String repeatProperty;
+    @Column(name = "meeting_status")
+    private MeetingStatus meetingStatus;
 
     @Column(name = "meetingroom_id")
     private Long meetingroomId;
 
     @Column(name = "user_id")
-    private Long userID;
+    private Long userId;
 
     /* 설명. 생성 시 updateTime에 현재 시각 설정 */
     @PrePersist
