@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.threeping.syncday.team.query.repository.TeamMapper">
+    <resultMap id="teamResultMap" type="com.threeping.syncday.team.query.aggregate.Team">
+        <id property="teamId" column="team_id"></id>
+        <result property="teamName" column="team_name"></result>
+    </resultMap>
+
+    <!-- 모든 팀을 조회하는 select 쿼리 -->
+    <select id="selectAllTeams" resultMap="teamResultMap">
+        SELECT * FROM TBL_TEAM
+    </select>
+</mapper>
