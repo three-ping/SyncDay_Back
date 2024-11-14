@@ -43,7 +43,7 @@ class AppProjServiceTests {
     void testModifyProj(){
 
         // given
-        Long projId = 10L;
+        Long projId = 5L;
         String modifyProjName = "프로젝트 수정 테스트";
 
         // when
@@ -62,7 +62,7 @@ class AppProjServiceTests {
     void testDeleteProj(){
 
         // given
-        Long projId = 10L;
+        Long projId = 5L;
 
         // when
         ProjDTO projDTO = appProjService.deleteProj(projId);
