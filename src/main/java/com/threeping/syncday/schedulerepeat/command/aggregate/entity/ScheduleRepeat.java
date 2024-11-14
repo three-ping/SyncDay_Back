@@ -3,11 +3,17 @@ package com.threeping.syncday.schedulerepeat.command.aggregate.entity;
 import com.threeping.syncday.common.enumtype.MeetingStatus;
 import com.threeping.syncday.common.enumtype.PublicStatus;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "TBL_SCHEDULE_REPEAT")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class ScheduleRepeat {
     @Id
     @Column(name = "schedule_repeat_id")
