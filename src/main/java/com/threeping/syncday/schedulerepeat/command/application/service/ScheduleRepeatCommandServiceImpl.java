@@ -19,10 +19,11 @@ public class ScheduleRepeatCommandServiceImpl implements ScheduleRepeatCommandSe
     }
 
     @Override
-    public void createScheduleRepeat(CreateScheduleRepeatDTO createScheduleRepeatDTO) {
+    public Long createScheduleRepeat(CreateScheduleRepeatDTO createScheduleRepeatDTO) {
         ScheduleRepeat scheduleRepeat = new ScheduleRepeat();
         createScheduleRepeatDtoToEntity(createScheduleRepeatDTO, scheduleRepeat);
         scheduleRepeatRepository.save(scheduleRepeat);
+        return scheduleRepeat.getScheduleRepeatId();
     }
 
     private static void createScheduleRepeatDtoToEntity(CreateScheduleRepeatDTO createScheduleRepeatDTO, ScheduleRepeat scheduleRepeat) {
