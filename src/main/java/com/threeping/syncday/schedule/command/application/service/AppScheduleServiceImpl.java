@@ -32,7 +32,7 @@ public class AppScheduleServiceImpl implements AppScheduleService{
 
     @Transactional
     @Override
-    public ScheduleDTO addSchedule(ScheduleDTO newScheduleDTO, Long userId) {
+    public ScheduleDTO addSchedule(ScheduleDTO newScheduleDTO) {
 
         Schedule newSchedule = new Schedule();
         newSchedule.setTitle(newScheduleDTO.getTitle());
@@ -45,19 +45,19 @@ public class AppScheduleServiceImpl implements AppScheduleService{
         newSchedule.setRepeatOrder(newScheduleDTO.getRepeatOrder());
         newSchedule.setMeetingStatus(newScheduleDTO.getMeetingStatus());
         newSchedule.setMeetingroomId(newScheduleDTO.getMeetingroomId());
-        newSchedule.setUserId(userId);
+        newSchedule.setUserId(newScheduleDTO.getUserId());
 
         scheduleRepository.saveAndFlush(newSchedule);
 
         // 참석자 추가 요청 (반복 생각은 아직 안함)
-        infraScheduleService.requestAddScheduleParticipant(userId, newSchedule.getScheduleId(), newScheduleDTO.getAttendeeIds());
+        infraScheduleService.requestAddScheduleParticipant(newSchedule.getUserId(), newSchedule.getScheduleId(), newScheduleDTO.getAttendeeIds());
 
         return modelMapper.map(newSchedule, ScheduleDTO.class);
     }
 
     @Transactional
     @Override
-    public ScheduleDTO modifySchedule(ScheduleDTO scheduleDTO, Long userId, Long scheduleId) {
+    public ScheduleDTO modifySchedule(ScheduleDTO scheduleDTO, Long scheduleId) {
 
         Schedule newSchedule = scheduleRepository.findByScheduleId(scheduleId);
         if (newSchedule == null) {
@@ -73,11 +73,11 @@ public class AppScheduleServiceImpl implements AppScheduleService{
         newSchedule.setRepeatOrder(scheduleDTO.getRepeatOrder());
         newSchedule.setMeetingStatus(scheduleDTO.getMeetingStatus());
         newSchedule.setMeetingroomId(scheduleDTO.getMeetingroomId());
-        newSchedule.setUserId(userId);
+        newSchedule.setUserId(scheduleDTO.getUserId());
 
         scheduleRepository.saveAndFlush(newSchedule);
 
-        infraScheduleService.requestUpdateScheduleParticipant(newSchedule.getScheduleId(), scheduleDTO.getAttendeeIds());
+        infraScheduleService.requestUpdateScheduleParticipant(newSchedule.getUserId(), newSchedule.getScheduleId(), scheduleDTO.getAttendeeIds());
 
         return modelMapper.map(newSchedule, ScheduleDTO.class);
     }

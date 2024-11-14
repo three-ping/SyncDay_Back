@@ -36,19 +36,11 @@ public class AppScheduleParticipantServiceImpl implements AppScheduleParticipant
 
             scheduleParticipantRepository.save(scheduleParticipant);
         }
-
-        // 일정을 만든 userId도 추가
-        ScheduleParticipant scheduleParticipant = new ScheduleParticipant();
-
-        scheduleParticipant.setUserId(userId);
-        scheduleParticipant.setScheduleId(scheduleId);
-
-        scheduleParticipantRepository.save(scheduleParticipant);
     }
 
     @Transactional
     @Override
-    public void updateScheduleParticipant(Long scheduleId, List<Long> attendeeIds) {
+    public void updateScheduleParticipant(Long userId, Long scheduleId, List<Long> attendeeIds) {
 
         // 기존 참석자 목록 조회
         List<ScheduleParticipant> currentParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
@@ -71,15 +63,15 @@ public class AppScheduleParticipantServiceImpl implements AppScheduleParticipant
                                                 .collect(Collectors.toSet());
 
         // 삭제처리
-        for (Long userId: attendeesToRemove) {
-            scheduleParticipantRepository.deleteByScheduleIdAndUserId(scheduleId, userId);
+        for (Long id: attendeesToRemove) {
+            scheduleParticipantRepository.deleteByScheduleIdAndUserId(scheduleId, id);
         }
 
         // 추가처리
-        for (Long userId: attendeesToAdd) {
+        for (Long id: attendeesToAdd) {
             ScheduleParticipant newScheduleParticipant = new ScheduleParticipant();
             newScheduleParticipant.setScheduleId(scheduleId);
-            newScheduleParticipant.setUserId(userId);
+            newScheduleParticipant.setUserId(id);
 
             scheduleParticipantRepository.save(newScheduleParticipant);
         }

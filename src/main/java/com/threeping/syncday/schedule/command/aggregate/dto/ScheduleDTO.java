@@ -11,6 +11,9 @@ import java.util.List;
 @Data
 public class ScheduleDTO {
 
+    @JsonProperty("user_id")
+    Long userId;
+
     @JsonProperty("schedule_id")
     Long scheduleId;
 

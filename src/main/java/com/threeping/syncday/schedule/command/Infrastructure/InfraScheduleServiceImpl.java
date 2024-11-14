@@ -20,7 +20,7 @@ public class InfraScheduleServiceImpl implements InfraScheduleService{
     }
 
     @Override
-    public void requestUpdateScheduleParticipant(Long scheduleId, List<Long> attendeeIds) {
-        appScheduleParticipantService.updateScheduleParticipant(scheduleId, attendeeIds);
+    public void requestUpdateScheduleParticipant(Long userId, Long scheduleId, List<Long> attendeeIds) {
+        appScheduleParticipantService.updateScheduleParticipant(userId, scheduleId, attendeeIds);
     }
 }
