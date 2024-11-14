@@ -93,6 +93,7 @@ public class WebSecurity {
                 .addFilter(getAuthenticationFilter(authenticationManager))
                 .addFilterBefore(new JwtFilter(userQueryServiceService, jwtUtil, redisTemplate), UsernamePasswordAuthenticationFilter.class);
 
+
         return http.build();
     }
 
@@ -101,6 +102,7 @@ public class WebSecurity {
         AuthenticationFilter authenticationFilter =
                 new AuthenticationFilter(authenticationManager, userQueryServiceService, userCommandService, environment, redisTemplate);
         authenticationFilter.setFilterProcessesUrl("/api/user/login");
+
 
         return authenticationFilter;
     }
