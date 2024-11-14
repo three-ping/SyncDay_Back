@@ -111,6 +111,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String storesRefreshToken = redisTemplate.opsForValue().get("RT:" + userEmail);
+        log.info("Redis에 저장된 storesRefreshToken: {}", storesRefreshToken);
 
         // 2-2 ) Redis에 저장된 토큰 null 체크
         if(storesRefreshToken == null) {

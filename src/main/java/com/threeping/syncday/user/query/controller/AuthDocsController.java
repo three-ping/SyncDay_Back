@@ -118,7 +118,8 @@ public class AuthDocsController {
                 userDetails.getProfilePhoto(),
                 userDetails.getJoinYear(),
                 userDetails.getPosition(),
-                userDetails.getTeamId()
+                userDetails.getTeamId(),
+                userDetails.getLastAccessTime()
         );
 
         ResponseDTO<ResponseNormalLoginVO> responseDTO = ResponseDTO.ok(responseNormalLoginVO);

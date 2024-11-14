@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,5 +82,10 @@ public class UserCommandController {
         userService.updatePassword(userId, request.getCurrentPwd(), request.getNewPwd());
 
         return ResponseDTO.ok("비밀번호가 변경되었습니다.");
+    }
+
+    @PostMapping("/logout")
+    public ResponseDTO<?> logout() {
+        return ResponseDTO.ok("로그아웃 성공");
     }
 }

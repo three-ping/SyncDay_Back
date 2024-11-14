@@ -1,5 +1,7 @@
 package com.threeping.syncday.user.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.user.command.application.service.UserCommandService;
 import com.threeping.syncday.user.query.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -77,6 +80,16 @@ public class WebSecurity {
                 .authenticationManager(authenticationManager)
                 // session 방식 사용 x
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // jwt filter 전에 로그아웃 필터 끼기
+                .logout(logout -> logout
+                        .logoutUrl("api/user/logout")
+                        .addLogoutHandler(new CustomLogoutHandler(redisTemplate, jwtUtil))
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpStatus.OK.value());
+                            new ObjectMapper().writeValue(response.getOutputStream(),
+                                    ResponseDTO.ok("로그아웃이 성공적으로 되었습니다."));
+                        })
+                )
                 .addFilter(getAuthenticationFilter(authenticationManager))
                 .addFilterBefore(new JwtFilter(userQueryServiceService, jwtUtil, redisTemplate), UsernamePasswordAuthenticationFilter.class);
 
