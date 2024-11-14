@@ -2,10 +2,10 @@ package com.threeping.syncday.schedule.command.application.service;
 
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
+import com.threeping.syncday.schedule.command.Infrastructure.InfraScheduleService;
 import com.threeping.syncday.schedule.command.aggregate.dto.ScheduleDTO;
 import com.threeping.syncday.schedule.command.aggregate.entity.Schedule;
 import com.threeping.syncday.schedule.command.domain.repository.ScheduleRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -21,11 +21,13 @@ public class AppScheduleServiceImpl implements AppScheduleService{
 
     private final ScheduleRepository scheduleRepository;
     private final ModelMapper modelMapper;
+    private final InfraScheduleService infraScheduleService;
 
     @Autowired
-    public AppScheduleServiceImpl(ScheduleRepository scheduleRepository, ModelMapper modelMapper) {
+    public AppScheduleServiceImpl(ScheduleRepository scheduleRepository, ModelMapper modelMapper, InfraScheduleService infraScheduleService) {
         this.scheduleRepository = scheduleRepository;
         this.modelMapper = modelMapper;
+        this.infraScheduleService = infraScheduleService;
     }
 
     @Transactional
@@ -45,9 +47,10 @@ public class AppScheduleServiceImpl implements AppScheduleService{
         newSchedule.setMeetingroomId(newScheduleDTO.getMeetingroomId());
         newSchedule.setUserId(userId);
 
-        log.info("newSchedule: {}", newSchedule);
+        scheduleRepository.saveAndFlush(newSchedule);
 
-        scheduleRepository.save(newSchedule);
+        // 참석자 추가 요청 (반복 생각은 아직 안함)
+        infraScheduleService.requestAddScheduleParticipant(userId, newSchedule.getScheduleId(), newScheduleDTO.getAttendeeIds());
 
         return modelMapper.map(newSchedule, ScheduleDTO.class);
     }
@@ -72,9 +75,9 @@ public class AppScheduleServiceImpl implements AppScheduleService{
         newSchedule.setMeetingroomId(scheduleDTO.getMeetingroomId());
         newSchedule.setUserId(userId);
 
-        log.info("newSchedule: {}", newSchedule);
+        scheduleRepository.saveAndFlush(newSchedule);
 
-        scheduleRepository.save(newSchedule);
+        infraScheduleService.requestUpdateScheduleParticipant(newSchedule.getScheduleId(), scheduleDTO.getAttendeeIds());
 
         return modelMapper.map(newSchedule, ScheduleDTO.class);
     }

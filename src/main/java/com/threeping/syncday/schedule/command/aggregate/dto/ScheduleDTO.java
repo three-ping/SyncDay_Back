@@ -6,6 +6,7 @@ import com.threeping.syncday.common.enumtype.PublicStatus;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 public class ScheduleDTO {
@@ -42,4 +43,7 @@ public class ScheduleDTO {
 
     @JsonProperty("meetingroom_id")
     Long meetingroomId;
+
+    @JsonProperty("attendee_ids")
+    List<Long> attendeeIds;
 }

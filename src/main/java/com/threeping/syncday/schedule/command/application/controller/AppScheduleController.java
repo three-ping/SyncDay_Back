@@ -21,7 +21,6 @@ public class AppScheduleController {
     @PostMapping("")
     public ResponseDTO<?> createSchedule(@RequestBody ScheduleDTO newSchedule,
                                          @RequestParam Long userId) {
-        log.info("newSchedule: {}", newSchedule);
         return ResponseDTO.ok(appScheduleService.addSchedule(newSchedule, userId));
     }
 
@@ -29,8 +28,6 @@ public class AppScheduleController {
     public ResponseDTO<?> updateSchedule(@RequestBody ScheduleDTO newSchedule,
                                          @RequestParam Long userId,
                                          @PathVariable Long scheduleId) {
-        log.info("ScheduleId: {}", scheduleId);
-        log.info("newSchedule: {}", newSchedule);
         return ResponseDTO.ok(appScheduleService.modifySchedule(newSchedule, userId, scheduleId));
     }
 
