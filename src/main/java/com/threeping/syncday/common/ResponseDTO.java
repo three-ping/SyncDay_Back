@@ -83,6 +83,4 @@ public class ResponseDTO<T> {
                 ExceptionDTO.of(ErrorCode.INVALID_PARAMETER_FORMAT)
         );
     }
-
-
 }

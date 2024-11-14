@@ -42,4 +42,7 @@ public class UserEntity {
 
     @Column(name = "team_id", nullable = false)
     private Long teamId;
+
+    @Column(name = "last_access_time")
+    private Timestamp lastAccessTime;
 }
