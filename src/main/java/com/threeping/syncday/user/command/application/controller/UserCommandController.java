@@ -84,6 +84,28 @@ public class UserCommandController {
         return ResponseDTO.ok("비밀번호가 변경되었습니다.");
     }
 
+    @Operation(summary = "로그아웃",
+            description = "로그아웃을 요청 시 redis에 저장된 refreshToken을 삭제하고, 발급된 accessToken을 블랙리스트에 들록합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "로그아웃 성공",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ResponseDTO.class),
+                                    examples = @ExampleObject(
+                                            value = """
+                                {
+                                    "success": true,
+                                    "data": "로그아웃 성공",
+                                    "error": null
+                                }
+                                """
+                                    )
+                            )
+                    )
+            }
+    )
     @PostMapping("/logout")
     public ResponseDTO<?> logout() {
         return ResponseDTO.ok("로그아웃 성공");

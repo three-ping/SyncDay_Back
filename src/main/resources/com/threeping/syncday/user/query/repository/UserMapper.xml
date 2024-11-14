@@ -13,6 +13,7 @@
         <result property="joinYear" column="join_year"/>
         <result property="position" column="position"/>
         <result property="teamId" column="team_id"/>
+        <result property="lastAccessTime" column="last_access_time"/>
     </resultMap>
 
     <select id="findByEmail" resultMap="userResultMap" parameterType="String">
@@ -25,7 +26,8 @@
                 profile_photo,
                 join_year,
                 position,
-                team_id
+                team_id,
+                last_access_time
                 FROM
                 TBL_USER
                 WHERE

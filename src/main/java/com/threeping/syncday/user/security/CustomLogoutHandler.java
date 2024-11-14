@@ -28,7 +28,7 @@ public class CustomLogoutHandler implements LogoutHandler {
     public void logout(HttpServletRequest request,
                        HttpServletResponse response,
                        Authentication authentication) {
-
+        log.info("로그아웃 handler method 작동 시작");
         String accessToken = extractAccessToken(request);
         if(accessToken != null) {
             try {
@@ -41,6 +41,7 @@ public class CustomLogoutHandler implements LogoutHandler {
                 // redis에 at 블랙리스트로 등록(서버 차원에서 at를 만료시킬 방법이 없으므로)
                 // at 토큰의 남은 저장 시간을 redis에 저장해놓고 시간이 지나면 자동 삭제되도록 구현
                 Long expiration = claims.getExpiration().getTime() - new Date().getTime();
+                log.info("accessToken 남은 시간 :{} " + expiration);
                 redisTemplate.opsForValue().set(
                         "BL:" + accessToken,
                         "logout",

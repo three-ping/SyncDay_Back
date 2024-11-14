@@ -34,41 +34,6 @@ public class JwtUtil {
         this.refreshExpiration = refreshExpiration;
     }
 
-
-    public boolean validateToken(String accessToken) {
-        try {
-            if(accessToken == null) throw new CommonException(ErrorCode.TOKEN_TYPE_ERROR);
-            if(accessToken.startsWith("Bearer ")) {
-                accessToken = accessToken.substring(7);
-            }
-            // 디버깅을 위한 로그 추가
-            log.info("Token to validate: {}", accessToken);
-            log.info("Secret key being used: {}", Base64.getEncoder().encodeToString(secret.getEncoded()));
-
-            // 토큰의 각 부분 출력
-            String[] chunks = accessToken.split("\\.");
-            if(chunks.length == 3) {
-                log.info("Header: {}", new String(Base64.getDecoder().decode(chunks[0])));
-                log.info("Payload: {}", new String(Base64.getDecoder().decode(chunks[1])));
-            }
-
-            Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(accessToken);
-            return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token: {}", e);
-            throw new CommonException(ErrorCode.INVALID_TOKEN_ERROR);
-        } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token: {}", e);
-            throw new CommonException(ErrorCode.EXPIRED_TOKEN_ERROR);
-        } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token: {}", e);
-            throw new CommonException(ErrorCode.TOKEN_UNSUPPORTED_ERROR);
-        } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty: {}", e);
-            throw new CommonException(ErrorCode.TOKEN_MALFORMED_ERROR);
-        }
-    }
-
     // accessToken으로부터 Claims추출
     public Claims parseClaims(String accessToken) {
         log.info("Claim 추출하기 위한 accessToken: {}", accessToken);

@@ -76,6 +76,14 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private void processAccessToken(String accessToken, HttpServletRequest request, HttpServletResponse response) {
+        // redis에 BL(로그아웃한 회원의 accessToken인지 확인)
+        log.info("accessToken 블랙리스트 체크 시작");
+        String logout = redisTemplate.opsForValue().get("BL:"+ accessToken);
+        // null이 아니다 == 해커가 탈취해서 재요청한 것(블랙리스트에 동륵되어 있는 거 가져옴)
+        if(logout != null) {
+            log.info("로그아웃된 accessToken을 가지고 온 경우 실행되는 예외");
+            throw new CommonException(ErrorCode.LOGOUT_ACCESS_TOKEN);
+        }
         log.info("processAccessToken method start");
         Claims claims = jwtUtil.parseClaims(accessToken);
         Authentication authentication = getAuthentication(claims);

@@ -82,7 +82,7 @@ public class WebSecurity {
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // jwt filter 전에 로그아웃 필터 끼기
                 .logout(logout -> logout
-                        .logoutUrl("api/user/logout")
+                        .logoutUrl("/api/user/logout")
                         .addLogoutHandler(new CustomLogoutHandler(redisTemplate, jwtUtil))
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setStatus(HttpStatus.OK.value());
