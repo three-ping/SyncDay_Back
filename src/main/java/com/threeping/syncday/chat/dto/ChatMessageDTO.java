@@ -1,20 +1,13 @@
-package com.threeping.syncday.chat.entity;
+package com.threeping.syncday.chat.dto;
 
-import com.threeping.syncday.chat.dto.ChatMessageDTO;
-import jakarta.persistence.Id;
+import com.threeping.syncday.chat.entity.ChatType;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "chat")
-@Getter
-@ToString
+@Data
 @Builder
-public class ChatMessage {
+public class ChatMessageDTO {
 
-    @Id
     private String messageId;
     private String message;
     private String roomId;
@@ -24,6 +17,8 @@ public class ChatMessage {
     private String memberIds;
     private ChatType chatType;
     private String sentTime;
+
+    private FileUploadDTO file;
 
 
 }
