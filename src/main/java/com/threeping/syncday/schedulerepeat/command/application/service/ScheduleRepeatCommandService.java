@@ -4,4 +4,6 @@ import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateSchedule
 
 public interface ScheduleRepeatCommandService {
     Long createScheduleRepeat(CreateScheduleRepeatDTO createScheduleRepeatDTO);
+
+    void createRepeatedSchedule(Long scheduleRepeatId, CreateScheduleRepeatDTO createScheduleRepeatDTO);
 }
