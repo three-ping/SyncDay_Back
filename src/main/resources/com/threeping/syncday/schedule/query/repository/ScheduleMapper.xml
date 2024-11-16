@@ -5,16 +5,52 @@
 <mapper namespace="com.threeping.syncday.schedule.query.repository.ScheduleMapper">
     <resultMap id="scheduleResultMap" type="com.threeping.syncday.schedule.query.aggregate.Schedule">
         <id property="scheduleId" column="schedule_id"></id>
-        <id property="meetingroomId" column="meetingroom_id"></id>
-        <id property="userId" column="user_id"></id>
         <result property="title" column="title"></result>
         <result property="content" column="content"></result>
         <result property="startTime" column="start_time"></result>
         <result property="endTime" column="end_time"></result>
         <result property="updateTime" column="update_time"></result>
         <result property="publicStatus" column="public_status"></result>
-        <result property="repeatStatus" column="repeat_status"></result>
-        <result property="repeatProperty" column="repeat_property"></result>
+        <result property="scheduleRepeatId" column="schedule_repeat_id"></result>
+        <result property="repeatOrder" column="repeat_order"></result>
+        <result property="meetingStatus" column="meeting_status"></result>
+        <result property="meetingroomId" column="meetingroom_id"></result>
+        <result property="userId" column="user_id"></result>
     </resultMap>
+
+    <select id="selectMySchedulesByUserId" resultMap="scheduleResultMap" parameterType="long">
+        SELECT SCHEDULE_ID
+             , TITLE
+             , CONTENT
+             , START_TIME
+             , END_TIME
+             , UPDATE_TIME
+             , PUBLIC_STATUS
+             , SCHEDULE_REPEAT_ID
+             , REPEAT_ORDER
+             , MEETING_STATUS
+             , MEETINGROOM_ID
+             , USER_ID
+          FROM TBL_SCHEDULE
+         WHERE USER_ID = #{userId}
+    </select>
+
+    <select id="selectOthersSchedulesBySearchUserId" resultMap="scheduleResultMap" parameterType="long">
+        SELECT SCHEDULE_ID
+             , TITLE
+             , CONTENT
+             , START_TIME
+             , END_TIME
+             , UPDATE_TIME
+             , PUBLIC_STATUS
+             , SCHEDULE_REPEAT_ID
+             , REPEAT_ORDER
+             , MEETING_STATUS
+             , MEETINGROOM_ID
+             , USER_ID
+          FROM TBL_SCHEDULE
+         WHERE USER_ID = #{userId}
+           AND PUBLIC_STATUS = 'PUBLIC'
+    </select>
 
 </mapper>
