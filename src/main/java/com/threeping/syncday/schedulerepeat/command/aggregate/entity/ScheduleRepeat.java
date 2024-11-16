@@ -2,6 +2,10 @@ package com.threeping.syncday.schedulerepeat.command.aggregate.entity;
 
 import com.threeping.syncday.common.enumtype.MeetingStatus;
 import com.threeping.syncday.common.enumtype.PublicStatus;
+import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.PersonalMonthlyType;
+import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.PersonalRecurrenceUnit;
+import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.RecurrencePattern;
+import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.RecurrenceType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,8 +45,20 @@ public class ScheduleRepeat {
     @Column(name = "meeting_status")
     private MeetingStatus meetingStatus;
 
-    @Column(name = "recurrence_pattern")
-    private String recurrencePattern;
+    @Column(name = "recurrence_type")
+    private RecurrenceType recurrenceType;
+
+    @Column(name = "personal_recurrence_unit")
+    private PersonalRecurrenceUnit personalRecurrenceUnit;
+
+    @Column(name = "personal_recurrence_interval")
+    private Long personalRecurrenceInterval;
+
+    @Column(name = "personal_recurrence_selected_days")
+    private Long personalRecurrenceSelectedDays;
+
+    @Column(name = "personal_monthly_type")
+    private PersonalMonthlyType personalMonthlyType;
 
     @Column(name = "user_id")
     private Long userId;

@@ -1,5 +1,6 @@
 package com.threeping.syncday.schedulerepeat.command.aggregate.enumtype;
 
-public enum WeekDays {
-
+public enum PersonalMonthlyType {
+    EVERY_DAY,
+    EVERY_WEEK_DAY
 }
