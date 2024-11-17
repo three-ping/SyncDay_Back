@@ -8,6 +8,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
+        log.info("현재 요청 path {}: " + path);
         return path.startsWith("/api/user/login")
                 || path.startsWith("/api/user/regist")
                 || path.startsWith("/api/user/health")
@@ -64,6 +67,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 // AT 존재한다면 유효성 검사
                 log.info("AT 유효성 검사 시작");
                 processAccessToken(accessToken, request, response);
+            } else {
+                // AT null이면 RT 검사(새로고침 등) RT로 인증 처리
+                processRefreshToken(request, response);
             }
         } catch (ExpiredJwtException e) {
             // 2 ) AT Expired
@@ -87,10 +93,76 @@ public class JwtFilter extends OncePerRequestFilter {
         log.info("processAccessToken method start");
         Claims claims = jwtUtil.parseClaims(accessToken);
         Authentication authentication = getAuthentication(claims);
+        // 요청마다 Authentication 객체 재설정
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    public Authentication getAuthentication(Claims claims) {
+    private void processRefreshToken(HttpServletRequest request, HttpServletResponse response) {
+        // At가 없고 Rt만 있는 경우 인증흐름
+        // 1) RT 검증
+        // 2) RT 기반으로 새로운 AT 발급
+        // 3) 새 AT에서 Claims 추출
+        // 4) Claims 기반으로 Authentication 객체 설정
+        // 5) SecurityContext에 Authentication 객체 저장
+        log.info("processRefreshToken method start");
+        String refreshToken = extractRefreshTokenFromCookie(request);
+
+        if(refreshToken == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_REFRESH_TOKEN);
+        }
+
+        String email = jwtUtil.getEmailFromToken(refreshToken);
+
+        validateRefreshToken(refreshToken, email);
+
+        // rt 재발급 조건 확인 및 처리
+        TokenPair tokenPair = handleTokenIssue(refreshToken, email, request);
+
+        // 응답헤더 설정
+        response.addHeader("Authorization", "Bearer " + tokenPair.accessToken);
+        log.info("rt기반으로 재발급된 accessToken: " + tokenPair.accessToken);
+
+        // Authentication 객체 새로 생성
+        Claims claims = jwtUtil.parseClaims(tokenPair.accessToken);
+        log.info("새로 발급된 accessToken으로 파싱한 Claims: {}", claims);
+        Authentication authentication = getAuthentication(claims); // 문제가 생기는 부분들
+
+        // SecurityContextHolder에 저장
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    private String extractRefreshTokenFromCookie(HttpServletRequest request) {
+        log.info("Cookie에서 Rt 추출하는 method start");
+
+        Cookie[] cookies = request.getCookies();
+
+        if(cookies == null) {
+            log.info("refreshToken을 담은 쿠키 목록이 없을 경우 예외 로그");
+            throw new CommonException(ErrorCode.NOT_FOUND_COOKIE);
+        }
+
+        for(Cookie cookie : cookies) {
+            if(cookie.getName().equals("refreshToken")) {
+                log.info("refreshToken을 담은 쿠키 도착");
+                log.info("쿠키 이름: {}", cookie.getName());
+                log.info("쿠키 값: {}", cookie.getValue());
+                log.info("쿠키 maxAge: {}", cookie.getMaxAge());
+            }
+        }
+
+        String refreshToken = Arrays.stream(cookies)
+                .filter(cookie -> "refreshToken".equals(cookie.getName()))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElse(null);
+        if(refreshToken == null) {
+            log.info("cookie 목록에서 refreshToken이 없는 경우 예외 로그");
+            throw new CommonException(ErrorCode.NOT_FOUND_COOKIE);
+        }
+        return refreshToken;
+    }
+
+    private Authentication getAuthentication(Claims claims) {
         // 토큰에서 Claims 추출
         log.info("getAuthentication method 시작");
         String email = claims.getSubject();
@@ -109,9 +181,22 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private void handleExpiredAccessToken(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = request.getHeader("Refresh-Token");
+        log.info("handleExpiredAccessToken method start");
+
+        String refreshToken = extractRefreshTokenFromCookie(request);
+        log.info("At가 만료되었고 at 재발급을 위해 쿠키로부터 추출한 rt: {}", refreshToken);
         String userEmail = jwtUtil.getEmailFromToken(refreshToken);
 
+        validateRefreshToken(refreshToken, userEmail);
+
+        String newAccessToken = jwtUtil.generateAccessToken(userEmail);
+        log.info("refreshToken 유효성 검사 통과 이후 새로 발급한 accessToken: {}", newAccessToken);
+
+        response.addHeader("Authorization", "Bearer " + newAccessToken);
+    }
+
+    private void validateRefreshToken(String refreshToken, String userEmail) {
+        log.info("refreshToken 유효성 검사 method 시작");
         // 2-1 ) RT null 체크
         if(refreshToken == null) {
             log.info("refresh token이 존재하지 않은 경우의 예외");
@@ -134,9 +219,12 @@ public class JwtFilter extends OncePerRequestFilter {
             log.info("저장된 rt와 가져온 rt가 일치하지 않을 경우의 예외(재로그인할 것)");
             throw new CommonException(ErrorCode.ACCESS_DENIED);
         }
-        // 2-4) 이전 ip와 비교 후, RT 새로 발급할지 말지 결정?
-        String newAccessToken = jwtUtil.generateAccessToken(userEmail);
-        response.addHeader("Authorization", "Bearer " + newAccessToken);
+    }
+
+    private TokenPair handleTokenIssue(String refreshToken, String email, HttpServletRequest request) {
+        String newAccessToken = jwtUtil.generateAccessToken(email);
+
+        return new TokenPair(newAccessToken, refreshToken);
     }
 
     private String extractAccessToken(HttpServletRequest request) {
@@ -146,4 +234,10 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         return null;
     }
+
+
+    // 1. 불변(Immutable) 데이터 객체
+    // 2. 생성자, getter, equals(), hashCode(), toString() 자동 생성
+    // 3. 간결한 문법으로 DTO 생성 가능
+    record TokenPair (String accessToken, String refreshToken) {}
 }
