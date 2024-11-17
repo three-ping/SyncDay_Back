@@ -10,6 +10,9 @@
 
     <!-- 모든 팀을 조회하는 select 쿼리 -->
     <select id="selectAllTeams" resultMap="teamResultMap">
-        SELECT * FROM TBL_TEAM
+        SELECT
+                 TEAM_ID
+                ,TEAM_NAME
+            FROM TBL_TEAM
     </select>
 </mapper>
