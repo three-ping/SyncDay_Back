@@ -34,9 +34,9 @@ public class CustomLogoutHandler implements LogoutHandler {
             try {
                 Claims claims = jwtUtil.parseClaims(accessToken);
                 String email = claims.getSubject();
-
                 // redis에서 rt제거
                 redisTemplate.delete("RT:" + email);
+                log.info("redis에서 RT 제거됌");
 
                 // redis에 at 블랙리스트로 등록(서버 차원에서 at를 만료시킬 방법이 없으므로)
                 // at 토큰의 남은 저장 시간을 redis에 저장해놓고 시간이 지나면 자동 삭제되도록 구현

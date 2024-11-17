@@ -108,6 +108,7 @@ public class UserCommandController {
     )
     @PostMapping("/logout")
     public ResponseDTO<?> logout() {
+
         return ResponseDTO.ok("로그아웃 성공");
     }
 }

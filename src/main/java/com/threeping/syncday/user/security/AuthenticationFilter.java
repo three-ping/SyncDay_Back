@@ -19,6 +19,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +32,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -60,15 +64,22 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
-
+        log.info("attemptAuthentication method start");
+        log.info("attemptAuthentication method request LocalPort: {}", request.getLocalPort());
         try {
             LoginRequestVO creds = new ObjectMapper().readValue(request.getInputStream(), LoginRequestVO.class);
-            String email = creds.getEmil();
+            log.info("attemptAuthentication method creds객체 정보 : {}", creds);
+            String email = creds.getEmail();
 
-            // 인증 token 만들기
-            return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(email, creds.getPassword(), new ArrayList<>())
-            );
+            // 인증 토큰 생성
+            UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(email, creds.getPassword(), new ArrayList<>());
+            log.info("attemptAuthentication authToken(성공 후 생성된 인증 토큰): {}", authToken);
+            // AuthenticationManager에 전달
+            Authentication auth = getAuthenticationManager().authenticate(authToken);
+            log.info("Authentication result: {}", auth);  // 이 로그가 찍히는지 확인
+
+            return auth;
         } catch (IOException e) {
             throw new AuthenticationServiceException("유저 인증 실패", e);
         }
@@ -120,11 +131,18 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 refreshExpiration,
                 TimeUnit.MILLISECONDS);
 
-        response.addHeader("Authorization", "Bearer " + accessToken);
-        response.addHeader("Access-Token-Expire", "" + accessExpiration);
-        response.addHeader("Refresh-Token", refreshToken);
-        response.addHeader("Refresh-Token-Expire", "" + refreshExpiration);
+        // RT는 HttpOnly Cookie에 담기
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+                        .httpOnly(true) // js를 통한 쿠키 완전히 차단, document.cookie로 쿠키 읽기/쓰기 불가, 오직 https 통신으로만 쿠키 전송 가능
+                        .secure(false) // 개발 환경에선 http 통신이므로
+                        .sameSite("Strict") // csrf 공격 방지
+                        .path("/api")   // cookie 사용 가능 경로 지정
+                        .build();
 
+        // at 헤더에 담기
+        response.addHeader("Authorization", "Bearer " + accessToken);
+        // Cookie를 헤더에 담아 전송
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
         // user 상세 정보 조회
         UserDTO userDetails = userQueryService.findByEmail(email);
         // 마지막 로그인 시간 업데이트
