@@ -2,7 +2,6 @@ package com.threeping.syncday.chat.controller;
 
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import com.threeping.syncday.chat.service.ChatService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
