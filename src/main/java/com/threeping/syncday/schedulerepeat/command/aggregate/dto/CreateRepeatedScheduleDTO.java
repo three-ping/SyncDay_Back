@@ -6,6 +6,7 @@ import com.threeping.syncday.common.enumtype.PublicStatus;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,4 +22,5 @@ public class CreateRepeatedScheduleDTO {
     private MeetingStatus meetingStatus;
     private Long userId;
     private Long scheduleRepeatId;
+    private List<Long> participants;
 }

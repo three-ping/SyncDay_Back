@@ -1,5 +1,7 @@
 package com.threeping.syncday.schedulerepeat.command.application.service;
 
+import com.threeping.syncday.common.exception.CommonException;
+import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateRepeatedScheduleDTO;
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateScheduleRepeatDTO;
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.RepeatDTO;
@@ -10,11 +12,13 @@ import com.threeping.syncday.schedulerepeat.command.domain.service.ScheduleRepea
 import com.threeping.syncday.schedulerepeat.command.infrastructure.service.InfraScheduleRepeatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 @Service
+@Transactional
 public class ScheduleRepeatCommandServiceImpl implements ScheduleRepeatCommandService {
 
     private final ScheduleRepeatRepository scheduleRepeatRepository;
@@ -35,9 +39,15 @@ public class ScheduleRepeatCommandServiceImpl implements ScheduleRepeatCommandSe
         ScheduleRepeat scheduleRepeat = new ScheduleRepeat();
         createScheduleRepeatDtoToEntity(createScheduleRepeatDTO, scheduleRepeat);
         scheduleRepeatRepository.save(scheduleRepeat);
-
         return scheduleRepeat.getScheduleRepeatId();
     }
+
+    @Override
+    public void createScheduleRepeatParticipants(Long scheduleRepeatId,
+                                                 CreateScheduleRepeatDTO createScheduleRepeatDTO){
+        infraScheduleRepeatService.createScheduleRepeatParticipants(scheduleRepeatId,createScheduleRepeatDTO);
+    }
+
 
     @Override
     public void createRepeatedSchedule(Long scheduleRepeatId, CreateScheduleRepeatDTO createScheduleRepeatDTO) {
@@ -46,8 +56,14 @@ public class ScheduleRepeatCommandServiceImpl implements ScheduleRepeatCommandSe
         RepeatDTO repeatDTO = makeRepeatDTO(createScheduleRepeatDTO);
 
         List<ScheduleDurationVO> repeatDays = scheduleRepeatDomainService.getRepeatDays(repeatDTO);
-
-
+        if (repeatDays.isEmpty()) {
+            throw new CommonException(ErrorCode.INVALID_INPUT_VALUE);
+        }
+        Long repeatOrder = 1L;
+        for (ScheduleDurationVO scheduleDuration: repeatDays){
+            infraScheduleRepeatService.createSchedule(scheduleDuration,createRepeatedScheduleDTO,repeatOrder);
+            repeatOrder++;
+        }
 
     }
 
@@ -79,6 +95,7 @@ public class ScheduleRepeatCommandServiceImpl implements ScheduleRepeatCommandSe
         createRepeatedScheduleDTO.setPublicStatus(createScheduleRepeatDTO.getPublicStatus());
         createRepeatedScheduleDTO.setUserId(createScheduleRepeatDTO.getUserId());
         createRepeatedScheduleDTO.setScheduleRepeatId(scheduleRepeatId);
+        createRepeatedScheduleDTO.setParticipants(createScheduleRepeatDTO.getParticipants());
         return createRepeatedScheduleDTO;
     }
 
