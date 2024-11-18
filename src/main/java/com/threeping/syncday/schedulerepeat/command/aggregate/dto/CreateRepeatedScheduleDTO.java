@@ -2,9 +2,7 @@ package com.threeping.syncday.schedulerepeat.command.aggregate.dto;
 
 import com.threeping.syncday.common.enumtype.MeetingStatus;
 import com.threeping.syncday.common.enumtype.PublicStatus;
-import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.PersonalMonthlyType;
-import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.RecurrenceType;
-import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.WeekDays;
+
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -23,8 +21,4 @@ public class CreateRepeatedScheduleDTO {
     private MeetingStatus meetingStatus;
     private Long userId;
     private Long scheduleRepeatId;
-    private RecurrenceType recurrenceType;
-    private Long recurrenceInterval;
-    private WeekDays weekDays;
-    private PersonalMonthlyType monthlyType;
 }

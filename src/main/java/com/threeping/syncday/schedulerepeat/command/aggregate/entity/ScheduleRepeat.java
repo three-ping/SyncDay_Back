@@ -60,6 +60,9 @@ public class ScheduleRepeat {
     @Column(name = "personal_monthly_type")
     private PersonalMonthlyType personalMonthlyType;
 
+    @Column(name = "repeat_end")
+    private Timestamp repeatEnd;
+
     @Column(name = "user_id")
     private Long userId;
 }
