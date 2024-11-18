@@ -4,6 +4,7 @@ import com.threeping.syncday.common.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -45,9 +46,12 @@ public class GlobalExceptionHandler {
         return ResponseDTO.fail(e);
     }
 
+    // httpstatus를 우리 고유 exception의 httpstatus와 동적으로 맞추기 위해 responseEntity로 바꿔서 반환하도록 수정
     @ExceptionHandler(value = {CommonException.class})
-    public ResponseDTO<?> handleCustomException(CommonException e) {
-        return ResponseDTO.fail(e);
+    public ResponseEntity<ResponseDTO<?>> handleCustomException(CommonException e) {
+        log.info("handleCustomException() in GlobalExceptionHandler가 예외를 던집니다 : {}", e.getMessage());
+        ResponseDTO<?> response = ResponseDTO.fail(e);
+        return new ResponseEntity<>(response, e.getErrorCode().getHttpStatus());
     }
 
     //필기. 서버 내부 오류시 작동
@@ -66,15 +70,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseDTO<?> handleValidationExceptions(MethodArgumentNotValidException e) {
-        Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-
-        log.error("Validation error: {}", errors);
-        return new ResponseDTO<>(HttpStatus.BAD_REQUEST, false, errors, null);
+    public ResponseEntity<ResponseDTO<?>> handleValidationExceptions(MethodArgumentNotValidException e) {
+        log.error("Validation error occurred: {}", e.getMessage());
+        ResponseDTO<?> response = ResponseDTO.failValidation(e);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

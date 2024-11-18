@@ -2,8 +2,8 @@ package com.threeping.syncday.user.query.service;
 
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
-import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.command.application.dto.UserDTO;
+import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.query.repository.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
@@ -32,9 +31,7 @@ class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("loadUserByUsername: {}", username);
         UserEntity existingUser = userMapper.findByEmail(username);
 
         if (existingUser == null) {
@@ -56,7 +53,6 @@ class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public UserDTO findByEmail(String email) {
         UserEntity user = userMapper.findByEmail(email);
 
@@ -68,18 +64,41 @@ class UserQueryServiceImpl implements UserQueryService {
         userDTO.setUserId(user.getUserId());
         userDTO.setUserName(user.getUserName());
         userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPassword());
         userDTO.setProfilePhoto(user.getProfilePhoto());
+        userDTO.setPhoneNumber(user.getPhoneNumber());
         userDTO.setPosition(user.getPosition());
         userDTO.setJoinYear(timeStampToString(user.getJoinYear()));
         userDTO.setTeamId(user.getTeamId());
-        userDTO.setLastAccessTime(user.getLastAccessTime()
-                .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        userDTO.setLastAccessTime(user.getLastAccessTime().toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME));
+
+        return userDTO;
+    }
+
+    @Override
+    public UserDTO findByUserEmail(String email) {
+        UserEntity user = userMapper.findByEmail(email);
+
+        if (user == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_USER);
+        }
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(user.getUserId());
+        userDTO.setUserName(user.getUserName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setProfilePhoto(user.getProfilePhoto());
+        userDTO.setPhoneNumber(user.getPhoneNumber());
+        userDTO.setPosition(user.getPosition());
+        userDTO.setJoinYear(timeStampToString(user.getJoinYear()));
+        userDTO.setLastAccessTime(user.getLastAccessTime().toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME));
+        userDTO.setTeamId(user.getTeamId());
 
         return userDTO;
     }
 
     private String timeStampToString(Timestamp joinYear) {
         return joinYear.toLocalDateTime()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
     }
 }

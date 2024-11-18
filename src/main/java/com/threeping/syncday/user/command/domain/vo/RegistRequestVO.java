@@ -33,7 +33,7 @@ public class RegistRequestVO {
     private String phoneNumber;
 
     @JsonProperty("profilephoto")
-    @Schema(description = "유저 프로필 사진", example = "dachshund.jpg")
+    @Schema(description = "유저 프로필 사진", example = "https://i.namu.wiki/i/fUp1O74ZM4BT7WfSGlx6xS4yCt_CbVyaOCCkrqSUh6-HhMf1nLRYWn4n16ckQO0e9wah643tfLpyRHuf0zxfHw.webp")
     private String profilePhoto;
 
     @JsonProperty("joinyear")

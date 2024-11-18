@@ -2,6 +2,7 @@ package com.threeping.syncday.user.security;
 
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
+import com.threeping.syncday.user.query.service.UserQueryService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -9,11 +10,13 @@ import io.jsonwebtoken.security.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 // Token의 유효성 검사
 @Component
@@ -23,15 +26,17 @@ public class JwtUtil {
     private final Key secret;
     private final long accessExpiration;
     private final long refreshExpiration;
+    private final UserQueryService userQueryService;
 
     @Autowired
     public JwtUtil(@Value("${token.secret}") String secret,
                    @Value("${token.access-expiration-time}") long accessExpiration,
-                   @Value("${token.refresh-expiration-time}") long refreshExpiration) {
+                   @Value("${token.refresh-expiration-time}") long refreshExpiration, UserQueryService userQueryService) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         this.secret = Keys.hmacShaKeyFor(keyBytes);
         this.accessExpiration = accessExpiration;
         this.refreshExpiration = refreshExpiration;
+        this.userQueryService = userQueryService;
     }
 
     // accessToken으로부터 Claims추출
@@ -56,7 +61,14 @@ public class JwtUtil {
 
     // At 생성 로직
     public String generateAccessToken(String userEmail) {
+
+        User userDetails = (User) userQueryService.loadUserByUsername(userEmail);
+
         Claims claims = Jwts.claims().setSubject(userEmail);
+        claims.put("auth", userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
+
         return buildToken(claims, accessExpiration);
     }
 

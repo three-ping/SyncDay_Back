@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
@@ -34,9 +36,9 @@ public class CustomLogoutHandler implements LogoutHandler {
             try {
                 Claims claims = jwtUtil.parseClaims(accessToken);
                 String email = claims.getSubject();
-
                 // redis에서 rt제거
                 redisTemplate.delete("RT:" + email);
+                log.info("redis에서 RT 제거됌");
 
                 // redis에 at 블랙리스트로 등록(서버 차원에서 at를 만료시킬 방법이 없으므로)
                 // at 토큰의 남은 저장 시간을 redis에 저장해놓고 시간이 지나면 자동 삭제되도록 구현
@@ -53,6 +55,16 @@ public class CustomLogoutHandler implements LogoutHandler {
                 throw new CommonException(ErrorCode.EXPIRED_TOKEN_ERROR);
             }
         }
+        // cookie 만료
+        ResponseCookie responseCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(false) // 개발 환경에선 false
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(0)
+                .build();
+        log.info("로그아웃 처리된 Cookie: {}", responseCookie);
+        response.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
     }
 
     private String extractAccessToken(HttpServletRequest request) {

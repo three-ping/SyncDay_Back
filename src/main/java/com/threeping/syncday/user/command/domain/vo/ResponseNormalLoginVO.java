@@ -14,7 +14,7 @@ import lombok.*;
 @EqualsAndHashCode
 public class ResponseNormalLoginVO {
 
-    @JsonProperty("user_id")
+    @JsonProperty("userId")
     @Schema(description = "유저 고유번호(PK)", example = "1")
     private Long userId;
 
@@ -26,11 +26,11 @@ public class ResponseNormalLoginVO {
     @Schema(description = "유저 이메일", example = "syncday1211@gmail.com")
     private String email;
 
-    @JsonProperty("profilephoto")
+    @JsonProperty("profilePhoto")
     @Schema(description = "유저 프로필 사진", example = "dachshund.jpg")
     private String profilePhoto;
 
-    @JsonProperty("joinyear")
+    @JsonProperty("joinYear")
     @Schema(description = "입사연도", example = "2023-01-20")
     private String joinYear;
 

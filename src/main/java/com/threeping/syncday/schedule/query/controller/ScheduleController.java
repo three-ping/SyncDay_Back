@@ -1,11 +1,10 @@
 package com.threeping.syncday.schedule.query.controller;
 
+import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.schedule.query.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -14,6 +13,18 @@ public class ScheduleController {
 
     private ScheduleService scheduleService;
 
-    @GetMapping("/{userId}")
-    void test(@RequestParam Long RequestUserId){}
+    @Autowired
+    public ScheduleController(ScheduleService scheduleService) {
+        this.scheduleService = scheduleService;
+    }
+
+    @GetMapping("/my")
+    public ResponseDTO<?> getMySchedules(@RequestParam Long userId) {
+        return ResponseDTO.ok(scheduleService.getMySchedulesByUserId(userId));
+    }
+
+    @GetMapping("/others")
+    public ResponseDTO<?> getOthersSchedules(@RequestParam Long searchUserId) {
+        return ResponseDTO.ok(scheduleService.getOthersSchedulesBySearchUserId(searchUserId));
+    }
 }

@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 public class UserCommandController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserCommandController.class);
     private final UserCommandService userService;
     private final ModelMapper modelMapper;
 
@@ -78,7 +81,7 @@ public class UserCommandController {
     @PutMapping("/password/{userId}")
     public ResponseDTO<?> updatePassword(@PathVariable Long userId,
                                          @Valid @RequestBody PwdChangeRequestVO request){
-
+        log.info("비밀번호 요청 들어옴");
         userService.updatePassword(userId, request.getCurrentPwd(), request.getNewPwd());
 
         return ResponseDTO.ok("비밀번호가 변경되었습니다.");
@@ -108,6 +111,7 @@ public class UserCommandController {
     )
     @PostMapping("/logout")
     public ResponseDTO<?> logout() {
+
         return ResponseDTO.ok("로그아웃 성공");
     }
 }
