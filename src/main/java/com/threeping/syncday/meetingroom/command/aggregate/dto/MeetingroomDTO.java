@@ -13,5 +13,4 @@ public class MeetingroomDTO {
     private String meetingroomPlace;
     private String meetingroomName;
     private Integer meetingroomCapacity;
-    private Long teamId;
 }

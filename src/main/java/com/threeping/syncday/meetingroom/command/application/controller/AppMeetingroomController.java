@@ -22,7 +22,6 @@ public class AppMeetingroomController {
     @PostMapping("/create")
     public ResponseDTO<?> createMeetingroom(@RequestBody MeetingroomDTO meetingroomDTO) {
         log.info("newMeetingroom: {}", meetingroomDTO);
-        log.info("Team ID: {}", meetingroomDTO.getTeamId());
         return ResponseDTO.ok(appMeetingroomService.addMeetingroom(meetingroomDTO));
     }
 
