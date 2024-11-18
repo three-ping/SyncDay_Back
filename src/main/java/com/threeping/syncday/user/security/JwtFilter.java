@@ -173,7 +173,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 .collect(Collectors.toList());
 
         UserDetails userDetails = userService.loadUserByUsername(email);
-
+        log.info("loadUserByUsername으로 찾은 userDetails: {}", userDetails);
         // Authentication 객체 생성 및 반환
         return new UsernamePasswordAuthenticationToken(userDetails,
                 "",

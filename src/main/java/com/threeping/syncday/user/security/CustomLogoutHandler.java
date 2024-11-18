@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
@@ -53,6 +55,16 @@ public class CustomLogoutHandler implements LogoutHandler {
                 throw new CommonException(ErrorCode.EXPIRED_TOKEN_ERROR);
             }
         }
+        // cookie 만료
+        ResponseCookie responseCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(false) // 개발 환경에선 false
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(0)
+                .build();
+        log.info("로그아웃 처리된 Cookie: {}", responseCookie);
+        response.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
     }
 
     private String extractAccessToken(HttpServletRequest request) {
