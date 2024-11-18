@@ -62,7 +62,9 @@ public class UserCommandServiceImpl implements UserCommandService {
     public void updatePassword(Long userId, String currentPwd, String newPwd) {
         UserEntity existingUser =
                 userRepository.findById(userId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_USER));
-
+        log.info("비밀번호 변경 service method 시작");
+        log.info("입력받은 현재 비밀번호: {}", currentPwd);
+        log.info("입력받은 새 비밀번호: {}", newPwd);
         if (!bCryptPasswordEncoder.matches(currentPwd, existingUser.getPassword())) {
             log.info("잘못된 현재 비밀번호 입력 시 나오는 예외");
             throw new CommonException(ErrorCode.INVALID_PASSWORD);
