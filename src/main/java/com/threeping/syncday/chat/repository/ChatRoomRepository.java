@@ -13,5 +13,4 @@ public interface ChatRoomRepository extends MongoRepository<ChatRoom, String> {
 
     ChatRoom findChatRoomByRoomId ( String roomId );
 
-    List<ChatRoomDTO> findAllRooms ();
 }

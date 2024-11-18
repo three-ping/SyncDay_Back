@@ -2,14 +2,12 @@ package com.threeping.syncday.chat.entity;
 
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import jakarta.persistence.Id;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "chat")
 @Getter
+@Setter
 @ToString
 @Builder
 public class ChatMessage {

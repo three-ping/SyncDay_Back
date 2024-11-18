@@ -29,8 +29,8 @@ public class ChatService {
         }
 
         //  채팅방 목록 조회
-        public List<ChatRoomDTO> findAllRooms() {
-            return chatRoomRepository.findAllRooms ();
+        public List<ChatRoom> findAll() {
+            return chatRoomRepository.findAll();
         }
 
         //  특정 채팅방 조회
