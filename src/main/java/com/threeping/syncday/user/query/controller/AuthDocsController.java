@@ -68,7 +68,7 @@ public class AuthDocsController {
         log.info("Swagger API login request 들어옴: {}", loginRequestVO);
 
         UsernamePasswordAuthenticationToken authRequest =
-                new UsernamePasswordAuthenticationToken(loginRequestVO.getEmil(),
+                new UsernamePasswordAuthenticationToken(loginRequestVO.getEmail(),
                         loginRequestVO.getPassword(), new ArrayList<>());
 
         Authentication authentication =
