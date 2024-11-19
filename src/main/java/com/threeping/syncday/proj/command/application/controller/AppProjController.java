@@ -24,11 +24,11 @@ public class AppProjController {
         return ResponseDTO.ok(appProjService.addProj(newProj));
     }
 
-//    @PutMapping("/")
-//    public ResponseDTO<?> updateProj(@RequestBody ProjDTO projDTO){
-//        log.info("projDTO: {}", projDTO);
-//        return ResponseDTO.ok(appProjService.modifyProj(projDTO));
-//    }
+    @PutMapping("/")
+    public ResponseDTO<?> updateProj(@RequestBody ProjVO projVO){
+        log.info("projVO: {}", projVO);
+        return ResponseDTO.ok(appProjService.modifyProj(projVO));
+    }
 
     @DeleteMapping("/{projId}")
     public ResponseDTO<?> deleteProj(@PathVariable("projId") Long projId){
