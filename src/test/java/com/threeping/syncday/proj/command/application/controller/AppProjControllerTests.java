@@ -116,7 +116,7 @@ class AppProjControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(
                 delete("/api/projs/{projId}", projId)
-                        .contentType(APPLICATION_JSON_UTF8)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
         );
 
