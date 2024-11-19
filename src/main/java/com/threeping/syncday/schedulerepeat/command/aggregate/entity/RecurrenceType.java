@@ -1,4 +1,4 @@
-package com.threeping.syncday.schedulerepeat.command.aggregate.enumtype;
+package com.threeping.syncday.schedulerepeat.command.aggregate.entity;
 
 import lombok.Getter;
 

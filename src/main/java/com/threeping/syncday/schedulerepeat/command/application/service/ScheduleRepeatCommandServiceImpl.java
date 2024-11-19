@@ -2,9 +2,12 @@ package com.threeping.syncday.schedulerepeat.command.application.service;
 
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
+import com.threeping.syncday.schedule.command.aggregate.entity.MeetingStatus;
+import com.threeping.syncday.schedule.command.aggregate.entity.PublicStatus;
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateRepeatedScheduleDTO;
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateScheduleRepeatDTO;
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.RepeatDTO;
+import com.threeping.syncday.schedulerepeat.command.aggregate.dto.SendScheduleRepeatMailDTO;
 import com.threeping.syncday.schedulerepeat.command.aggregate.entity.ScheduleRepeat;
 import com.threeping.syncday.schedulerepeat.command.aggregate.vo.ScheduleDurationVO;
 import com.threeping.syncday.schedulerepeat.command.domain.repository.ScheduleRepeatRepository;
@@ -72,6 +75,18 @@ public class ScheduleRepeatCommandServiceImpl implements ScheduleRepeatCommandSe
 
     }
 
+    @Override
+    public void sendMailToScheduleRepeatParticipants(Long scheduleRepeatId,
+                                                     CreateScheduleRepeatDTO createScheduleRepeatDTO) {
+        SendScheduleRepeatMailDTO sendScheduleRepeatMailDTO = new SendScheduleRepeatMailDTO();
+        sendScheduleRepeatMailDTO.setRecurrenceType(createScheduleRepeatDTO.getRecurrenceType());
+        sendScheduleRepeatMailDTO.setStartTime(createScheduleRepeatDTO.getStartTime());
+        sendScheduleRepeatMailDTO.setTitle(createScheduleRepeatDTO.getTitle());
+        sendScheduleRepeatMailDTO.setEmails(createScheduleRepeatDTO.getParticipantsEmails());
+        sendScheduleRepeatMailDTO.setUserName(createScheduleRepeatDTO.getUserName());
+        infraScheduleRepeatService.sendMailToRepeatScheduleParticipants(sendScheduleRepeatMailDTO);
+    }
+
 
     private void createScheduleRepeatDtoToEntity(CreateScheduleRepeatDTO createScheduleRepeatDTO, ScheduleRepeat scheduleRepeat) {
         scheduleRepeat.setTitle(createScheduleRepeatDTO.getTitle());
@@ -96,12 +111,30 @@ public class ScheduleRepeatCommandServiceImpl implements ScheduleRepeatCommandSe
         createRepeatedScheduleDTO.setContent(createScheduleRepeatDTO.getContent());
         createRepeatedScheduleDTO.setStartTime(createScheduleRepeatDTO.getStartTime());
         createRepeatedScheduleDTO.setEndTime(createScheduleRepeatDTO.getEndTime());
-        createRepeatedScheduleDTO.setMeetingStatus(createScheduleRepeatDTO.getMeetingStatus());
-        createRepeatedScheduleDTO.setPublicStatus(createScheduleRepeatDTO.getPublicStatus());
+        createRepeatedScheduleDTO.setMeetingStatus(converMeetingStatus(createScheduleRepeatDTO.getMeetingStatus()));
+        createRepeatedScheduleDTO.setPublicStatus(convertPublicStatus(createScheduleRepeatDTO.getPublicStatus()));
         createRepeatedScheduleDTO.setUserId(createScheduleRepeatDTO.getUserId());
         createRepeatedScheduleDTO.setScheduleRepeatId(scheduleRepeatId);
         createRepeatedScheduleDTO.setParticipants(createScheduleRepeatDTO.getParticipants());
         return createRepeatedScheduleDTO;
+    }
+
+    private PublicStatus convertPublicStatus(com.threeping.syncday.schedulerepeat.command.aggregate.entity.PublicStatus publicStatus) {
+        if (publicStatus == com.threeping.syncday.schedulerepeat.command.aggregate.entity.PublicStatus.PUBLIC){
+            return PublicStatus.PUBLIC;
+        } else {
+            return PublicStatus.PRIVATE;
+        }
+
+    }
+
+    private MeetingStatus converMeetingStatus(com.threeping.syncday.schedulerepeat.command.aggregate.entity.MeetingStatus meetingStatus) {
+        if (meetingStatus == com.threeping.syncday.schedulerepeat.command.aggregate.entity.MeetingStatus.ACTIVE){
+            return MeetingStatus.ACTIVE;
+        } else {
+            return MeetingStatus.INACTIVE;
+        }
+
     }
 
     private RepeatDTO makeRepeatDTO(CreateScheduleRepeatDTO createScheduleRepeatDTO) {

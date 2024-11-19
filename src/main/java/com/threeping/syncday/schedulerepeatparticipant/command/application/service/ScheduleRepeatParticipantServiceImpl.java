@@ -1,13 +1,11 @@
 package com.threeping.syncday.schedulerepeatparticipant.command.application.service;
 
-import com.threeping.syncday.common.enumtype.ParticipationStatus;
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateScheduleRepeatDTO;
+import com.threeping.syncday.schedulerepeatparticipant.command.aggregate.entity.ParticipationStatus;
 import com.threeping.syncday.schedulerepeatparticipant.command.aggregate.entity.ScheduleRepeatParticipant;
 import com.threeping.syncday.schedulerepeatparticipant.command.domain.repository.ScheduleRepeatParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ScheduleRepeatParticipantServiceImpl implements ScheduleRepeatParticipantService{

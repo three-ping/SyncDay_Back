@@ -9,4 +9,6 @@ public interface ScheduleRepeatCommandService {
                                           CreateScheduleRepeatDTO createScheduleRepeatDTO);
 
     void createRepeatedSchedule(Long scheduleRepeatId, CreateScheduleRepeatDTO createScheduleRepeatDTO);
+
+    void sendMailToScheduleRepeatParticipants(Long scheduleRepeatId, CreateScheduleRepeatDTO createScheduleRepeatDTO);
 }

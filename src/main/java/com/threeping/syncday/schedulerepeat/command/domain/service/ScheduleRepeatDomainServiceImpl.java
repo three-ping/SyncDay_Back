@@ -1,9 +1,9 @@
 package com.threeping.syncday.schedulerepeat.command.domain.service;
 
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.RepeatDTO;
-import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.PersonalMonthlyType;
-import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.PersonalRecurrenceUnit;
-import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.RecurrenceType;
+import com.threeping.syncday.schedulerepeat.command.aggregate.entity.PersonalMonthlyType;
+import com.threeping.syncday.schedulerepeat.command.aggregate.entity.PersonalRecurrenceUnit;
+import com.threeping.syncday.schedulerepeat.command.aggregate.entity.RecurrenceType;
 import com.threeping.syncday.schedulerepeat.command.aggregate.vo.ScheduleDurationVO;
 import org.springframework.stereotype.Service;
 

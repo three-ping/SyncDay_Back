@@ -1,10 +1,5 @@
 package com.threeping.syncday.schedulerepeat.command.aggregate.entity;
 
-import com.threeping.syncday.common.enumtype.MeetingStatus;
-import com.threeping.syncday.common.enumtype.PublicStatus;
-import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.PersonalMonthlyType;
-import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.PersonalRecurrenceUnit;
-import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.RecurrenceType;
 import jakarta.persistence.*;
 import lombok.*;
 

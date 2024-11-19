@@ -1,8 +1,8 @@
 package com.threeping.syncday.schedulerepeat.command.aggregate.dto;
 
-import com.threeping.syncday.common.enumtype.MeetingStatus;
-import com.threeping.syncday.common.enumtype.PublicStatus;
 
+import com.threeping.syncday.schedule.command.aggregate.entity.MeetingStatus;
+import com.threeping.syncday.schedule.command.aggregate.entity.PublicStatus;
 import lombok.*;
 
 import java.sql.Timestamp;
