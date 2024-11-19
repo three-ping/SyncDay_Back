@@ -25,6 +25,9 @@ public class ProjDTO {
     @JsonProperty("updated_at")
     Byte progressStatus;
 
-    @JsonProperty("user_id")
-    Long userId;
+    @JsonProperty("vcs_type")
+    String vcsType;
+
+    @JsonProperty("vcs_proj_url")
+    String vcsProjUrl;
 }

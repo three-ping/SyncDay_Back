@@ -1,7 +1,5 @@
 package com.threeping.syncday.schedule.command.aggregate.entity;
 
-import com.threeping.syncday.common.enumtype.MeetingStatus;
-import com.threeping.syncday.common.enumtype.PublicStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 

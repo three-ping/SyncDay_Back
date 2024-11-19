@@ -8,6 +8,7 @@ import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.common.exception.ExceptionDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.FieldError;
@@ -18,7 +19,10 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hibernate.query.sqm.tree.SqmNode.log;
+
 //필기. 응답 DTO통일
+@Slf4j
 @Data
 public class ResponseDTO<T> {
 
@@ -92,7 +96,7 @@ public class ResponseDTO<T> {
     public static ResponseDTO<Object> failValidation(MethodArgumentNotValidException e) {
         // 첫 번째 에러 메시지만 사용
         String errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-
+        log.info("예외에서 발생된 에러 메시지: " + errorMessage);
         // 에러 메시지에 따른 ErrorCode 매핑
         ErrorCode errorCode;
         if (errorMessage.contains("영문자, 숫자, 특수문자")) {

@@ -24,7 +24,7 @@ class TeamControllerTests {
     @DisplayName("팀 전체 조회 테스트")
     @Test
     void testGetAllTeams() throws Exception {
-        mockMvc.perform(get("/api/team/"))
+        mockMvc.perform(get("/api/team"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
