@@ -39,16 +39,16 @@ public class ChatService {
         }
 
         //  채팅방 생성(멤버 필터)
-//        public ChatRoom createChatRoom(ChatRoomDTO chatRoomDTO){
-//            ChatRoom chatRoom = ChatRoom.builder ()
-//                    .roomId ( chatRoomDTO.getRoomId () )
-//                    .chatRoomName ( chatRoomDTO.getChatRoomName () )
-//                    .creatorId ( chatRoomDTO.getCreatorId () )
-//                    .createdAt ( chatRoomDTO.getCreatedAt () )
-//                    .memberCount ( chatRoomDTO.getMemberCount () )
-//                    .build ();
-//            return chatRoomRepository.save (chatRoom);
-//        }
+        public ChatRoom createChatRoom(ChatRoomDTO chatRoomDTO){
+            ChatRoom chatRoom = ChatRoom.builder ()
+                    .roomId ( chatRoomDTO.getRoomId () )
+                    .chatRoomName ( chatRoomDTO.getChatRoomName () )
+                    .creatorId ( chatRoomDTO.getCreatorId () )
+                    .createdAt ( chatRoomDTO.getCreatedAt () )
+                    .memberCount ( chatRoomDTO.getMemberCount () )
+                    .build ();
+            return chatRoomRepository.save (chatRoom);
+        }
 
         //  특정 채팅방 입장
         public ChatRoom joinChatRoom (String roomId, String userId) {
