@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.threeping.syncday.meetingroomreservation.query.repository.MeetingroomReservationMapper">
+    <resultMap id="meetingroomReservationResultMap" type="com.threeping.syncday.meetingroomreservation.query.aggregate.MeetingroomReservation">
+        <id property="meetingroomReservationId" column="meetingroom_reservation_id"/>
+        <result property="meetingTime" column="meeting_time"/>
+        <result property="meetingRoom" column="meetingroom_id"/>
+        <result property="schedule" column="schedule_id"/>
+    </resultMap>
+
+    <select id="selectAllMeetingroomReservations" resultMap="meetingroomReservationResultMap">
+        SELECT
+            MEETINGROOM_RESERVATION_ID,
+            MEETING_TIME,
+            MEETINGROOM_ID,
+            SCHEDULE_ID
+          FROM TBL_MEETINGROOM_RESERVATION
+<!--        WHERE SCHEDULE_ID = #{schedule}-->
+    </select>
+</mapper>
