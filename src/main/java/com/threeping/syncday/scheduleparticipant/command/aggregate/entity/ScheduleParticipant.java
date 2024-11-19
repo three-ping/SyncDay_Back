@@ -1,6 +1,5 @@
 package com.threeping.syncday.scheduleparticipant.command.aggregate.entity;
 
-import com.threeping.syncday.common.enumtype.ParticipationStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
