@@ -1,7 +1,5 @@
 package com.threeping.syncday.meetingroomreservation.command.application.service;
 
-import com.threeping.syncday.common.enumtype.MeetingStatus;
-import com.threeping.syncday.common.enumtype.PublicStatus;
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.meetingroom.command.aggregate.entity.Meetingroom;
@@ -11,6 +9,8 @@ import com.threeping.syncday.meetingroomreservation.command.aggregate.entity.Mee
 import com.threeping.syncday.meetingroomreservation.command.domain.repository.MeetingroomReservationRepository;
 import com.threeping.syncday.meetingroomreservation.command.infrastructure.InfraMeetingroomReservationService;
 import com.threeping.syncday.schedule.command.aggregate.dto.ScheduleDTO;
+import com.threeping.syncday.schedule.command.aggregate.entity.MeetingStatus;
+import com.threeping.syncday.schedule.command.aggregate.entity.PublicStatus;
 import com.threeping.syncday.schedule.command.aggregate.entity.Schedule;
 import com.threeping.syncday.schedule.command.domain.repository.ScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
