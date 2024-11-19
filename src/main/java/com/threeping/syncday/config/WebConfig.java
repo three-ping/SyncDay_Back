@@ -18,6 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
 
                 /* Ingress 적용 이후 CORS 불필요로 인한 경로 제거 */
 //                .allowedOrigins()
-                .allowedMethods("GET", "POST", "PUT", "DELETE");
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("*");
     }
 }
