@@ -26,7 +26,7 @@ class ProjControllerTests {
     @DisplayName("프로젝트 전체 조회 테스트")
     @Test
     void testGetAllProblems() throws Exception{
-        mockMvc.perform(get("/api/proj/"))
+        mockMvc.perform(get("/api/projs/"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
