@@ -31,5 +31,9 @@ public class ProjServiceImpl implements ProjService {
         return projDTOs;
     }
 
-
+    @Override
+    public ProjDTO getProjById(Long projId) {
+        Proj proj = projMapper.selectProjById(projId);
+        return modelMapper.map(proj, ProjDTO.class);
+    }
 }

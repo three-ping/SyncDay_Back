@@ -8,4 +8,5 @@ import java.util.List;
 public interface ProjService {
     List<ProjDTO> getAllProjs();
 
+    ProjDTO getProjById(Long projId);
 }

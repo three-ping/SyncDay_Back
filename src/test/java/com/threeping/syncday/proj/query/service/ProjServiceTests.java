@@ -33,6 +33,21 @@ class ProjServiceTests {
         });
     }
 
+    @DisplayName("프로젝트 ID를 통한 조회")
+    @Test
+    void testGetProjById(){
+
+        // given
+        Long projId = 1L;
+
+        // when
+        ProjDTO proj=projService.getProjById(projId);
+
+        // then
+        assertNotNull(proj);
+        log.info("proj: {}", proj);
+    }
+
 
 
 }
