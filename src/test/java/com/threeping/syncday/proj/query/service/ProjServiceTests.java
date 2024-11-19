@@ -1,6 +1,6 @@
 package com.threeping.syncday.proj.query.service;
 
-import com.threeping.syncday.proj.query.aggregate.ProjDTO;
+import com.threeping.syncday.proj.query.aggregate.dto.ProjDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,21 +33,21 @@ class ProjServiceTests {
         });
     }
 
-
-    @DisplayName("유저 아이디로 프로젝트 조회")
+    @DisplayName("프로젝트 ID를 통한 조회")
     @Test
-    void testGetProjsByUserId(){
+    void testGetProjById(){
 
         // given
-        Long userId = 1L;
+        Long projId = 1L;
 
         // when
-        List<ProjDTO> projList = projService.getProjsByUserId(userId);
+        ProjDTO proj=projService.getProjById(projId);
 
         // then
-        assertNotNull(projList);
-        projList.forEach(projDTO -> {
-            log.info("projDTO: {}", projDTO);
-        });
+        assertNotNull(proj);
+        log.info("proj: {}", proj);
     }
+
+
+
 }
