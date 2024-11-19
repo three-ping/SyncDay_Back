@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/proj")
+@RequestMapping("/api/projs")
 @Slf4j
 public class ProjController {
 
-    private ProjService projService;
+    private final ProjService projService;
 
     @Autowired
     public ProjController(ProjService projService){
@@ -26,8 +26,9 @@ public class ProjController {
         return ResponseDTO.ok(projService.getAllProjs());
     }
 
-    @GetMapping("/{userId}")
-    public ResponseDTO<?> findProjByUserId(@PathVariable("userId") Long userId){
-        return ResponseDTO.ok(projService.getProjsByUserId(userId));
+    @GetMapping("/{projId}")
+    public ResponseDTO<?> findProjById(@PathVariable("projId") Long projId){
+        return ResponseDTO.ok(projService.getProjById(projId));
     }
+
 }

@@ -27,6 +27,21 @@
         FROM         TBL_PROJ
     </select>
 
+    <select id="selectProjById" resultMap="projResultMap" parameterType="long">
+        SELECT
+               PROJ_ID
+              ,PROJ_NAME
+              ,START_TIME
+              ,END_TIME
+              ,CREATED_AT
+              ,PROGRESS_STATUS
+              ,VCS_TYPE
+              ,VCS_PROJ_URL
+        FROM   TBL_PROJ
+        WHERE  PROJ_ID = #{ projId }
+    </select>
+
+
 
 
 </mapper>
