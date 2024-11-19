@@ -1,6 +1,6 @@
 package com.threeping.syncday.proj.query.service;
 
-import com.threeping.syncday.proj.query.aggregate.ProjDTO;
+import com.threeping.syncday.proj.query.aggregate.dto.ProjDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

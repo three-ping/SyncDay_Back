@@ -1,4 +1,4 @@
-package com.threeping.syncday.proj.query.aggregate;
+package com.threeping.syncday.proj.query.aggregate.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

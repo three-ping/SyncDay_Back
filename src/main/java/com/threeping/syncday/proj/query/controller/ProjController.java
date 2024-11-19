@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ProjController {
 
-    private ProjService projService;
+    private final ProjService projService;
 
     @Autowired
     public ProjController(ProjService projService){
@@ -26,8 +26,5 @@ public class ProjController {
         return ResponseDTO.ok(projService.getAllProjs());
     }
 
-    @GetMapping("/{userId}")
-    public ResponseDTO<?> findProjByUserId(@PathVariable("userId") Long userId){
-        return ResponseDTO.ok(projService.getProjsByUserId(userId));
-    }
+
 }
