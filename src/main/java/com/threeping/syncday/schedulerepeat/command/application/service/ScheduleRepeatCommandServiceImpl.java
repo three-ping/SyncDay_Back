@@ -10,6 +10,7 @@ import com.threeping.syncday.schedulerepeat.command.aggregate.vo.ScheduleDuratio
 import com.threeping.syncday.schedulerepeat.command.domain.repository.ScheduleRepeatRepository;
 import com.threeping.syncday.schedulerepeat.command.domain.service.ScheduleRepeatDomainService;
 import com.threeping.syncday.schedulerepeat.command.infrastructure.service.InfraScheduleRepeatService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Service
 @Transactional
+@Slf4j
 public class ScheduleRepeatCommandServiceImpl implements ScheduleRepeatCommandService {
 
     private final ScheduleRepeatRepository scheduleRepeatRepository;

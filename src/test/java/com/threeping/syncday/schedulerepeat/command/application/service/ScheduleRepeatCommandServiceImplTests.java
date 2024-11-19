@@ -4,16 +4,14 @@ import com.threeping.syncday.common.enumtype.MeetingStatus;
 import com.threeping.syncday.common.enumtype.PublicStatus;
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateScheduleRepeatDTO;
 import com.threeping.syncday.schedulerepeat.command.aggregate.entity.ScheduleRepeat;
+import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.RecurrenceType;
 import com.threeping.syncday.schedulerepeat.command.domain.repository.ScheduleRepeatRepository;
-import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,7 +37,7 @@ class ScheduleRepeatCommandServiceImplTests {
         createScheduleRepeatDTO.setUserId(1L);
         createScheduleRepeatDTO.setPublicStatus(PublicStatus.PUBLIC);
         createScheduleRepeatDTO.setMeetingStatus(MeetingStatus.ACTIVE);
-        createScheduleRepeatDTO.setRecurrencePattern("test-recurrence");
+        createScheduleRepeatDTO.setRecurrenceType(RecurrenceType.EVERY_WEEK_DAY);
 
         scheduleRepeatCommandService.createScheduleRepeat(createScheduleRepeatDTO);
 
@@ -52,9 +50,7 @@ class ScheduleRepeatCommandServiceImplTests {
         assertEquals(1L,savedScheduleRepeat.getUserId(),"userId가 잘못 저장됨");
         assertEquals(PublicStatus.PUBLIC,savedScheduleRepeat.getPublicStatus(),"publicStatus가 잘못 저장됨");
         assertEquals(MeetingStatus.ACTIVE,savedScheduleRepeat.getMeetingStatus(),"meetingStatus가 잘못 저장됨");
-        assertEquals("test-recurrence",savedScheduleRepeat.getRecurrencePattern(),"recurrencePattern이 잘못 저장됨");
-
-
+        assertEquals(RecurrenceType.EVERY_MONTH_DAY,savedScheduleRepeat.getRecurrenceType(),"recurrencePattern이 잘못 저장됨");
     }
 
 }

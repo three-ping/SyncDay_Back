@@ -38,15 +38,19 @@ public class ScheduleRepeat {
     @Column(name = "update_time")
     private Timestamp updateTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "public_status")
     private PublicStatus publicStatus;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "meeting_status")
     private MeetingStatus meetingStatus;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "recurrence_type")
     private RecurrenceType recurrenceType;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "personal_recurrence_unit")
     private PersonalRecurrenceUnit personalRecurrenceUnit;
 
@@ -56,6 +60,7 @@ public class ScheduleRepeat {
     @Column(name = "personal_recurrence_selected_days")
     private Long personalRecurrenceSelectedDays;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "personal_monthly_type")
     private PersonalMonthlyType personalMonthlyType;
 
