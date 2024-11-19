@@ -1,7 +1,8 @@
 package com.threeping.syncday.proj.command.application.service;
 
+import com.threeping.syncday.proj.command.aggregate.entity.VcsType;
+import com.threeping.syncday.proj.command.aggregate.vo.ProjVO;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
-import com.threeping.syncday.proj.command.aggregate.entity.Proj;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -9,67 +10,77 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.sql.Timestamp;
 
-@Slf4j
+import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
+@Slf4j
 class AppProjServiceTests {
+
     @Autowired
-    AppProjService appProjService;
+    private AppProjService appProjService;
 
     @DisplayName("프로젝트 생성 테스트")
     @Test
-    void testAddProj(){
+    void testCreateProject(){
 
         // given
         Long userId = 1L;
-        String projName = "프로젝트 생성 및 프로젝트 오너 생성 테스트";
+        String projName ="프로젝트 생성 테스트";
 
         // when
-        ProjDTO projDTO = new ProjDTO();
-        projDTO.setUserId(userId);
-        projDTO.setProjName(projName);
-        ProjDTO newProj = appProjService.addProj(projDTO);
+        ProjVO projVO = new ProjVO();
+        projVO.setUserId(userId);
+        projVO.setProjName(projName);
 
         // then
-        assertEquals(userId, newProj.getUserId());
-
+        ProjDTO newProj = appProjService.addProj(projVO);
+        assertEquals(projVO.getProjName(), newProj.getProjName());
         log.info("newProj: {}", newProj);
     }
 
+
     @DisplayName("프로젝트 수정 테스트")
     @Test
-    void testModifyProj(){
-
+    void testUpdateProject(){
         // given
-        Long projId = 5L;
+        Long projId = 1L;
         String modifyProjName = "프로젝트 수정 테스트";
+        Long userId = 1L;
+        Timestamp startTime = new Timestamp(System.currentTimeMillis());
+        VcsType vcsType = VcsType.GITHUB;
+        String url = "github.com";
+
+        ProjVO projVO = new ProjVO();
+        projVO.setProjId(projId);
+        projVO.setUserId(userId);
+        projVO.setProjName(modifyProjName);
+        projVO.setStartTime(startTime);
+        projVO.setVcsType(vcsType);
+        projVO.setVcsProjUrl(url);
 
         // when
-        ProjDTO projDTO = new ProjDTO();
-        projDTO.setProjId(projId);
-        projDTO.setProjName(modifyProjName);
-        ProjDTO modifiedProj = appProjService.modifyProj(projDTO);
+        ProjDTO newProj = appProjService.modifyProj(projVO);
 
-        // then
-        assertEquals(modifyProjName, modifiedProj.getProjName());
-        log.info("modifiedProj: {}", modifiedProj);
+        assertEquals(projVO.getProjName(), newProj.getProjName());
+        log.info("newProj: {}", newProj);
+
+
     }
 
     @DisplayName("프로젝트 삭제 테스트")
     @Test
-    void testDeleteProj(){
+    void testDeleteProject(){
 
         // given
-        Long projId = 5L;
+        Long projId = 1L;
 
         // when
-        ProjDTO projDTO = appProjService.deleteProj(projId);
+        ProjDTO deleteProjDTO = appProjService.deleteProj(projId);
 
-        // then
-        assertEquals(projId, projDTO.getProjId());
+        assertEquals(projId, deleteProjDTO.getProjId());
+        log.info("deleteProjDTO: {}", deleteProjDTO);
 
-        log.info("deleteProj: {}", projDTO);
     }
 }

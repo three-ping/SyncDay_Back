@@ -52,6 +52,12 @@ public enum ErrorCode {
     NOT_FOUND_USER(40401, HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."),
 
 
+    // 도메인 별 에러 코드
+    // 04: 프로젝트
+    NOT_FOUND_PROJ(4040400,HttpStatus.NOT_FOUND,"해당ID의 프로젝트가 존재하지 않습니다"),
+    INVALID_REQUEST_PROJ(4010401, HttpStatus.UNAUTHORIZED,"수정 권한이 없습니다"),
+
+
     //500
     INTERNAL_SERVER_ERROR(50000, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다");
 

@@ -1,17 +1,23 @@
-package com.threeping.syncday.proj.query.aggregate;
+package com.threeping.syncday.proj.command.aggregate.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.threeping.syncday.proj.command.aggregate.entity.VcsType;
 import lombok.Data;
 
 import java.sql.Timestamp;
+
 @Data
-public class ProjDTO {
+public class ProjVO {
+    /* add, modify 전용 VO */
 
     @JsonProperty("proj_id")
-    Long projId;
+    private Long projId;
+
+    @JsonProperty("user_id")
+    private Long userId;
 
     @JsonProperty("proj_name")
-    String projName;
+    private String projName;
 
     @JsonProperty("start_time")
     Timestamp startTime;
@@ -19,14 +25,8 @@ public class ProjDTO {
     @JsonProperty("end_time")
     Timestamp endTime;
 
-    @JsonProperty("created_at")
-    Timestamp createdAt;
-
-    @JsonProperty("updated_at")
-    Byte progressStatus;
-
     @JsonProperty("vcs_type")
-    String vcsType;
+    VcsType vcsType;
 
     @JsonProperty("vcs_proj_url")
     String vcsProjUrl;

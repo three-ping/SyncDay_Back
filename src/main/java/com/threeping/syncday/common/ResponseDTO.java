@@ -8,6 +8,7 @@ import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.common.exception.ExceptionDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.FieldError;
@@ -21,6 +22,7 @@ import java.util.Map;
 import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 //필기. 응답 DTO통일
+@Slf4j
 @Data
 public class ResponseDTO<T> {
 
