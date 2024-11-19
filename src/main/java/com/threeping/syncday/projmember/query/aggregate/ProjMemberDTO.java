@@ -6,11 +6,8 @@ import lombok.Data;
 @Data
 public class ProjMemberDTO {
 
-    @JsonProperty("user_id")
-    private Long userId;
-
-    @JsonProperty("proj_id")
-    private Long projId;
+    @JsonProperty("proj_member_id")
+    private Long projMemberId;
 
     @JsonProperty("bookmark_status")
     private String bookmarkStatus;
@@ -18,6 +15,10 @@ public class ProjMemberDTO {
     @JsonProperty("participation_status")
     private String participationStatus;
 
-    @JsonProperty("role")
-    private String role;
+    @JsonProperty("user_id")
+    private Long userId;
+
+    @JsonProperty("proj_id")
+    private Long projId;
+
 }
