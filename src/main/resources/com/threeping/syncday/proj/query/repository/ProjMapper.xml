@@ -10,7 +10,8 @@
     <result property="endTime" column="end_time"></result>
     <result property="createdAt" column="created_at"></result>
     <result property="progressStatus" column="progress_status"></result>
-    <result property="userId" column="user_id"></result>
+    <result property="vcsType" column="vcs_type"/>
+    <result property="vcs_proj_url" column="vcs_proj_url"/>
 </resultMap>
 
     <select id="selectAllProjs" resultMap="projResultMap">
@@ -21,21 +22,11 @@
                     ,END_TIME
                     ,CREATED_AT
                     ,PROGRESS_STATUS
-                    ,USER_ID
+                    ,VCS_TYPE
+                    ,VCS_PROJ_URL
         FROM         TBL_PROJ
     </select>
 
 
-    <select id="selectProjsByUserId" resultMap="projResultMap" parameterType="long">
-        SELECT
-                    PROJ_ID
-                   ,PROJ_NAME
-                   ,START_TIME
-                   ,END_TIME
-                   ,CREATED_AT
-                   ,PROGRESS_STATUS
-                   ,USER_ID
-          FROM      TBL_PROJ
-         WHERE      USER_ID = #{userId}
-    </select>
+
 </mapper>

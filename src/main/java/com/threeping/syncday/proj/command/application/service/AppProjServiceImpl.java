@@ -2,6 +2,7 @@ package com.threeping.syncday.proj.command.application.service;
 
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
+import com.threeping.syncday.proj.command.aggregate.dto.NewProjDTO;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.command.aggregate.entity.Proj;
 import com.threeping.syncday.proj.command.domain.repository.ProjRepository;
@@ -33,29 +34,18 @@ public class AppProjServiceImpl implements AppProjService {
 
     @Transactional
     @Override
-    public ProjDTO addProj(ProjDTO newProjDTO) {
+    public ProjDTO addProj(NewProjDTO newProjDTO) {
 
         Proj newProj = modelMapper.map(newProjDTO, Proj.class);
         log.info("newProj: {}", newProj);
 
         Proj addedProj = projRepository.save(newProj);
-        Boolean isUserAdded = infraProjService.requestAddProjOwner(addedProj.getProjId(), addedProj.getUserId());
+        Boolean isUserAdded = infraProjService.requestAddProjOwner(addedProj.getProjId(), newProjDTO.getUserId());
         log.debug("isUserAdded: {}", isUserAdded);
         return modelMapper.map(addedProj, ProjDTO.class);
     }
 
-    @Transactional
-    @Override
-    public ProjDTO modifyProj(ProjDTO projDTO) {
-        Proj existingProj = projRepository.findByProjId(projDTO.getProjId());
-        if(existingProj == null) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-        existingProj.setProjName(projDTO.getProjName());
-        Proj updatedProj = projRepository.save(existingProj);
 
-        return modelMapper.map(updatedProj, ProjDTO.class);
-    }
     @Transactional
     @Override
     public ProjDTO deleteProj(Long projId) {

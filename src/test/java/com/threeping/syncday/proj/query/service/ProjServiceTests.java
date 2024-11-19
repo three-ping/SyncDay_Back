@@ -34,20 +34,5 @@ class ProjServiceTests {
     }
 
 
-    @DisplayName("유저 아이디로 프로젝트 조회")
-    @Test
-    void testGetProjsByUserId(){
 
-        // given
-        Long userId = 1L;
-
-        // when
-        List<ProjDTO> projList = projService.getProjsByUserId(userId);
-
-        // then
-        assertNotNull(projList);
-        projList.forEach(projDTO -> {
-            log.info("projDTO: {}", projDTO);
-        });
-    }
 }
