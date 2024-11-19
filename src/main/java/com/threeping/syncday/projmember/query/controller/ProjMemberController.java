@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/proj-member")
+@RequestMapping("api/proj-members")
 public class ProjMemberController {
 
     private final ProjMemberService projMemberService;
@@ -25,7 +25,7 @@ public class ProjMemberController {
         return ResponseDTO.ok(projMemberService.getAllProjMembers());
     }
 
-    @GetMapping("/{projId}")
+    @GetMapping("/projs/{projId}")
     public ResponseDTO<?> findProjMemberById(@PathVariable("projId") Long projId) {
 
         return ResponseDTO.ok(projMemberService.getProjMembersByProjId(projId));
