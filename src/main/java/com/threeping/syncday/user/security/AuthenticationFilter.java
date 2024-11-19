@@ -2,9 +2,12 @@ package com.threeping.syncday.user.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.threeping.syncday.common.ResponseDTO;
+import com.threeping.syncday.user.command.application.dto.UserDTO;
+import com.threeping.syncday.user.command.application.service.UserCommandService;
+import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
+import com.threeping.syncday.user.command.domain.repository.UserRepository;
 import com.threeping.syncday.user.command.domain.vo.LoginRequestVO;
 import com.threeping.syncday.user.command.domain.vo.ResponseNormalLoginVO;
-import com.threeping.syncday.user.query.dto.UserDTO;
 import com.threeping.syncday.user.query.service.UserQueryService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,50 +18,68 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final UserQueryService userService;
+    private final UserQueryService userQueryService;
+    private final UserCommandService userCommandService;
     private final Environment env;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public AuthenticationFilter(AuthenticationManager authenticationManager,
-                                UserQueryService userService,
+                                UserQueryService userQueryService,
+                                UserCommandService userCommandService,
                                 Environment env,
-                                BCryptPasswordEncoder bCryptPasswordEncoder) {
+                                RedisTemplate<String, String> redisTemplate) {
         super(authenticationManager);
-        this.userService = userService;
+        this.userQueryService = userQueryService;
+        this.userCommandService = userCommandService;
         this.env = env;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
-
+        log.info("attemptAuthentication method start");
+        log.info("attemptAuthentication method request LocalPort: {}", request.getLocalPort());
         try {
             LoginRequestVO creds = new ObjectMapper().readValue(request.getInputStream(), LoginRequestVO.class);
-            String email = creds.getEmil();
+            log.info("attemptAuthentication method creds객체 정보 : {}", creds);
+            String email = creds.getEmail();
 
-            // 인증 token 만들기
-            return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(email, creds.getPassword(), new ArrayList<>())
-            );
+            // 인증 토큰 생성
+            UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(email, creds.getPassword(), new ArrayList<>());
+            log.info("attemptAuthentication authToken(성공 후 생성된 인증 토큰): {}", authToken);
+            // AuthenticationManager에 전달
+            Authentication auth = getAuthenticationManager().authenticate(authToken);
+            log.info("Authentication result: {}", auth);  // 이 로그가 찍히는지 확인
+
+            return auth;
         } catch (IOException e) {
             throw new AuthenticationServiceException("유저 인증 실패", e);
         }
@@ -74,48 +95,69 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         String email = ((User) authResult.getPrincipal()).getUsername();
 
-        Claims claims = Jwts.claims().setSubject(email); // 회원 정보
+        Claims acessClaims = Jwts.claims().setSubject(email); // 회원 정보
+        Claims refreshClaims = Jwts.claims().setSubject(email);
         List<String> roles = authResult.getAuthorities().stream()
                 .map(role -> role.getAuthority())
                 .collect(Collectors.toList()); // 권한 정보
-        claims.put("auth", roles);
+        acessClaims.put("auth", roles);
 
         // 토큰 만료 시간 설정
         long accessExpiration =
                 System.currentTimeMillis() + getExpirationTime(env.getProperty("token.access-expiration-time"));
-        // refresh는 추후에 설정할 예정
         long refreshExpiration =
                 System.currentTimeMillis() + getExpirationTime(env.getProperty("token.refresh-expiration-time"));
 
         // AT 생성
         String accessToken = Jwts.builder()
-                .setClaims(claims)
-                .setExpiration(new Date(accessExpiration))
+                .setClaims(acessClaims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + accessExpiration))
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
                 .compact();
 
         // RT 생성
         String refreshToken = Jwts.builder()
-                .setClaims(claims)
-                .setExpiration(new Date(refreshExpiration))
+                .setClaims(refreshClaims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshExpiration))
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
                 .compact();
 
-        // user 상세 정보 조회
-        UserDTO userDetails = userService.findByEmail(email);
-
-        ResponseNormalLoginVO responseNormalLoginVO = new ResponseNormalLoginVO(
-                accessToken,
-                new Date(accessExpiration),
+        // Ex ) Key: RT:abc@gmail.com, Value: RT정보, TTL(Data 만료시간)
+        redisTemplate.opsForValue().set(
+                "RT:" + email,
                 refreshToken,
-                new Date(refreshExpiration),
+                refreshExpiration,
+                TimeUnit.MILLISECONDS);
+
+        // RT는 HttpOnly Cookie에 담기
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+                        .httpOnly(true) // js를 통한 쿠키 완전히 차단, document.cookie로 쿠키 읽기/쓰기 불가, 오직 https 통신으로만 쿠키 전송 가능
+                        .secure(false) // 개발 환경에선 http 통신이므로
+                        .sameSite("Strict") // csrf 공격 방지
+                        .path("/api")   // cookie 사용 가능 경로 지정
+                        .build();
+
+        // at 헤더에 담기
+        response.addHeader("Authorization", "Bearer " + accessToken);
+        // Cookie를 헤더에 담아 전송
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        // user 상세 정보 조회
+        UserDTO userDetails = userQueryService.findByEmail(email);
+        // 마지막 로그인 시간 업데이트
+        userCommandService.updateLastAccessTime(email);
+
+        // 로그인 성공 후 바로 보여줄 응답객체, 아마 nav바에 들어갈 정보를 담을 듯?
+        ResponseNormalLoginVO responseNormalLoginVO = new ResponseNormalLoginVO(
                 userDetails.getUserId(),
                 userDetails.getUserName(),
                 userDetails.getEmail(),
                 userDetails.getProfilePhoto(),
                 userDetails.getJoinYear(),
                 userDetails.getPosition(),
-                userDetails.getTeamId()
+                userDetails.getTeamId(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         );
 
         ResponseDTO<ResponseNormalLoginVO> responseDTO = ResponseDTO.ok(responseNormalLoginVO);

@@ -2,7 +2,6 @@ package com.threeping.syncday.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.customizers.OpenApiCustomizer;
@@ -21,7 +20,7 @@ public class SwaggerConfiguration {
     @Profile("!Prod") // 운영환경은 제외
     public GroupedOpenApi userApi() {
 
-        String[] paths = {"/user/**"};
+        String[] paths = {"/api/user/**"};
 
         return GroupedOpenApi
                 .builder()
@@ -32,9 +31,22 @@ public class SwaggerConfiguration {
 
     @Bean
     @Profile("!Prod")
+    public GroupedOpenApi authApi() {
+        String[] paths = {"/api/docs/**", "/api/user/login/**"};
+
+        return GroupedOpenApi
+                .builder()
+                .group("인증 관련 api")
+                .pathsToMatch(paths)
+                .addOpenApiCustomizer(buildSecurityOpenApi())
+                .build();
+    }
+
+    @Bean
+    @Profile("!Prod")
     public GroupedOpenApi teamApi() {
 
-        String[] paths = {"/team/**"};
+        String[] paths = {"/api/team/**"};
 
         return GroupedOpenApi
                 .builder()
@@ -47,7 +59,7 @@ public class SwaggerConfiguration {
     @Profile("!Prod")
     public GroupedOpenApi projectApi() {
 
-        String[] paths = {"/project/**"};
+        String[] paths = {"/api/proj/**"};
 
         return GroupedOpenApi
                 .builder()
@@ -58,13 +70,13 @@ public class SwaggerConfiguration {
 
     @Bean
     @Profile("!Prod")
-    public GroupedOpenApi mileStoneApi() {
+    public GroupedOpenApi cardboardApi() {
 
-        String[] paths = {"/milestone/**"};
+        String[] paths = {"/api/cardboard/**"};
 
         return GroupedOpenApi
                 .builder()
-                .group("마일스톤 관련 api")
+                .group("카드보드 관련 api")
                 .pathsToMatch(paths)
                 .addOpenApiCustomizer(buildSecurityOpenApi()).build();
     }
@@ -73,7 +85,7 @@ public class SwaggerConfiguration {
     @Profile("!Prod")
     public GroupedOpenApi chatApi() {
 
-        String[] paths = {"/chat/**"};
+        String[] paths = {"/api/chat/**"};
 
         return GroupedOpenApi
                 .builder()
@@ -86,7 +98,7 @@ public class SwaggerConfiguration {
     @Profile("!Prod")
     public GroupedOpenApi cardApi() {
 
-        String[] paths = {"/card/**"};
+        String[] paths = {"/api/card/**"};
 
         return GroupedOpenApi
                 .builder()
@@ -99,7 +111,7 @@ public class SwaggerConfiguration {
     @Profile("!Prod")
     public GroupedOpenApi calendarApi() {
 
-        String[] paths = {"/calendar/**"};
+        String[] paths = {"/api/calendar/**"};
 
         return GroupedOpenApi
                 .builder()

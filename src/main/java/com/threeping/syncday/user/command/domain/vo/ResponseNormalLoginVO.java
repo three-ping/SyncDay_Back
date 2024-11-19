@@ -1,12 +1,10 @@
 package com.threeping.syncday.user.command.domain.vo;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotNull;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,39 +13,36 @@ import java.util.Date;
 @ToString
 @EqualsAndHashCode
 public class ResponseNormalLoginVO {
-    @JsonProperty("access_token")
-    private String accessToken;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    @JsonProperty("access_token_expiry")
-    private Date accessTokenExpiry;
-
-    @JsonProperty("refresh_token")
-    private String refreshToken;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    @JsonProperty("refresh_token_expiry")
-    private Date refreshTokenExpiry;
-
-    @JsonProperty("user_id")
+    @JsonProperty("userId")
+    @Schema(description = "유저 고유번호(PK)", example = "1")
     private Long userId;
 
     @JsonProperty("username")
+    @Schema(description = "유저 이름", example = "장그래")
     private String userName;
 
     @JsonProperty("email")
+    @Schema(description = "유저 이메일", example = "syncday1211@gmail.com")
     private String email;
 
-    @JsonProperty("profilephoto")
+    @JsonProperty("profilePhoto")
+    @Schema(description = "유저 프로필 사진", example = "dachshund.jpg")
     private String profilePhoto;
 
-    @JsonProperty("joinyear")
+    @JsonProperty("joinYear")
+    @Schema(description = "입사연도", example = "2023-01-20")
     private String joinYear;
 
     @JsonProperty("position")
+    @Schema(description = "직책", example = "대리")
     private String position;
 
     @JsonProperty("teamid")
+    @Schema(description = "팀번호", example = "1")
     private Long teamId;
 
+    @JsonProperty("lastaccesstime")
+    @Schema(description = "마지막 로그인 시각", example = "2024-12-11 15:45:30")
+    private String lastAccessTime;
 }

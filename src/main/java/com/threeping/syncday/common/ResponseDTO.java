@@ -10,8 +10,15 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 //필기. 응답 DTO통일
 @Data
@@ -84,5 +91,27 @@ public class ResponseDTO<T> {
         );
     }
 
+    public static ResponseDTO<Object> failValidation(MethodArgumentNotValidException e) {
+        // 첫 번째 에러 메시지만 사용
+        String errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        log.info("예외에서 발생된 에러 메시지: " + errorMessage);
+        // 에러 메시지에 따른 ErrorCode 매핑
+        ErrorCode errorCode;
+        if (errorMessage.contains("영문자, 숫자, 특수문자")) {
+            errorCode = ErrorCode.INVALID_PASSWORD_PATTERN;
+        } else if (errorMessage.contains("8자 이상 20자 이하")) {
+            errorCode = ErrorCode.INVALID_PASSWORD_LENGTH;
+        } else if (errorMessage.contains("3번 이상 연속")) {
+            errorCode = ErrorCode.INVALID_PASSWORD_REPEAT;
+        } else {
+            errorCode = ErrorCode.INVALID_INPUT_VALUE;
+        }
 
+        return new ResponseDTO<>(
+                HttpStatus.BAD_REQUEST,
+                false,
+                null,
+                ExceptionDTO.of(errorCode)
+        );
+    }
 }
