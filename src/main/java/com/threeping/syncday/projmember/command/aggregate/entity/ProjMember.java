@@ -10,6 +10,7 @@ import lombok.Data;
 public class ProjMember {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="proj_member_id")
     private Long projMemberId;
 
