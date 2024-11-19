@@ -1,6 +1,6 @@
 package com.threeping.syncday.proj.command.application.service;
 
-import com.threeping.syncday.proj.command.aggregate.dto.NewProjDTO;
+import com.threeping.syncday.proj.command.aggregate.dto.ProjVO;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +27,13 @@ class AppProjServiceTests {
         String projName ="프로젝트 생성 테스트";
 
         // when
-        NewProjDTO newProjDTO = new NewProjDTO();
-        newProjDTO.setUserId(userId);
-        newProjDTO.setProjName(projName);
+        ProjVO projVO = new ProjVO();
+        projVO.setUserId(userId);
+        projVO.setProjName(projName);
 
         // then
-        ProjDTO newProj = appProjService.addProj(newProjDTO);
-        assertEquals(newProjDTO.getProjName(), newProj.getProjName());
+        ProjDTO newProj = appProjService.addProj(projVO);
+        assertEquals(projVO.getProjName(), newProj.getProjName());
         log.info("newProj: {}", newProj);
     }
 }

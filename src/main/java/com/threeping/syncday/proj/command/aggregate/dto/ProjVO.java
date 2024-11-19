@@ -6,7 +6,10 @@ import lombok.Data;
 import java.sql.Timestamp;
 
 @Data
-public class NewProjDTO {
+public class ProjVO {
+    @JsonProperty("proj_id")
+    private Long projId;
+
     @JsonProperty("user_id")
     private Long userId;
 

@@ -2,7 +2,7 @@ package com.threeping.syncday.proj.command.application.service;
 
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
-import com.threeping.syncday.proj.command.aggregate.dto.NewProjDTO;
+import com.threeping.syncday.proj.command.aggregate.dto.ProjVO;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.command.aggregate.entity.Proj;
 import com.threeping.syncday.proj.command.domain.repository.ProjRepository;
@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
 
 @Slf4j
 @Service
@@ -34,17 +32,25 @@ public class AppProjServiceImpl implements AppProjService {
 
     @Transactional
     @Override
-    public ProjDTO addProj(NewProjDTO newProjDTO) {
+    public ProjDTO addProj(ProjVO projVO) {
 
-        Proj newProj = modelMapper.map(newProjDTO, Proj.class);
+        Proj newProj = modelMapper.map(projVO, Proj.class);
         log.info("newProj: {}", newProj);
 
         Proj addedProj = projRepository.save(newProj);
-        Boolean isUserAdded = infraProjService.requestAddProjOwner(addedProj.getProjId(), newProjDTO.getUserId());
+        Boolean isUserAdded = infraProjService.requestAddProjOwner(addedProj.getProjId(), projVO.getUserId());
         log.debug("isUserAdded: {}", isUserAdded);
         return modelMapper.map(addedProj, ProjDTO.class);
     }
 
+    @Override
+    public ProjDTO modifyProj(ProjVO projVO) {
+
+        Proj foundProj = projRepository.findByProjId(projVO.getProjId());
+
+
+        return null;
+    }
 
     @Transactional
     @Override

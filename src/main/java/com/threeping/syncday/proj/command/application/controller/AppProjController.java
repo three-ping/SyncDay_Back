@@ -1,8 +1,7 @@
 package com.threeping.syncday.proj.command.application.controller;
 
 import com.threeping.syncday.common.ResponseDTO;
-import com.threeping.syncday.proj.command.aggregate.dto.NewProjDTO;
-import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
+import com.threeping.syncday.proj.command.aggregate.dto.ProjVO;
 import com.threeping.syncday.proj.command.application.service.AppProjService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class AppProjController {
     }
 
     @PostMapping("/")
-    public ResponseDTO<?> createProj(@RequestBody NewProjDTO newProj){
+    public ResponseDTO<?> createProj(@RequestBody ProjVO newProj){
         log.info("newProj: {}", newProj);
         return ResponseDTO.ok(appProjService.addProj(newProj));
     }
