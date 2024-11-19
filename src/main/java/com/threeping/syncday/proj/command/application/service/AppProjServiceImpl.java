@@ -2,7 +2,7 @@ package com.threeping.syncday.proj.command.application.service;
 
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
-import com.threeping.syncday.proj.command.aggregate.dto.ProjVO;
+import com.threeping.syncday.proj.command.aggregate.vo.ProjVO;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.command.aggregate.entity.Proj;
 import com.threeping.syncday.proj.command.domain.repository.ProjRepository;
@@ -38,26 +38,38 @@ public class AppProjServiceImpl implements AppProjService {
         log.info("newProj: {}", newProj);
 
         Proj addedProj = projRepository.save(newProj);
-        Boolean isUserAdded = infraProjService.requestAddProjOwner(addedProj.getProjId(), projVO.getUserId());
-        log.debug("isUserAdded: {}", isUserAdded);
+        Boolean isOwnerAdded = infraProjService.requestAddProjOwner(addedProj.getProjId(), projVO.getUserId());
+        log.info("isOwnerAdded: {}", isOwnerAdded);
         return modelMapper.map(addedProj, ProjDTO.class);
     }
 
     @Override
     public ProjDTO modifyProj(ProjVO projVO) {
 
-        Proj foundProj = projRepository.findByProjId(projVO.getProjId());
 
 
-        return null;
+        /* todo: 유효성 검증  */
+        Proj foundProj = projRepository.findById(projVO.getProjId()).orElse(null);
+        log.info("foundProj: {}", foundProj);
+        if (foundProj == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_PROJ);
+        }
+        foundProj.setProjName(projVO.getProjName());
+        foundProj.setStartTime(projVO.getStartTime());
+        foundProj.setEndTime(projVO.getEndTime());
+        foundProj.setVcsType(projVO.getVcsType());
+        foundProj.setVcsProjUrl(projVO.getVcsProjUrl());
+
+        Proj modifiedProj = projRepository.save(foundProj);
+        return modelMapper.map(modifiedProj, ProjDTO.class);
     }
 
     @Transactional
     @Override
     public ProjDTO deleteProj(Long projId) {
         Proj existingProj = projRepository.findByProjId(projId);
-        if(existingProj == null) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        if (existingProj == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_PROJ);
         }
         projRepository.delete(existingProj);
         return modelMapper.map(existingProj, ProjDTO.class);

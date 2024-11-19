@@ -1,7 +1,7 @@
 package com.threeping.syncday.proj.command.application.controller;
 
 import com.threeping.syncday.common.ResponseDTO;
-import com.threeping.syncday.proj.command.aggregate.dto.ProjVO;
+import com.threeping.syncday.proj.command.aggregate.vo.ProjVO;
 import com.threeping.syncday.proj.command.application.service.AppProjService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
