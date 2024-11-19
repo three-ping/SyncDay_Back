@@ -38,6 +38,9 @@ public class ScheduleRepeatCommandServiceImpl implements ScheduleRepeatCommandSe
 
     @Override
     public Long createScheduleRepeat(CreateScheduleRepeatDTO createScheduleRepeatDTO) {
+        if (createScheduleRepeatDTO.getStartTime().after(createScheduleRepeatDTO.getEndTime())) {
+            throw new CommonException(ErrorCode.INVALID_REPEAT_SCHEDULE_START_END);
+        }
         ScheduleRepeat scheduleRepeat = new ScheduleRepeat();
         createScheduleRepeatDtoToEntity(createScheduleRepeatDTO, scheduleRepeat);
         scheduleRepeatRepository.save(scheduleRepeat);
