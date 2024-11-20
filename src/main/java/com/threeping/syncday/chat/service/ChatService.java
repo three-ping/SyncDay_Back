@@ -28,6 +28,7 @@ public class ChatService {
             this.userRepository = userRepository;
         }
 
+
         //  채팅방 목록 조회
         public List<ChatRoom> findAll() {
             return chatRoomRepository.findAll();
@@ -35,6 +36,9 @@ public class ChatService {
 
         //  특정 채팅방 조회
         public ChatRoom findChatRoomByRoomId(String roomId){
+//            ChatRoom chatRoom = this.chatRoomRepository.findChatRoomByRoomId(roomId).orElseThrow(
+//                    () -> new IllegalArgumentException("해당 {roomId}채팅방이 없습니다." + roomId));
+
             return chatRoomRepository.findChatRoomByRoomId(roomId);
         }
 
@@ -72,7 +76,7 @@ public class ChatService {
         }
 
         //  채팅방 채팅 작성
-        public ChatMessage createMessage(ChatMessageDTO chatMessageDTO) {
+        public ChatMessage createMessage(String roomId, ChatMessageDTO chatMessageDTO) {
             ChatMessage chatMessage = ChatMessage.builder ()
                     .messageId ( chatMessageDTO.getMessageId () )
                     .message ( chatMessageDTO.getMessage () )
