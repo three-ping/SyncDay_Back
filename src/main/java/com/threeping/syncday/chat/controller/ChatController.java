@@ -25,13 +25,14 @@ public class ChatController {
 
     // "/app/message"로 보낸 메시지를 처리
         @MessageMapping("/room/{roomId}/message") // "/app/{roomId}/message"로 들어오는 정보 처리
-        @SendTo("/topic/room/{roomId}")  // 받은 반환값을 이 경로로 보내줌
+//        @SendTo("/topic/room/{roomId}")  // 받은 반환값을 이 경로로 보내줌
         public void sendMessage( ChatMessageDTO chatMessageDTO, @DestinationVariable String roomId) {
-            log.info("Received message: {}", chatMessageDTO);
+            log.info("새 메세지 in {} room: {}", roomId, chatMessageDTO);
 
             // 메시지를 저장하거나 추가 처리가 필요하면 서비스 호출
             chatService.createMessage(roomId, chatMessageDTO);
-            messagingTemplate.convertAndSend("/topic/room/" + chatMessageDTO.getRoomId(), chatMessageDTO);
+//            messagingTemplate.convertAndSend("/topic/room/" + chatMessageDTO.getRoomId(), chatMessageDTO);
+            messagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessageDTO);
 
             // "/topic/chatroom"으로 브로드캐스트
 //            return chatMessageDTO;

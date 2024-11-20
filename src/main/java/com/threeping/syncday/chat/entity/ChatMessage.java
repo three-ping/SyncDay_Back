@@ -3,7 +3,11 @@ package com.threeping.syncday.chat.entity;
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import jakarta.persistence.Id;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Document(collection = "chat")
 @Getter
@@ -19,9 +23,11 @@ public class ChatMessage {
     private String senderId;
     private String receiverId;
     private int memberCount;
-    private String memberIds;
+    private List<String> memberIds;
     private ChatType chatType;
-    private String sentTime;
+
+    @CreationTimestamp
+    private LocalDateTime sentTime;
 
 
 }

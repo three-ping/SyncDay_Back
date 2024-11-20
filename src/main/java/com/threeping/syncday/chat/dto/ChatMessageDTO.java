@@ -4,6 +4,9 @@ import com.threeping.syncday.chat.entity.ChatType;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
 @Builder
 public class ChatMessageDTO {
@@ -14,9 +17,9 @@ public class ChatMessageDTO {
     private String senderId;
     private String receiverId;
     private int memberCount;
-    private String memberIds;
+    private List<String> memberIds;
     private ChatType chatType;
-    private String sentTime;
+    private LocalDateTime sentTime;
 
     private FileUploadDTO file;
 
