@@ -49,8 +49,10 @@ public class AppScheduleServiceImpl implements AppScheduleService{
 
         scheduleRepository.saveAndFlush(newSchedule);
 
+        if (newScheduleDTO.getAttendeeIds() != null) {
+            infraScheduleService.requestAddScheduleParticipant(newSchedule.getUserId(), newSchedule.getScheduleId(), newScheduleDTO.getAttendeeIds());
+        }
         // 참석자 추가 요청 (반복 생각은 아직 안함)
-        infraScheduleService.requestAddScheduleParticipant(newSchedule.getUserId(), newSchedule.getScheduleId(), newScheduleDTO.getAttendeeIds());
 
         return modelMapper.map(newSchedule, ScheduleDTO.class);
     }

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kr">
+<head>
+    <title>일정(반복) 참여 요청 알림</title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333; background: linear-gradient(135deg, #a8e6cf, #81c784); padding: 20px; text-align: center;">
+
+<!-- Header with SYNDAY logo -->
+<div style="font-size: 24px; font-weight: bold; color: #ffffff; padding: 10px 0;">
+    SYNCDAY
+</div>
+
+<!-- Notification Container -->
+<div style="max-width: 600px; margin: 20px auto; background-color: rgba(255, 255, 255, 0.9); border-radius: 12px; overflow: hidden; padding: 20px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
+
+    <!-- Notification Title -->
+    <h2 style="color: #81c784; margin: 0 0 10px;">일정(반복) 참여 요청 알림</h2>
+    <p style="color: #555; font-size: 16px;">
+        <strong th:text="${sender}">발신자</strong>님이 <strong th:text="${title}">일정명</strong> 일정(반복)에 참여를 요청하셨습니다.
+    </p>
+
+    <!-- Table with Event Details -->
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; color: #333;">
+        <tr style="background-color: #dcedc8;">
+            <td style="padding: 10px; text-align: left; font-weight: bold;">일정명</td>
+            <td style="padding: 10px; text-align: right;" th:text="${title}">일정명</td>
+        </tr>
+        <tr style="background-color: #c5e1a5;">
+            <td style="padding: 10px; text-align: left; font-weight: bold;">발신자</td>
+            <td style="padding: 10px; text-align: right;" th:text="${sender}">발신자</td>
+        </tr>
+        <tr style="background-color: #dcedc8;">
+            <td style="padding: 10px; text-align: left; font-weight: bold;">첫 일정</td>
+            <td style="padding: 10px; text-align: right;" th:text="${date}">첫 일정 날짜</td>
+        </tr>
+        <tr style="background-color: #c5e1a5;">
+            <td style="padding: 10px; text-align: left; font-weight: bold;">반복 주기</td>
+            <td style="padding: 10px; text-align: right;" th:text="${recurrence}">반복 주기</td>
+        </tr>
+    </table>
+
+    <!-- Buttons -->
+    <div style="margin-top: 20px;">
+        <a href="http://localhost:5000/api/accept" style="
+                display: inline-block;
+                padding: 12px 24px;
+                margin: 0 5px;
+                color: #ffffff;
+                background-color: #81c784;
+                text-decoration: none;
+                border-radius: 24px;
+                font-size: 16px;
+                font-weight: bold;
+                box-shadow: 0px 4px 8px rgba(129, 199, 132, 0.3);">
+            참여 가능
+        </a>
+
+        <a href="http://localhost:5000/api/decline" style="
+                display: inline-block;
+                padding: 12px 24px;
+                margin: 0 5px;
+                color: #ffffff;
+                background-color: #a5d6a7;
+                text-decoration: none;
+                border-radius: 24px;
+                font-size: 16px;
+                font-weight: bold;
+                box-shadow: 0px 4px 8px rgba(165, 214, 167, 0.3);">
+            참여 불가
+        </a>
+    </div>
+</div>
+</body>
+</html>

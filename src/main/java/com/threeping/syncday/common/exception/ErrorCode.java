@@ -24,6 +24,7 @@ public enum ErrorCode {
     INVALID_PASSWORD_PATTERN(40016, HttpStatus.BAD_REQUEST, "비밀번호는 영문자, 숫자, 특수문자를 포함해야 합니다."),
     INVALID_PASSWORD_LENGTH(40017, HttpStatus.BAD_REQUEST, "최소 8자 이상 20자 이하로 구성해야합니다."),
     INVALID_PASSWORD_REPEAT(40018, HttpStatus.BAD_REQUEST, "동일한 문자를 3번 이상 연속해서 사용할 수 없습니다."),
+    INVALID_REPEAT_SCHEDULE_START_END(40021,HttpStatus.BAD_REQUEST,"일정 시작일보다 종료일이 앞설 수 없습니다."),
 
 
     //401
@@ -49,21 +50,12 @@ public enum ErrorCode {
 
     //404
     NOT_FOUND_USER(40401, HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."),
-    NOT_FOUND_STUDY_GROUP(40402, HttpStatus.NOT_FOUND, "스터디 그룹이 존재하지 않습니다."),
-    NOT_FOUND_RECRUITMENT_BOARD(40403, HttpStatus.NOT_FOUND, "모집 게시판이 존재하지 않습니다."),
-    NOT_FOUND_RECRUITMENT_BOARD_COMMENT(40404, HttpStatus.NOT_FOUND, "모집 게시판 댓글이 존재하지 않습니다."),
-    NOT_FOUND_RECRUITMENT_BOARD_REPLY(40405, HttpStatus.NOT_FOUND, "모집 게시판 답글이 존재하지 않습니다."),
-    NOT_FOUND_STUDY_GROUP_MEMBER(40406, HttpStatus.NOT_FOUND, "스터디 그룹 멤버가 존재하지 않습니다."),
-    NOT_FOUND_STUDY_GROUP_BOARD(40407, HttpStatus.NOT_FOUND,    "스터디 그룹 게시판이 존재하지 않습니다."),
-    NOT_FOUND_STUDY_GROUP_BOARD_COMMENT(40408, HttpStatus.NOT_FOUND, "스터디 그룹 게시판 댓글이 존재하지 않습니다."),
-    NOT_FOUND_STUDY_GROUP_BOARD_REPLY(40409, HttpStatus.NOT_FOUND, "스터디 그룹 게시판 답글이 존재하지 않습니다."),
-    NOT_FOUND_STUDY_SCHEDULE(40410, HttpStatus.NOT_FOUND, "스터디 일정이 존재하지 않습니다."),
-    NOT_FOUND_STUDY_SCHEDULE_PARTICIPANT(40411, HttpStatus.NOT_FOUND, "스터디 일정 참가자가 존재하지 않습니다."),
-    NOT_FOUND_PROBLEM(40412, HttpStatus.NOT_FOUND, "문제가 존재하지 않습니다."),
-    NOT_FOUND_CHOICE(40413, HttpStatus.NOT_FOUND, "문제 선택지가 존재하지 않습니다."),
-    NOT_FOUND_SUBMITTED_ANSWER(40414, HttpStatus.NOT_FOUND, "제출된 답변이 존재하지 않습니다."),
-    NOT_FOUND_STUDY_GROUP_NOTICE(40415, HttpStatus.NOT_FOUND, "스터디 그룹 공지가 존재하지 않습니다."),
-    FORBIDDEN_PROBLEM_SUBMISSION_TIMEOUT(40416, HttpStatus.FORBIDDEN, "유효한 문제 제출 시간이 아닙니다."),
+
+
+    // 도메인 별 에러 코드
+    // 04: 프로젝트
+    NOT_FOUND_PROJ(4040400,HttpStatus.NOT_FOUND,"해당ID의 프로젝트가 존재하지 않습니다"),
+    INVALID_REQUEST_PROJ(4010401, HttpStatus.UNAUTHORIZED,"수정 권한이 없습니다"),
 
 
     //500

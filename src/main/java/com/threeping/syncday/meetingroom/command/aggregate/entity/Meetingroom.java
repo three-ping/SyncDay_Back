@@ -26,8 +26,4 @@ public class Meetingroom {
     @Column(name="meetingroom_capacity")
     private Integer meetingroomCapacity;
 
-    // 팀은 여러개의 회의실 예약 가능
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="team_id", nullable = false)
-    private Team team;
 }

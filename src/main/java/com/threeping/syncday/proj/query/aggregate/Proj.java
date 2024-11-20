@@ -12,6 +12,6 @@ public class Proj {
     Timestamp endTime;
     Timestamp createdAt;
     Byte progressStatus;
-    Long userId;
-
+    String vcsType;
+    String vcsProjUrl;
 }
