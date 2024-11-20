@@ -8,4 +8,6 @@ public interface ScheduleService {
     List<ScheduleDTO> getMySchedulesByUserId(Long userId);
 
     List<ScheduleDTO> getOthersSchedulesBySearchUserId(Long searchUserId);
+
+    List<ScheduleDTO> getMyDetailSchedulesByUserIdAndScheduleId(Long userId, Long scheduleId);
 }

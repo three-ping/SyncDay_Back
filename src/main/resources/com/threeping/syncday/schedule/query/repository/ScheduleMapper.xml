@@ -53,4 +53,20 @@
            AND PUBLIC_STATUS = 'PUBLIC'
     </select>
 
+    <select id="selectMyDetailSchedulesByUserIdAndScheduleId" resultMap="scheduleResultMap" parameterType="map">
+        SELECT TITLE
+             , CONTENT
+             , START_TIME
+             , END_TIME
+             , UPDATE_TIME
+             , PUBLIC_STATUS
+             , SCHEDULE_REPEAT_ID
+             , REPEAT_ORDER
+             , MEETING_STATUS
+             , MEETINGROOM_ID
+             , USER_ID
+          FROM TBL_SCHEDULE
+         WHERE USER_ID = #{userId}
+           AND SCHEDULE_ID = #{scheduleId}
+    </select>
 </mapper>

@@ -41,4 +41,14 @@ public class ScheduleServiceImpl implements ScheduleService {
                         .collect(Collectors.toList());
         return scheduleDTOS;
     }
+
+    @Override
+    public List<ScheduleDTO> getMyDetailSchedulesByUserIdAndScheduleId(Long userId, Long scheduleId) {
+        List<Schedule> schedules = scheduleMapper.selectMyDetailSchedulesByUserIdAndScheduleId(userId, scheduleId);
+        List<ScheduleDTO> scheduleDTOS =
+                schedules.stream()
+                        .map(schedule -> modelMapper.map(schedule, ScheduleDTO.class))
+                        .collect(Collectors.toList());
+        return scheduleDTOS;
+    }
 }
