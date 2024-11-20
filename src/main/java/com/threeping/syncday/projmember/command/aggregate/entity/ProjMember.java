@@ -7,13 +7,16 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="TBL_PROJ_MEMBER")
-@IdClass(ProjMemberPK.class)
 public class ProjMember {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="proj_member_id")
+    private Long projMemberId;
+
     @Column(name="proj_id")
     private Long projId;
 
-    @Id
     @Column(name="user_id")
     private Long userId;
 

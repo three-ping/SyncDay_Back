@@ -42,7 +42,23 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+<<<<<<< Updated upstream
 
+=======
+//    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+//    // websocket 설정
+//    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+//    implementation 'org.webjars:stomp-websocket:2.3.3-1'
+//    implementation 'org.webjars:sockjs-client:1.1.2'
+//
+//    // websocket aws
+//    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+//    // file upload
+//    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+//    compileOnly 'commons-io:commons-io:2.11.0'
+>>>>>>> Stashed changes
 
     // Model mapper
     // https://mvnrepository.com/artifact/org.modelmapper/modelmapper

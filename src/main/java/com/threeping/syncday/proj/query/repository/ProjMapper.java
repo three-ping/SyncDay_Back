@@ -10,4 +10,6 @@ public interface ProjMapper {
     List<Proj> selectAllProjs();
 
     List<Proj> selectProjsByUserId(Long userId);
+
+    Proj selectProjById(Long projId);
 }
