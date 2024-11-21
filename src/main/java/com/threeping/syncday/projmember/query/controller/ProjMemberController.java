@@ -25,6 +25,7 @@ public class ProjMemberController {
         return ResponseDTO.ok(projMemberService.getAllProjMembers());
     }
 
+    /* 설명. 프로젝트 탭으로 이동시 유저의 아이디를 통해 프로젝트와 워크스페이스 정보 조회 */
     @GetMapping("/users/{userId}")
     public ResponseDTO<?> findAllProjsByUserId(@PathVariable("userId") Long userId) {
         return ResponseDTO.ok(projMemberService.getProjsByUserId(userId));

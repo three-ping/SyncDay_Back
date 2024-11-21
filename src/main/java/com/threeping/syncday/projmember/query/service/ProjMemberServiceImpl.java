@@ -39,9 +39,11 @@ public class ProjMemberServiceImpl implements ProjMemberService {
         return projMemberDTOS;
     }
 
+
+    /* 설명. 프로젝트 탭으로 이동시 유저의 아이디를 통해 프로젝트와 워크스페이스 정보 조회 */
     @Override
     public List<ProjMemberDTO> getProjsByUserId(Long userId) {
-        List<ProjMember> projMembers = projMemberMapper.selectProjsByUserId(userId);
+        List<ProjMember> projMembers = projMemberMapper.selectProjInfosByUserId(userId);
         List<ProjMemberDTO> projMemberDTOS = projMembers.stream().map(projMember -> modelMapper.map(projMember, ProjMemberDTO.class)).collect(Collectors.toList());
         return projMemberDTOS;
     }
