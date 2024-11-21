@@ -1,9 +1,10 @@
 package com.threeping.syncday.proj.query.aggregate.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.*;
 
 import java.sql.Timestamp;
+
 @Data
 public class ProjDTO {
 
@@ -22,7 +23,7 @@ public class ProjDTO {
     @JsonProperty("created_at")
     Timestamp createdAt;
 
-    @JsonProperty("updated_at")
+    @JsonProperty("progress_status")
     Byte progressStatus;
 
     @JsonProperty("vcs_type")

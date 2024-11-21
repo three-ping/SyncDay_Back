@@ -48,4 +48,18 @@ class ProjMemberServiceTests {
         assertNotNull(projMemberList);
         projMemberList.forEach(x-> log.info("x: {}", x));
     }
+
+
+    @DisplayName("유저 아이디로 프로젝트 조회")
+    @Test
+    void testGetProjsByUserId(){
+
+        // given
+        Long userId = 1L;
+
+        // when
+        List<ProjMemberDTO> projMemberList = projMemberService.getProjsByUserId(userId);
+        assertNotNull(projMemberList);
+        projMemberList.forEach(x-> log.info("x: {}", x));
+    }
 }

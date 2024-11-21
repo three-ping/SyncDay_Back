@@ -2,7 +2,6 @@ package com.threeping.syncday.proj.query.service;
 
 import com.threeping.syncday.proj.query.aggregate.Proj;
 import com.threeping.syncday.proj.query.aggregate.dto.ProjDTO;
-import com.threeping.syncday.proj.query.aggregate.dto.ProjAndMemberDTO;
 import com.threeping.syncday.proj.query.repository.ProjMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
