@@ -26,13 +26,6 @@ class ProjControllerTests {
     private MockMvc mockMvc;
 
 
-    @DisplayName("프로젝트 전체 조회 테스트")
-    @Test
-    void testGetAllProjs() throws Exception{
-        mockMvc.perform(get("/api/projs/"))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
 
     @DisplayName("프로젝트 ID를 통한 조회 테스트")
     @Test

@@ -21,7 +21,6 @@ public class ProjController {
         this.projService = projService;
     }
 
-
     @GetMapping("/{projId}")
     public ResponseDTO<?> findProjById(@PathVariable("projId") Long projId){
         return ResponseDTO.ok(projService.getProjById(projId));
