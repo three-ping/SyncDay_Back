@@ -1,5 +1,6 @@
 package com.threeping.syncday.chat.config;
 
+import com.threeping.syncday.chat.JwtHandShakeInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -24,7 +25,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws") // 웹소켓 핸드쉐이크를 위한 주소. handler 처리 안 할 수 있음
 //                .setAllowedOriginsPatterns("http://localhost:5173")
                 .setAllowedOriginPatterns("*")  // 일단 모두 허용
-                .withSockJS();  // SockJs 설정
+                .withSockJS()  // SockJs 설정
+                .setInterceptors(new JwtHandShakeInterceptor());
     }
 
     @Override
