@@ -1,6 +1,8 @@
 package com.threeping.syncday.chat.controller;
 
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
+import com.threeping.syncday.chat.dto.ChatRoomDTO;
+import com.threeping.syncday.chat.entity.ChatRoom;
 import com.threeping.syncday.chat.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ public class ChatController {
         this.messagingTemplate = messagingTemplate;
     }
 
-    // "/app/message"로 보낸 메시지를 처리
+    // 메세지 전송: "/app/message"로 보낸 메시지를 처리
         @MessageMapping("/room/{roomId}/message") // "/app/{roomId}/message"로 들어오는 정보 처리
 //        @SendTo("/topic/room/{roomId}")  // 받은 반환값을 이 경로로 보내줌
         public void sendMessage( ChatMessageDTO chatMessageDTO, @DestinationVariable String roomId) {
@@ -33,11 +35,22 @@ public class ChatController {
             chatService.createMessage(roomId, chatMessageDTO);
 //            messagingTemplate.convertAndSend("/topic/room/" + chatMessageDTO.getRoomId(), chatMessageDTO);
             messagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessageDTO);
-
-            // "/topic/chatroom"으로 브로드캐스트
-//            return chatMessageDTO;
         }
 
+    // 채팅방 생성
+    @MessageMapping("/roor/create")
+    public void createChatRoom(ChatRoomDTO chatRoomDTO) {
+        ChatRoom newRoom = chatService.createChatRoom(chatRoomDTO);
+
+        messagingTemplate.convertAndSend("/topic/newroom", newRoom);
+    }
+
+    // 채팅방 입장
+    @MessageMapping("/room/{roomId}/join")
+    public void joinChatRoom(@DestinationVariable String roomId, String userId) {
+        log.info("{}user: {} 채팅방 입장.", userId, roomId);
+        messagingTemplate.convertAndSend("/topic/room/" + roomId, "User" + userId + "joined!");
+    }
     }
 
 
