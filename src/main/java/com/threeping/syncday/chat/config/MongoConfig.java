@@ -9,6 +9,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 public class MongoConfig {
     @Bean
     public MongoTemplate mongoTemplate(MongoClient mongoClient) {
-        return new MongoTemplate(mongoClient, "yourDatabaseName");
+        return new MongoTemplate(mongoClient, "chatdb");
     }
 }
