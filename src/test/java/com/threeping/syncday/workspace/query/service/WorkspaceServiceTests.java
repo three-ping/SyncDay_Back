@@ -43,5 +43,7 @@ class WorkspaceServiceTests {
         // when
         List<WorkspaceDTO> workspaceDTOS = workspaceService.getWorkspacesByProjId(projId);
         assertNotNull(workspaceDTOS);
+
+        workspaceDTOS.forEach(x-> log.info("x: {}", x));
     }
 }
