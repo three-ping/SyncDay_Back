@@ -21,6 +21,11 @@ public class ProjController {
         this.projService = projService;
     }
 
+    @GetMapping("/")
+    public ResponseDTO<?> findAllProjs(){
+        return ResponseDTO.ok(projService.getAllProjs());
+    }
+
     @GetMapping("/{projId}")
     public ResponseDTO<?> findProjById(@PathVariable("projId") Long projId){
         return ResponseDTO.ok(projService.getProjById(projId));
