@@ -25,10 +25,13 @@ public class ProjMemberController {
         return ResponseDTO.ok(projMemberService.getAllProjMembers());
     }
 
+    @GetMapping("/users/{userId}")
+    public ResponseDTO<?> findAllProjsByUserId(@PathVariable("userId") Long userId) {
+        return ResponseDTO.ok(projMemberService.getProjsByUserId(userId));
+    }
     @GetMapping("/projs/{projId}")
     public ResponseDTO<?> findProjMemberById(@PathVariable("projId") Long projId) {
 
         return ResponseDTO.ok(projMemberService.getProjMembersByProjId(projId));
-
     }
 }

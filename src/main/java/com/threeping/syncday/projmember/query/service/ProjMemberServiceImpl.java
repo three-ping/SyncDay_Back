@@ -38,4 +38,11 @@ public class ProjMemberServiceImpl implements ProjMemberService {
         List<ProjMemberDTO> projMemberDTOS = projMembers.stream().map(projMember -> modelMapper.map(projMember, ProjMemberDTO.class)).collect(Collectors.toList());
         return projMemberDTOS;
     }
+
+    @Override
+    public List<ProjMemberDTO> getProjsByUserId(Long userId) {
+        List<ProjMember> projMembers = projMemberMapper.selectProjsByUserId(userId);
+        List<ProjMemberDTO> projMemberDTOS = projMembers.stream().map(projMember -> modelMapper.map(projMember, ProjMemberDTO.class)).collect(Collectors.toList());
+        return projMemberDTOS;
+    }
 }
