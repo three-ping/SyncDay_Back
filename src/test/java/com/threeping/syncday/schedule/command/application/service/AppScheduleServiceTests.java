@@ -1,18 +1,16 @@
 package com.threeping.syncday.schedule.command.application.service;
 
-import com.threeping.syncday.common.enumtype.MeetingStatus;
-import com.threeping.syncday.common.enumtype.PublicStatus;
-import com.threeping.syncday.schedule.command.Infrastructure.InfraScheduleService;
+
 import com.threeping.syncday.schedule.command.aggregate.dto.ScheduleDTO;
-import com.threeping.syncday.schedule.command.aggregate.entity.Schedule;
-import com.threeping.syncday.schedule.command.domain.repository.ScheduleRepository;
+
+import com.threeping.syncday.schedule.command.aggregate.entity.MeetingStatus;
+import com.threeping.syncday.schedule.command.aggregate.entity.PublicStatus;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.Timestamp;
 import java.time.Instant;

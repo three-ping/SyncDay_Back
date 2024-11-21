@@ -37,7 +37,7 @@ class ScheduleServiceTests {
     @DisplayName("타인의 일정을 조회한다.")
     @Test
     void testGetOthersSchedulesBySearchUserId() {
-        Long searchUserId = 2L;
+        Long searchUserId = 1L;
 
         // when
         List<ScheduleDTO> publicSchedules = scheduleService.getOthersSchedulesBySearchUserId(searchUserId);
