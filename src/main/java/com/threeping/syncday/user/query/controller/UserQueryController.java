@@ -44,7 +44,7 @@ public class UserQueryController {
     @GetMapping("/profile")
     public ResponseDTO<?> findMyProfile(@AuthenticationPrincipal User user){
         String email = user.getUsername();
-        UserDTO userDTO = userService.findByEmail(email);
+        UserDTO userDTO = userService.findByUserEmail(email);
         return ResponseDTO.ok(userDTO);
     }
 }

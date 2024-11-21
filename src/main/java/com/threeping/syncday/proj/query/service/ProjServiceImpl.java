@@ -1,7 +1,7 @@
 package com.threeping.syncday.proj.query.service;
 
 import com.threeping.syncday.proj.query.aggregate.Proj;
-import com.threeping.syncday.proj.query.aggregate.ProjDTO;
+import com.threeping.syncday.proj.query.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.query.repository.ProjMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ public class ProjServiceImpl implements ProjService {
         this.projMapper = projMapper;
         this.modelMapper = modelMapper;
     }
+
     @Override
     public List<ProjDTO> getAllProjs() {
         List<Proj> projs = projMapper.selectAllProjs();
@@ -29,12 +30,9 @@ public class ProjServiceImpl implements ProjService {
         return projDTOs;
     }
 
-
     @Override
-    public List<ProjDTO> getProjsByUserId(Long userId) {
-        List<Proj> projs = projMapper.selectProjsByUserId(userId);
-        List<ProjDTO> projDTOS
-                 = projs.stream().map(proj -> modelMapper.map(proj, ProjDTO.class)).collect(Collectors.toList());
-        return projDTOS;
+    public ProjDTO getProjById(Long projId) {
+        Proj proj = projMapper.selectProjById(projId);
+        return modelMapper.map(proj, ProjDTO.class);
     }
 }

@@ -5,4 +5,8 @@ import java.util.List;
 
 public interface ProjMemberService {
     List<ProjMemberDTO> getAllProjMembers();
+
+    List<ProjMemberDTO> getProjMembersByProjId(Long projId);
+
+    List<ProjMemberDTO> getProjsByUserId(Long userId);
 }

@@ -1,8 +1,8 @@
 package com.threeping.syncday.schedule.query.aggregate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.threeping.syncday.common.enumtype.MeetingStatus;
-import com.threeping.syncday.common.enumtype.PublicStatus;
+import com.threeping.syncday.schedule.command.aggregate.entity.MeetingStatus;
+import com.threeping.syncday.schedule.command.aggregate.entity.PublicStatus;
 import lombok.Data;
 
 import java.sql.Timestamp;

@@ -2,6 +2,7 @@ package com.threeping.syncday.proj.command.application.service;
 
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
+import com.threeping.syncday.proj.command.aggregate.vo.ProjVO;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.command.aggregate.entity.Proj;
 import com.threeping.syncday.proj.command.domain.repository.ProjRepository;
@@ -11,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
 
 @Slf4j
 @Service
@@ -33,35 +32,44 @@ public class AppProjServiceImpl implements AppProjService {
 
     @Transactional
     @Override
-    public ProjDTO addProj(ProjDTO newProjDTO) {
+    public ProjDTO addProj(ProjVO projVO) {
 
-        Proj newProj = modelMapper.map(newProjDTO, Proj.class);
+        Proj newProj = modelMapper.map(projVO, Proj.class);
         log.info("newProj: {}", newProj);
 
         Proj addedProj = projRepository.save(newProj);
-        Boolean isUserAdded = infraProjService.requestAddProjOwner(addedProj.getProjId(), addedProj.getUserId());
-        log.debug("isUserAdded: {}", isUserAdded);
+        Boolean isOwnerAdded = infraProjService.requestAddProjOwner(addedProj.getProjId(), projVO.getUserId());
+        log.info("isOwnerAdded: {}", isOwnerAdded);
         return modelMapper.map(addedProj, ProjDTO.class);
     }
 
-    @Transactional
     @Override
-    public ProjDTO modifyProj(ProjDTO projDTO) {
-        Proj existingProj = projRepository.findByProjId(projDTO.getProjId());
-        if(existingProj == null) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-        existingProj.setProjName(projDTO.getProjName());
-        Proj updatedProj = projRepository.save(existingProj);
+    public ProjDTO modifyProj(ProjVO projVO) {
 
-        return modelMapper.map(updatedProj, ProjDTO.class);
+
+
+        /* todo: 유효성 검증  */
+        Proj foundProj = projRepository.findById(projVO.getProjId()).orElse(null);
+        log.info("foundProj: {}", foundProj);
+        if (foundProj == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_PROJ);
+        }
+        foundProj.setProjName(projVO.getProjName());
+        foundProj.setStartTime(projVO.getStartTime());
+        foundProj.setEndTime(projVO.getEndTime());
+        foundProj.setVcsType(projVO.getVcsType());
+        foundProj.setVcsProjUrl(projVO.getVcsProjUrl());
+
+        Proj modifiedProj = projRepository.save(foundProj);
+        return modelMapper.map(modifiedProj, ProjDTO.class);
     }
+
     @Transactional
     @Override
     public ProjDTO deleteProj(Long projId) {
         Proj existingProj = projRepository.findByProjId(projId);
-        if(existingProj == null) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        if (existingProj == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_PROJ);
         }
         projRepository.delete(existingProj);
         return modelMapper.map(existingProj, ProjDTO.class);

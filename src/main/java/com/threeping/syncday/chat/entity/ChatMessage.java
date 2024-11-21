@@ -24,7 +24,7 @@ public class ChatMessage {
     private String receiverId;
     private int memberCount;
     private List<String> memberIds;
-    private ChatType chatType;
+    private ChatMessageDTO.ChatType chatType;
 
     @CreationTimestamp
     private LocalDateTime sentTime;

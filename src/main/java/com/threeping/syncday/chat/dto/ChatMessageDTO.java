@@ -1,6 +1,5 @@
 package com.threeping.syncday.chat.dto;
 
-import com.threeping.syncday.chat.entity.ChatType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -24,4 +23,7 @@ public class ChatMessageDTO {
     private FileUploadDTO file;
 
 
+    public enum ChatType {
+        ENTER, TALK, LEAVE
+    }
 }

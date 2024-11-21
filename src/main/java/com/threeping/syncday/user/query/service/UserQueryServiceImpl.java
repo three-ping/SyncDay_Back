@@ -75,6 +75,28 @@ class UserQueryServiceImpl implements UserQueryService {
         return userDTO;
     }
 
+    @Override
+    public UserDTO findByUserEmail(String email) {
+        UserEntity user = userMapper.findByEmail(email);
+
+        if (user == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_USER);
+        }
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(user.getUserId());
+        userDTO.setUserName(user.getUserName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setProfilePhoto(user.getProfilePhoto());
+        userDTO.setPhoneNumber(user.getPhoneNumber());
+        userDTO.setPosition(user.getPosition());
+        userDTO.setJoinYear(timeStampToString(user.getJoinYear()));
+        userDTO.setLastAccessTime(user.getLastAccessTime().toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME));
+        userDTO.setTeamId(user.getTeamId());
+
+        return userDTO;
+    }
+
     private String timeStampToString(Timestamp joinYear) {
         return joinYear.toLocalDateTime()
                 .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
