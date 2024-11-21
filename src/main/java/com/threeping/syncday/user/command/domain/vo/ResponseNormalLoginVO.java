@@ -18,7 +18,7 @@ public class ResponseNormalLoginVO {
     @Schema(description = "유저 고유번호(PK)", example = "1")
     private Long userId;
 
-    @JsonProperty("username")
+    @JsonProperty("userName")
     @Schema(description = "유저 이름", example = "장그래")
     private String userName;
 
@@ -38,11 +38,11 @@ public class ResponseNormalLoginVO {
     @Schema(description = "직책", example = "대리")
     private String position;
 
-    @JsonProperty("teamid")
+    @JsonProperty("teamId")
     @Schema(description = "팀번호", example = "1")
     private Long teamId;
 
-    @JsonProperty("lastaccesstime")
+    @JsonProperty("lastAccessTime")
     @Schema(description = "마지막 로그인 시각", example = "2024-12-11 15:45:30")
     private String lastAccessTime;
 }
