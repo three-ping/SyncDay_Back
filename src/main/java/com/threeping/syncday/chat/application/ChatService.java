@@ -1,4 +1,4 @@
-package com.threeping.syncday.chat.service;
+package com.threeping.syncday.chat.application;
 
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import com.threeping.syncday.chat.dto.ChatRoomDTO;

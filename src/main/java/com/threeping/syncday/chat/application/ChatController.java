@@ -1,14 +1,12 @@
-package com.threeping.syncday.chat.controller;
+package com.threeping.syncday.chat.application;
 
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import com.threeping.syncday.chat.dto.ChatRoomDTO;
 import com.threeping.syncday.chat.entity.ChatRoom;
-import com.threeping.syncday.chat.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
