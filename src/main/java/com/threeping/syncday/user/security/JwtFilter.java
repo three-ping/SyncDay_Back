@@ -106,9 +106,22 @@ public class JwtFilter extends OncePerRequestFilter {
         // 4) Claims 기반으로 Authentication 객체 설정
         // 5) SecurityContext에 Authentication 객체 저장
         log.info("processRefreshToken method start");
-        String refreshToken = extractRefreshTokenFromCookie(request);
+//        String refreshToken = extractRefreshTokenFromCookie(request);
+
+        String refreshToken = null;
+        try {
+            refreshToken = extractRefreshTokenFromCookie(request);
+        } catch (CommonException e) {
+            log.info("쿠키에서 Refresh Token을 찾지 못했습니다. 헤더에서 검사합니다.");
+        }
+
+        // 2. 헤더에서 Refresh Token 추출 시도
+        if (refreshToken == null) {
+            refreshToken = extractRefreshTokenFromHeader(request);
+        }
 
         if(refreshToken == null) {
+            log.info("rt이 존재하지 않음");
             throw new CommonException(ErrorCode.NOT_FOUND_REFRESH_TOKEN);
         }
 
