@@ -11,6 +11,9 @@ public class WorkspaceInfoDTO {
     @JsonProperty("workspace_id")
     private Long workspaceId;
 
+    @JsonProperty("workspace_name")
+    private String workspaceName;
+
     @JsonProperty("cardboards")
     private List<CardBoardVO> cardBoards;
 }

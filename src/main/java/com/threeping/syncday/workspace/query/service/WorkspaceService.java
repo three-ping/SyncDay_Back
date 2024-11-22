@@ -11,6 +11,6 @@ public interface WorkspaceService {
 
     List<WorkspaceDTO> getWorkspacesByProjId(Long projId);
 
-    public WorkspaceInfoDTO getWorkspaceInfo(Long workspaceId);
+    WorkspaceInfoDTO getWorkspaceInfo(Long workspaceId);
 
 }

@@ -41,6 +41,7 @@
 
     <resultMap id="workspaceInfoMap" type="com.threeping.syncday.workspace.query.aggregate.WorkspaceInfoDTO">
         <id property="workspaceId" column="workspace_id"/>
+        <result property="workspaceName" column="workspace_name"></result>
         <collection property="cardBoards" column="workspace_id"
                     select="selectCardBoardsByWorkspaceId"/>
     </resultMap>
@@ -92,7 +93,9 @@
 
     <!-- Select Workspace -->
     <select id="selectWorkspaceById" resultMap="workspaceInfoMap">
-        SELECT workspace_id
+        SELECT
+                WORKSPACE_ID
+               ,WORKSPACE_NAME
         FROM TBL_WORKSPACE
         WHERE workspace_id = #{workspaceId}
     </select>
