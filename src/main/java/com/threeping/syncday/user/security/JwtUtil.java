@@ -2,6 +2,7 @@ package com.threeping.syncday.user.security;
 
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
+import com.threeping.syncday.user.command.domain.aggregate.CustomUser;
 import com.threeping.syncday.user.query.service.UserQueryService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -62,20 +63,18 @@ public class JwtUtil {
     // At 생성 로직
     public String generateAccessToken(String userEmail) {
 
-        User userDetails = (User) userQueryService.loadUserByUsername(userEmail);
+        CustomUser user = (CustomUser) userQueryService.loadUserByUsername(userEmail);
 
         Claims claims = Jwts.claims().setSubject(userEmail);
-        claims.put("auth", userDetails.getAuthorities().stream()
+        claims.put("userName", user.getUserName());
+        claims.put("userId", user.getUserId());
+        claims.put("profilePhoto", user.getProfilePhoto());
+
+        claims.put("auth", user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
 
         return buildToken(claims, accessExpiration);
-    }
-
-    // Rt 생성 로직
-    public String generateRefreshToken(String userEmail) {
-        Claims claims = Jwts.claims().setSubject(userEmail);
-        return buildToken(claims, refreshExpiration);
     }
 
     // Token 생성 공통 로직
@@ -86,5 +85,17 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS512 ,secret)
                 .compact();
+    }
+
+    public boolean isTokenExpired(String token) {
+        Claims claims = parseClaims(token);
+
+        return claims.getExpiration().before(new Date());
+    }
+
+    public Long getRemainingTime(String token) {
+        Claims claims = parseClaims(token);
+
+        return claims.getExpiration().getTime() - new Date().getTime();
     }
 }
