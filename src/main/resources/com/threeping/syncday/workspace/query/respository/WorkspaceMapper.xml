@@ -37,4 +37,84 @@
         FROM    TBL_WORKSPACE
        WHERE   PROJ_ID = #{ projId }
     </select>
+
+
+    <resultMap id="workspaceInfoMap" type="com.threeping.syncday.workspace.query.aggregate.WorkspaceInfoDTO">
+        <id property="workspaceId" column="workspace_id"/>
+        <collection property="cardBoards" column="workspace_id"
+                    select="selectCardBoardsByWorkspaceId"/>
+    </resultMap>
+
+
+    <resultMap id="cardBoardMap" type="com.threeping.syncday.workspace.query.aggregate.CardBoardVO">
+        <id property="cardboardId" column="cardboard_id"/>
+        <result property="title" column="title"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="progressStatus" column="progress_status"/>
+        <result property="vcsType" column="vcs_type"/>
+        <result property="vcsMilestoneUrl" column="vcs_milestone_url"/>
+        <result property="workspaceId" column="workspace_id"/>
+        <collection property="cards" column="cardboard_id"
+                    select="selectCardsByCardBoardId"/>
+    </resultMap>
+
+    <resultMap id="cardMap" type="com.threeping.syncday.workspace.query.aggregate.CardVO">
+        <id property="cardId" column="card_id"/>
+        <result property="cardTitle" column="card_title"/>
+        <result property="cardContent" column="card_content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="vcsObjectType" column="vcs_object_type"/>
+        <result property="vcsObjectUrl" column="vcs_object_url"/>
+        <result property="cardboardId" column="cardboard_id"/>
+        <result property="tagId" column="tag_id"/>
+        <result property="tagName" column="tag_name"/>
+        <result property="tagColor" column="tag_color"/>
+        <result property="cardboardTitle" column="cardboard_title"/>
+        <result property="workspaceId" column="workspace_id"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="creatorName" column="creator_name"/>
+        <result property="creatorEmail" column="creator_email"/>
+        <result property="creatorProfileUrl" column="creator_profile_url"/>
+        <result property="creatorTeamId" column="creator_team_id"/>
+        <result property="assigneeId" column="assignee_id"/>
+        <result property="assigneeName" column="assignee_name"/>
+        <result property="assigneeEmail" column="assignee_email"/>
+        <result property="assigneeProfileUrl" column="assignee_profile_url"/>
+        <result property="assigneeTeamId" column="assignee_team_id"/>
+        <result property="creatorTeamName" column="creator_team_name"/>
+        <result property="assigneeTeamName" column="assignee_team_name"/>
+    </resultMap>
+
+
+    <!-- Select Workspace -->
+    <select id="selectWorkspaceById" resultMap="workspaceInfoMap">
+        SELECT workspace_id
+        FROM TBL_WORKSPACE
+        WHERE workspace_id = #{workspaceId}
+    </select>
+    <select id="selectCardBoardsByWorkspaceId" resultMap="cardBoardMap">
+        SELECT cardboard_id,
+               title,
+               created_at,
+               start_time,
+               end_time,
+               progress_status,
+               vcs_type,
+               vcs_milestone_url,
+               workspace_id
+        FROM TBL_CARDBOARD
+        WHERE workspace_id = #{workspaceId}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="selectCardsByCardBoardId" resultMap="cardMap">
+        SELECT *
+        FROM VW_CARD_INFO
+        WHERE cardboard_id = #{cardboardId}
+        ORDER BY created_at DESC
+    </select>
 </mapper>

@@ -3,6 +3,7 @@ package com.threeping.syncday.workspace.query.service;
 
 import com.threeping.syncday.workspace.query.aggregate.Workspace;
 import com.threeping.syncday.workspace.query.aggregate.WorkspaceDTO;
+import com.threeping.syncday.workspace.query.aggregate.WorkspaceInfoDTO;
 import com.threeping.syncday.workspace.query.respository.WorkspaceMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -37,5 +38,10 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     public List<WorkspaceDTO> getWorkspacesByProjId(Long projId) {
        List<Workspace> workspaces= workspaceMapper.selectWorkspacesByProjId(projId);
        return workspaces.stream().map(workspace -> modelMapper.map(workspace, WorkspaceDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public WorkspaceInfoDTO getWorkspaceInfo(Long workspaceId) {
+        return workspaceMapper.selectWorkspaceById(workspaceId);
     }
 }
