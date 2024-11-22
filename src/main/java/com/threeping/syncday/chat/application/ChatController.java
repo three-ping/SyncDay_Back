@@ -29,7 +29,7 @@ public class ChatController {
 
     // 메세지 전송: "/app/message"로 보낸 메시지를 처리
         @MessageMapping("/room/message/{roomId}") // "/app/{roomId}/message"로 들어오는 정보 처리
-        @SendTo("/topic/room/message/{roomId}")  // 받은 반환값을 이 경로로 보내줌
+        @SendTo("/topic/room/message/{roomId}")  // 받은 메세지를 이 경로로 보내줌
         public void sendMessage(ChatMessageDTO chatMessageDTO,
                                 @DestinationVariable String roomId,
                                 SimpMessageHeaderAccessor headerAccessor) {
