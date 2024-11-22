@@ -4,13 +4,17 @@ import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import com.threeping.syncday.chat.dto.ChatRoomDTO;
 import com.threeping.syncday.chat.entity.ChatMessage;
 import com.threeping.syncday.chat.entity.ChatRoom;
+import com.threeping.syncday.chat.entity.ChatType;
 import com.threeping.syncday.chat.repository.ChatMessageRepository;
 import com.threeping.syncday.chat.repository.ChatRoomRepository;
+import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.command.domain.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,19 +23,24 @@ public class ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
+    private final SimpMessagingTemplate messagingTemplate; // 특정 사용자에게 메시지 전달 시 사용
+
 
     @Autowired
     public ChatService(ChatMessageRepository chatMessageRepository,
                        ChatRoomRepository chatRoomRepository,
-                       UserRepository userRepository) {
+                       UserRepository userRepository,
+                       SimpMessagingTemplate messagingTemplate) {
         this.chatMessageRepository = chatMessageRepository;
         this.chatRoomRepository = chatRoomRepository;
         this.userRepository = userRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
 
     //  채팅방 목록 조회
-    public List<ChatRoom> findUserChat(String userId) {
+    public List<ChatRoom> findUserChat(Long userId) {
+
         return chatRoomRepository.findByMemberId(userId);
     }
 
@@ -41,6 +50,11 @@ public class ChatService {
         return chatRoomRepository.findChatRoomByRoomId(roomId).orElseThrow(
                 () -> new IllegalArgumentException("해당 {roomId}채팅방이 없습니다." + roomId));
 
+    }
+
+    // 멤버 조회
+    public List<UserEntity> getAllUsers() {
+        return userRepository.findAll();
     }
 
     //  채팅방 생성(멤버 필터)
@@ -97,6 +111,35 @@ public class ChatService {
     }
 
 
+    // 멤버 초대
+    public ChatRoom inviteUser(String roomId, List<String> userIds) {
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId(roomId)
+                .orElseThrow(() -> new RuntimeException("해당 채팅방이 존재하지 않습니다."));
+
+        List<String> memberIds = new ArrayList<>(chatRoom.getMemberIds());
+        memberIds.addAll(userIds);
+        chatRoom.setMemberIds(memberIds);
+
+        ChatRoom updatedRoom = chatRoomRepository.save(chatRoom);
+
+        // 초대된 사용자들의 입장 메시지 생성 및 저장
+        for (Long userId : userIds) {
+            UserEntity user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+            ChatMessage enterMessage = new ChatMessage();
+            enterMessage.setRoomId(roomId);
+            enterMessage.setSenderId(senderId);
+            enterMessage.setMessage(user.getUserName() + "님이 입장하셨습니다.");
+            enterMessage.setChatType(ChatType.ENTER);
+            enterMessage.setSentTime(LocalDateTime.now());
+            ChatMessage savedMessage = chatMessageRepository.save(enterMessage);
+
+            // 입장 메시지를 WebSocket을 통해 전송
+            ChatMessageDTO chatMessage = convertToDto(savedMessage);
+            messagingTemplate.convertAndSend("/topic/messages/" + roomId, chatMessage);
+    }
+
         // 채팅방 이름 수정(단체톡방 일 시)
         public ChatRoom updateRoomName(String roomId, String newName) {
             ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId(roomId)
@@ -105,23 +148,49 @@ public class ChatService {
             chatRoom.setChatRoomName(newName);
             return chatRoomRepository.save(chatRoom);
         }
-        //  채팅방 채팅 작성
-        public ChatMessage createMessage(String roomId, ChatMessageDTO chatMessageDTO) {
-            ChatMessage chatMessage = ChatMessage.builder ()
-                    .messageId ( chatMessageDTO.getMessageId () )
-                    .message ( chatMessageDTO.getMessage () )
-                    .roomId ( chatMessageDTO.getRoomId () )
-                    .senderId ( chatMessageDTO.getSenderId () )
-                    .sentTime (LocalDateTime.now())
-                    .receiverId ( chatMessageDTO.getReceiverId () )
-                    .memberIds ( chatMessageDTO.getMemberIds () )
-                    .memberCount ( chatMessageDTO.getMemberCount () )
-                    .chatType ( chatMessageDTO.getChatType () )
-                    .build ();
-            return chatMessageRepository.save ( chatMessage );
+        // 채팅방 정보 업데이트를 모든 참여자에게 브로드캐스트
+        messagingTemplate.convertAndSend("/topic/rooms/" + roomId + "/update", updatedRoom);
+
+        // 새로 초대된 사용자들에게 채팅방 목록 업데이트 알림
+        userIds.forEach(userId -> {
+            messagingTemplate.convertAndSend("/topic/user/" + userId + "/rooms/update", getAllRooms());
+        });
+
+        return updatedRoom;
+    }
+}
+
+//  채팅방 채팅 작성
+        public void createMessage(String roomId, ChatMessageDTO chatMessageDTO) {
+
+    ChatMessage chatMessage = new ChatMessage();
+    chatMessage.setRoomId(roomId);
+    chatMessage.setSenderId(chatMessage.getSenderId());
+    chatMessage.setMessage(chatMessage.getMessage());
+    chatMessage.setMessageId(chatMessage.getMessageId());
+    chatMessage.setReceiverId(chatMessage.getReceiverId());
+    chatMessage.setMemberCount(chatMessage.getMemberCount());
+    chatMessage.setMemberIds(chatMessage.getMemberIds());
+    chatMessage.setSentTime(LocalDateTime.now());
+    chatMessage.setChatType(ChatType.valueOf(chatMessage.getChatType().name()));
+
+    chatMessageRepository.save(chatMessage);
         }
+
+    // 메세지 db에 저장
+    private ChatMessageDTO convertToDto(ChatMessage chat) {
+            ChatMessageDTO messageDTO =  new ChatMessageDTO();
+            messageDTO.setRoomId(chat.getRoomId());
+            messageDTO.setSenderId(chat.getSenderId());
+            messageDTO.setMessage(chat.getMessage());
+            messageDTO.setChatType(ChatType.valueOf(chat.getChatType().name()));
+
+            return messageDTO;
+        }
+
 //  채팅방&채팅 내용 검색
 
 //  첨부 파일 업로드
 }
+
 

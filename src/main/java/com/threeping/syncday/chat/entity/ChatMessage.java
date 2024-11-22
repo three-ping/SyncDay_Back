@@ -1,6 +1,5 @@
 package com.threeping.syncday.chat.entity;
 
-import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,7 +23,7 @@ public class ChatMessage {
     private String receiverId;
     private int memberCount;
     private List<String> memberIds;
-    private ChatMessageDTO.ChatType chatType;
+    private ChatType chatType;
 
     @CreationTimestamp
     private LocalDateTime sentTime;
