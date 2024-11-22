@@ -96,18 +96,31 @@ public class ChatService {
 //        }
 
     //  특정 채팅방 퇴장
-    public void leaveChatRoom(String roomId, Long userId) {
+    public ChatRoom leaveChatRoom(String roomId, Long userId) {
         ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
 
-        chatRoom.getMemberIds().remove(userId);
-        chatRoom.setMemberCount(chatRoom.getMemberIds().size());
+        List<String> memberIds = new ArrayList<>(chatRoom.getMemberIds());
+        memberIds.remove(userId);
+        chatRoom.setMemberIds(memberIds);
+
+        LocalDateTime leaveTime = LocalDateTime.now();  // 채팅방 나간 시간
+
+        ChatMessage leaveMessage = new ChatMessage();
+        leaveMessage.setRoomId(roomId);
+        leaveMessage.getSenderId(userId);
+        leaveMessage.setChatType(ChatType.LEAVE);
+        leaveMessage.setSentTime(leaveTime);
+        chatMessageRepository.save(leaveMessage);
+        ChatRoom updatedChatRoom = chatRoomRepository.save(chatRoom);
 
         if (chatRoom.getMemberCount() == 0) {   // 채팅방에 멤버가 1명이면 자동 삭제됨
             chatRoomRepository.delete(chatRoom);
         } else {
             chatRoomRepository.save(chatRoom);
         }
+
+        return updatedChatRoom;
     }
 
 
@@ -123,13 +136,13 @@ public class ChatService {
         ChatRoom updatedRoom = chatRoomRepository.save(chatRoom);
 
         // 초대된 사용자들의 입장 메시지 생성 및 저장
-        for (Long userId : userIds) {
+        for (String userName : userIds) {
             UserEntity user = userRepository.findByUserId(userId)
                     .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
             ChatMessage enterMessage = new ChatMessage();
             enterMessage.setRoomId(roomId);
-            enterMessage.setSenderId(senderId);
+//            enterMessage.setSenderId(senderId);
             enterMessage.setMessage(user.getUserName() + "님이 입장하셨습니다.");
             enterMessage.setChatType(ChatType.ENTER);
             enterMessage.setSentTime(LocalDateTime.now());
@@ -139,26 +152,27 @@ public class ChatService {
             ChatMessageDTO chatMessage = convertToDto(savedMessage);
             messagingTemplate.convertAndSend("/topic/messages/" + roomId, chatMessage);
     }
-
-        // 채팅방 이름 수정(단체톡방 일 시)
-        public ChatRoom updateRoomName(String roomId, String newName) {
-            ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId(roomId)
-                    .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
-
-            chatRoom.setChatRoomName(newName);
-            return chatRoomRepository.save(chatRoom);
-        }
         // 채팅방 정보 업데이트를 모든 참여자에게 브로드캐스트
         messagingTemplate.convertAndSend("/topic/rooms/" + roomId + "/update", updatedRoom);
 
         // 새로 초대된 사용자들에게 채팅방 목록 업데이트 알림
         userIds.forEach(userId -> {
-            messagingTemplate.convertAndSend("/topic/user/" + userId + "/rooms/update", getAllRooms());
+            messagingTemplate.convertAndSend("/topic/user/" + userId + "/rooms/update", findUserChat());
         });
 
         return updatedRoom;
     }
-}
+
+        // 채팅방 이름 수정(단체톡방 일 시)
+        public ChatRoom updateRoomName (String roomId, String newRoom) {
+            ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId(roomId)
+                    .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
+
+            chatRoom.setChatRoomName(newRoom);
+            return chatRoomRepository.save(chatRoom);
+        }
+
+
 
 //  채팅방 채팅 작성
         public void createMessage(String roomId, ChatMessageDTO chatMessageDTO) {
