@@ -1,7 +1,7 @@
 package com.threeping.syncday.schedule.query.repository;
 
-import com.threeping.syncday.schedule.query.aggregate.Schedule;
 import com.threeping.syncday.schedule.query.aggregate.ScheduleDTO;
+import com.threeping.syncday.schedule.query.aggregate.ScheduleDetailDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,10 +9,10 @@ import java.util.List;
 
 @Mapper
 public interface ScheduleMapper {
-    List<Schedule> selectMySchedulesByUserId(Long userId);
+    List<ScheduleDTO> selectMySchedulesByUserId(Long userId);
 
-    List<Schedule> selectOthersSchedulesBySearchUserId(Long searchUserId);
+    List<ScheduleDTO> selectOthersSchedulesBySearchUserId(Long searchUserId);
 
-    List<Schedule> selectMyDetailSchedulesByUserIdAndScheduleId(@Param("userId") Long userId,
-                                                                @Param("scheduleId") Long scheduleId);
+    List<ScheduleDetailDTO> selectMyDetailSchedulesByUserIdAndScheduleId(@Param("userId") Long userId,
+                                                                         @Param("scheduleId") Long scheduleId);
 }
