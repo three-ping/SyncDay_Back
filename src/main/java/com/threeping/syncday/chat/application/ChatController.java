@@ -62,6 +62,7 @@ public class ChatController {
 //        messagingTemplate.convertAndSend("/topic/room/" + roomId, "User" + userId + "joined!");
     }
 
+    // 채팅방 나가기
     @PostMapping("/room/{roomId}/leave")
     public ChatRoom leaveChatRoom(@PathVariable String roomId, @RequestParam Long userId) {
         return chatService.leaveChatRoom(roomId, userId))}
