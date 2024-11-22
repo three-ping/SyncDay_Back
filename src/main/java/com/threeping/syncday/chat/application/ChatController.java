@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -45,8 +46,8 @@ public class ChatController {
 
     // 채팅방 목록 조회
     @GetMapping("/room")
-    public List<ChatRoom> findAllChatRooms(@RequestParam Long userId) {
-        return chatService.findUserChat(userId);
+    public List<ChatRoom> findAllChatRooms() {
+        return chatService.findUserChat();
     }
 
     // 채팅방 생성
@@ -56,17 +57,22 @@ public class ChatController {
     }
 
     // 채팅방 입장
-    @MessageMapping("/room/{roomId}/join")
-    public void joinChatRoom(@DestinationVariable String roomId, String userId) {
+    @GetMapping("/room/{roomId}/join")
+    public void joinChatRoom(@PathVariable String roomId, @RequestParam Long userId) {
         log.info("{}user: {} 채팅방 입장.", userId, roomId);
-//        messagingTemplate.convertAndSend("/topic/room/" + roomId, "User" + userId + "joined!");
     }
 
     // 채팅방 나가기
     @PostMapping("/room/{roomId}/leave")
-    public ChatRoom leaveChatRoom(@PathVariable String roomId, @RequestParam Long userId) {
-        return chatService.leaveChatRoom(roomId, userId))}
+    public ChatRoom leaveChatRoom(@PathVariable String roomId, @RequestParam String userId) {
+        return chatService.leaveChatRoom(roomId, userId);
+    }
 
-
+//    // 기존 채팅방에 멤버 초대(추가)
+//    @PostMapping("/room/{roomId}/invite")
+//    public ChatRoom inviteMember(@PathVariable String roomId, @RequestBody Map<String, List<String>> request) {
+//        List<String> userIds = request.get("userIds");
+//        return chatService.inviteUser(roomId, userIds);
+//    }
 
  }

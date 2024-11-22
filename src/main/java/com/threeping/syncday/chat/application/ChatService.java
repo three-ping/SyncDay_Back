@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ChatService {
@@ -37,11 +38,12 @@ public class ChatService {
         this.messagingTemplate = messagingTemplate;
     }
 
+    private Map<String, ChatMessage> chatMessageMap;
 
     //  채팅방 목록 조회
-    public List<ChatRoom> findUserChat(Long userId) {
+    public List<ChatRoom> findUserChat() {
 
-        return chatRoomRepository.findByMemberId(userId);
+        return chatRoomRepository.findAll();
     }
 
     //  특정 채팅방 조회
@@ -53,9 +55,9 @@ public class ChatService {
     }
 
     // 멤버 조회
-    public List<UserEntity> getAllUsers() {
-        return userRepository.findAll();
-    }
+//    public List<UserEntity> getAllUsers() {
+//        return userRepository.findAll();
+//    }
 
     //  채팅방 생성(멤버 필터)
     public ChatRoom createChatRoom(ChatRoomDTO chatRoomDTO) {
@@ -84,19 +86,9 @@ public class ChatService {
         return chatRoomRepository.save(chatRoom);
     }
 
-    //  특정 채팅방 입장
-//        public ChatRoom joinChatRoom (String roomId, String userId) {
-//            ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId ( roomId );
-//
-//            if (chatRoom == null) {
-//                throw new IllegalArgumentException ("채팅방이 존재하지 않습니다.");
-//            }
-//            chatRoom.setMemberCount(chatRoom.getMemberCount () + 1);
-//            return chatRoomRepository.save ( chatRoom );
-//        }
 
     //  특정 채팅방 퇴장
-    public ChatRoom leaveChatRoom(String roomId, Long userId) {
+    public ChatRoom leaveChatRoom(String roomId, String userId) {
         ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
 
@@ -108,7 +100,7 @@ public class ChatService {
 
         ChatMessage leaveMessage = new ChatMessage();
         leaveMessage.setRoomId(roomId);
-        leaveMessage.getSenderId(userId);
+        leaveMessage.setSenderId(userId);
         leaveMessage.setChatType(ChatType.LEAVE);
         leaveMessage.setSentTime(leaveTime);
         chatMessageRepository.save(leaveMessage);
@@ -125,43 +117,43 @@ public class ChatService {
 
 
     // 멤버 초대
-    public ChatRoom inviteUser(String roomId, List<String> userIds) {
-        ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId(roomId)
-                .orElseThrow(() -> new RuntimeException("해당 채팅방이 존재하지 않습니다."));
-
-        List<String> memberIds = new ArrayList<>(chatRoom.getMemberIds());
-        memberIds.addAll(userIds);
-        chatRoom.setMemberIds(memberIds);
-
-        ChatRoom updatedRoom = chatRoomRepository.save(chatRoom);
-
-        // 초대된 사용자들의 입장 메시지 생성 및 저장
-        for (String userName : userIds) {
-            UserEntity user = userRepository.findByUserId(userId)
-                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-            ChatMessage enterMessage = new ChatMessage();
-            enterMessage.setRoomId(roomId);
-//            enterMessage.setSenderId(senderId);
-            enterMessage.setMessage(user.getUserName() + "님이 입장하셨습니다.");
-            enterMessage.setChatType(ChatType.ENTER);
-            enterMessage.setSentTime(LocalDateTime.now());
-            ChatMessage savedMessage = chatMessageRepository.save(enterMessage);
-
-            // 입장 메시지를 WebSocket을 통해 전송
-            ChatMessageDTO chatMessage = convertToDto(savedMessage);
-            messagingTemplate.convertAndSend("/topic/messages/" + roomId, chatMessage);
-    }
-        // 채팅방 정보 업데이트를 모든 참여자에게 브로드캐스트
-        messagingTemplate.convertAndSend("/topic/rooms/" + roomId + "/update", updatedRoom);
-
-        // 새로 초대된 사용자들에게 채팅방 목록 업데이트 알림
-        userIds.forEach(userId -> {
-            messagingTemplate.convertAndSend("/topic/user/" + userId + "/rooms/update", findUserChat());
-        });
-
-        return updatedRoom;
-    }
+//    public ChatRoom inviteUser(String roomId, List<Long> userIds ) {
+//        ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId(roomId)
+//                .orElseThrow(() -> new RuntimeException("해당 채팅방이 존재하지 않습니다."));
+//
+//        List<String> memberIds = new ArrayList<>(chatRoom.getMemberIds());
+//        memberIds.addAll(userIds);
+//        chatRoom.setMemberIds(memberIds);
+//
+//        ChatRoom updatedRoom = chatRoomRepository.save(chatRoom);
+//
+//        // 초대된 사용자들의 입장 메시지 생성 및 저장
+//        for (String userName : userIds) {
+//            UserEntity user = userRepository.findByUserId(userIds)
+//                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+//
+//            ChatMessage enterMessage = new ChatMessage();
+//            enterMessage.setRoomId(roomId);
+////            enterMessage.setSenderId(senderId);
+//            enterMessage.setMessage(user.getUserName() + "님이 입장하셨습니다.");
+//            enterMessage.setChatType(ChatType.ENTER);
+//            enterMessage.setSentTime(LocalDateTime.now());
+//            ChatMessage savedMessage = chatMessageRepository.save(enterMessage);
+//
+//            // 입장 메시지를 WebSocket을 통해 전송
+//            ChatMessageDTO chatMessage = convertToDto(savedMessage);
+//            messagingTemplate.convertAndSend("/topic/messages/" + roomId, chatMessage);
+//    }
+//        // 채팅방 정보 업데이트를 모든 참여자에게 브로드캐스트
+//        messagingTemplate.convertAndSend("/topic/rooms/" + roomId + "/update", updatedRoom);
+//
+//        // 새로 초대된 사용자들에게 채팅방 목록 업데이트 알림
+//        userIds.forEach(userId -> {
+//            messagingTemplate.convertAndSend("/topic/user/" + userId + "/rooms/update", findUserChat());
+//        });
+//
+//        return updatedRoom;
+//    }
 
         // 채팅방 이름 수정(단체톡방 일 시)
         public ChatRoom updateRoomName (String roomId, String newRoom) {

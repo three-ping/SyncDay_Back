@@ -14,6 +14,6 @@ import java.util.Optional;
 public interface ChatRoomRepository extends MongoRepository<ChatRoom, String> {
     Optional<ChatRoom> findChatRoomByRoomId (String roomId );
 
-    @Query("SELECT c FROM ChatRoom c WHERE userId MEMBER OF c.memberIds")
-    List<ChatRoom> findByMemberId(@Param("userId") Long userId);   // 사용자가 포함된 채팅방만 조회
+//    @Query("SELECT c FROM ChatRoom c WHERE userId MEMBER OF c.memberIds")
+//    List<ChatRoom> findByMemberId(@Param("userId") Long userId);   // 사용자가 포함된 채팅방만 조회
 }

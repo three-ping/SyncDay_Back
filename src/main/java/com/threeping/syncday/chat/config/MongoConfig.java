@@ -63,64 +63,60 @@ public class MongoConfig {
             chatRoomRepository.saveAll(List.of(room1, room2, room3));
 
             // 채팅 메시지 더미 데이터 생성
-            ChatMessage message1 = ChatMessage.builder()
-                    .messageId("msg1")
-                    .message("안녕하세요!")
-                    .roomId("room1")
-                    .senderId("이코딩")
-                    .receiverId("김개발")
-                    .memberIds(List.of("이코딩", "김개발"))
-                    .chatType(ChatType.PRIVATE) // 개인 채팅
-                    .sentTime(LocalDateTime.now())
-                    .build();
+            ChatMessage message1 = new ChatMessage();
+            message1.setMessageId("msg1");
+            message1.setMessage("안녕하세요!");
+            message1.setRoomId("room1");
+            message1.setSenderId("이코딩");
+            message1.setReceiverId("김개발");
+            message1.setMemberIds(List.of("이코딩", "김개발"));
+            message1.setChatType(ChatType.PRIVATE); // 개인 채팅
+            message1.setSentTime(LocalDateTime.now());
 
-            ChatMessage message2 = ChatMessage.builder()
-                    .messageId("msg2")
-                    .message("프로젝트 관련해서 이야기 나눠요.")
-                    .roomId("room2")
-                    .senderId("박디자인")
-                    .receiverId("정그래픽")
-                    .memberIds(List.of("박디자인", "정그래픽"))
-                    .chatType(ChatType.PRIVATE)
-                    .sentTime(LocalDateTime.now())
-                    .build();
+            ChatMessage message2 = new ChatMessage();
+            message2.setMessageId("msg2");
+            message2.setMessage("프로젝트 관련해서 이야기 나눠요.");
+            message2.setRoomId("room2");
+            message2.setSenderId("박디자인");
+            message2.setReceiverId("정그래픽");
+            message2.setMemberIds(List.of("박디자인", "정그래픽"));
+            message2.setChatType(ChatType.PRIVATE);
+            message2.setSentTime(LocalDateTime.now());
 
-            ChatMessage message3 = ChatMessage.builder()
-                    .messageId("msg3")
-                    .message("안녕하세요, 함께 이야기해요!")
-                    .roomId("room3")
-                    .senderId("최마케팅")
-                    .receiverId(null) // 그룹 채팅의 경우 null
-                    .memberIds(List.of("최마케팅", "김개발", "정그래픽"))
-                    .chatType(ChatType.GROUP) // 그룹 채팅
-                    .sentTime(LocalDateTime.now())
-                    .build();
+            ChatMessage message3 = new ChatMessage();
+            message3.setMessageId("msg3");
+            message3.setMessage("안녕하세요, 함께 이야기해요!");
+            message3.setRoomId("room3");
+            message3.setSenderId("최마케팅");
+            message3.setReceiverId(null); // 그룹 채팅의 경우 null
+            message3.setMemberIds(List.of("최마케팅", "김개발", "정그래픽"));
+            message3.setChatType(ChatType.GROUP); // 그룹 채팅
+            message3.setSentTime(LocalDateTime.now());
 
-            ChatMessage message4 = ChatMessage.builder()
-                    .messageId("msg4")
-                    .message("일정에 대해 정리해두었습니다.")
-                    .roomId("room3")
-                    .senderId("김개발")
-                    .receiverId(null)
-                    .memberIds(List.of("최마케팅", "김개발", "정그래픽"))
-                    .chatType(ChatType.GROUP)
-                    .sentTime(LocalDateTime.now())
-                    .build();
+            ChatMessage message4 = new ChatMessage();
+            message4.setMessageId("msg4");
+            message4.setMessage("일정에 대해 정리해두었습니다.");
+            message4.setRoomId("room3");
+            message4.setSenderId("김개발");
+            message4.setReceiverId(null);
+            message4.setMemberIds(List.of("최마케팅", "김개발", "정그래픽"));
+            message4.setChatType(ChatType.GROUP);
+            message4.setSentTime(LocalDateTime.now());
 
-            ChatMessage message5 = ChatMessage.builder()
-                    .messageId("msg5")
-                    .message("질문이 있습니다.")
-                    .roomId("room1")
-                    .senderId("김개발")
-                    .receiverId("이코딩")
-                    .memberIds(List.of("이코딩", "김개발"))
-                    .chatType(ChatType.PRIVATE)
-                    .sentTime(LocalDateTime.now())
-                    .build();
+            ChatMessage message5 = new ChatMessage();
+            message5.setMessageId("msg5");
+            message5.setMessage("질문이 있습니다.");
+            message5.setRoomId("room1");
+            message5.setSenderId("김개발");
+            message5.setReceiverId("이코딩");
+            message5.setMemberIds(List.of("이코딩", "김개발"));
+            message5.setChatType(ChatType.PRIVATE);
+            message5.setSentTime(LocalDateTime.now());
 
             // 채팅 메시지 저장
             chatMessageRepository.saveAll(List.of(message1, message2, message3, message4, message5));
-        };    }
+        };
+    }
 
     // ChatRoom 생성 함수
     private ChatRoom createChatRoom(String creatorId, List<String> memberIds) {
@@ -134,19 +130,18 @@ public class MongoConfig {
                 .build();
     }
 
-    private ChatMessage createChatMessage(String message, String roomId,
-                                          String senderId, String receiverId,
-                                          List<String> memberIds, ChatType chatType) {
-        return ChatMessage.builder()
-                .messageId(UUID.randomUUID().toString())
-                .message(message)
-                .roomId(roomId)
-                .senderId(senderId)
-                .receiverId(receiverId)
-                .memberIds(memberIds)
-                .chatType(chatType)
-                .sentTime(LocalDateTime.now())
-                .build();
+    // ChatMessage 생성 함수
+    private ChatMessage createChatMessage(String message, String roomId, String senderId, String receiverId, List<String> memberIds, ChatType chatType) {
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setMessageId(UUID.randomUUID().toString());
+        chatMessage.setMessage(message);
+        chatMessage.setRoomId(roomId);
+        chatMessage.setSenderId(senderId);
+        chatMessage.setReceiverId(receiverId);
+        chatMessage.setMemberIds(memberIds);
+        chatMessage.setChatType(chatType);
+        chatMessage.setSentTime(LocalDateTime.now());
+        return chatMessage;
     }
 
 }
