@@ -54,7 +54,7 @@ class AppProjControllerTests {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                post("/api/proj/")
+                post("/api/projs/")
                         .contentType(APPLICATION_JSON_UTF8)
                         .characterEncoding("UTF-8")
                         .content(content)
@@ -87,7 +87,7 @@ class AppProjControllerTests {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                put("/api/proj/")
+                put("/api/projs/")
                         .contentType(APPLICATION_JSON_UTF8)
                         .characterEncoding("UTF-8")
                         .content(content)
@@ -115,8 +115,8 @@ class AppProjControllerTests {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                delete("/api/proj/{projId}", projId)
-                        .contentType(APPLICATION_JSON_UTF8)
+                delete("/api/projs/{projId}", projId)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
         );
 
