@@ -32,4 +32,16 @@ public class CardServiceImpl implements CardService {
                 .collect(Collectors.toList());
         return cardDTOs;
     }
+
+    @Override
+    public List<CardDTO> getCardsByCardboardId(Long cardboardId) {
+
+        List<Card> cards  = cardMapper.selectCardsByCardboardId(cardboardId);
+
+        List<CardDTO> cardDTOs = cards
+                .stream()
+                .map(card -> modelMapper.map(card, CardDTO.class))
+                .collect(Collectors.toList());
+        return cardDTOs;
+    }
 }

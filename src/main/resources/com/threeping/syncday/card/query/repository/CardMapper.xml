@@ -35,4 +35,21 @@
           FROM TBL_CARD
     </select>
 
+    <select id="selectCardsByCardboardId" resultMap="cardResultMap" parameterType="long">
+        SELECT
+                CARD_ID
+               ,TITLE
+               ,CONTENT
+               ,CREATED_AT
+               ,START_TIME
+               ,END_TIME
+               ,VCS_OBJECT_TYPE
+               ,VCS_OBJECT_URL
+               ,CARDBOARD_ID
+               ,TAG_ID
+               ,CREATED_BY
+               ,ASSIGNEE
+          FROM  TBL_CARD
+         WHERE CARDBOARD_ID = #{ cardboardId }
+    </select>
 </mapper>

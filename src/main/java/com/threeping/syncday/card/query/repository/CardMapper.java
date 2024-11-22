@@ -8,6 +8,7 @@ import java.util.List;
 @Mapper
 public interface CardMapper {
 
-
     List<Card> selectAllCards();
+
+    List<Card> selectCardsByCardboardId(Long cardboardId);
 }

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CardService {
     List<CardDTO> getAllCards();
+
+    List<CardDTO> getCardsByCardboardId(Long cardboardId);
 }

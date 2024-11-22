@@ -35,4 +35,20 @@ class CardServiceTests {
         cards.forEach(cardDTO -> log.info("cardDTO: {}", cardDTO));
 
     }
+
+    @DisplayName("카드보드로 카드리스트 조회")
+    @Test
+    void testGetCardsByCardBoardId(){
+
+        // given
+        Long cardboardId = 1L;
+
+        // when
+        List<CardDTO> cards = cardService.getCardsByCardboardId(cardboardId);
+
+        // then
+        assertNotNull(cards);
+        cards.forEach(cardDTO -> log.info("cardDTO: {}", cardDTO));
+    }
+
 }
