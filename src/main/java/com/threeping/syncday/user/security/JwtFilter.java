@@ -12,6 +12,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.webresources.StandardRoot;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -106,9 +107,22 @@ public class JwtFilter extends OncePerRequestFilter {
         // 4) Claims 기반으로 Authentication 객체 설정
         // 5) SecurityContext에 Authentication 객체 저장
         log.info("processRefreshToken method start");
-        String refreshToken = extractRefreshTokenFromCookie(request);
+//        String refreshToken = extractRefreshTokenFromCookie(request);
+
+        String refreshToken = null;
+        try {
+            refreshToken = extractRefreshTokenFromCookie(request);
+        } catch (CommonException e) {
+            log.info("쿠키에서 Refresh Token을 찾지 못했습니다. 헤더에서 검사합니다.");
+        }
+
+        // 2. 헤더에서 Refresh Token 추출 시도
+        if (refreshToken == null) {
+            refreshToken = extractRefreshTokenFromHeader(request);
+        }
 
         if(refreshToken == null) {
+            log.info("rt이 존재하지 않음");
             throw new CommonException(ErrorCode.NOT_FOUND_REFRESH_TOKEN);
         }
 
@@ -151,6 +165,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
+
         String refreshToken = Arrays.stream(cookies)
                 .filter(cookie -> "refreshToken".equals(cookie.getName()))
                 .findFirst()
@@ -161,6 +176,21 @@ public class JwtFilter extends OncePerRequestFilter {
             throw new CommonException(ErrorCode.NOT_FOUND_COOKIE);
         }
         return refreshToken;
+    }
+
+    // 웹소켓 연결 시 필요한 인증 토큰 헤더에 추가
+    private String extractRefreshTokenFromHeader(HttpServletRequest request) {
+        log.info("헤더에서 rt토큰 추출 시도");
+
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            String token = bearerToken.substring(7);
+            log.info("헤더에서 추출한 Refresh Token: {}", token);
+            return token;
+        }
+
+        log.info("Authorization 헤더에 Refresh Token이 없습니다.");
+        return null;
     }
 
     private Authentication getAuthentication(Claims claims) {
