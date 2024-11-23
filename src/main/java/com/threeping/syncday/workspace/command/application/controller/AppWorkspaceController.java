@@ -17,12 +17,12 @@ public class AppWorkspaceController {
         this.appWorkspaceService = appWorkspaceService;
     }
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseDTO<?> createWorkspace(@RequestBody WorkspaceVO newWorkspace) {
         return ResponseDTO.ok(appWorkspaceService.addWorkspace(newWorkspace));
     }
 
-    @PutMapping("/")
+    @PutMapping()
     public ResponseDTO<?> updateWorkspace(@RequestBody WorkspaceVO workspaceVO) {
         return ResponseDTO.ok(appWorkspaceService.modifyWorkspace(workspaceVO));
     }
