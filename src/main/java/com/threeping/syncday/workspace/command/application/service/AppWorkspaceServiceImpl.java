@@ -46,7 +46,22 @@ public class AppWorkspaceServiceImpl implements AppWorkspaceService {
         }
         existingWs.setWorkspaceName(workspaceVO.getWorkspaceName());
         existingWs.setVcsType(workspaceVO.getVcsType());
+        existingWs.setVcsRepoUrl(workspaceVO.getVcsRepoUrl());
+        Workspace updatedWorkspace = workspaceRepository.save(existingWs);
+        log.info("updatedWorkspace: {}", updatedWorkspace);
+        return modelMapper.map(updatedWorkspace, WorkspaceVO.class);
+    }
 
-        return null;
+    @Transactional
+    @Override
+    public WorkspaceVO deleteWorkspace(Long workspaceId) {
+        Workspace existingWorkspace = workspaceRepository.findById(workspaceId).orElse(null);
+
+        if (existingWorkspace == null) {
+            throw new CommonException(ErrorCode.WORKSPACE_NOT_FOUND);
+        }
+
+        workspaceRepository.delete(existingWorkspace);
+        return modelMapper.map(existingWorkspace, WorkspaceVO.class);
     }
 }

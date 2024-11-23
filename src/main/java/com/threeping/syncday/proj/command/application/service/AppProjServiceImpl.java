@@ -43,6 +43,7 @@ public class AppProjServiceImpl implements AppProjService {
         return modelMapper.map(addedProj, ProjDTO.class);
     }
 
+    @Transactional
     @Override
     public ProjDTO modifyProj(ProjVO projVO) {
 

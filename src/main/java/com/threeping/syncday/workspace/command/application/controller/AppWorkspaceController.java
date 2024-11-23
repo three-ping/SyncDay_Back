@@ -26,4 +26,9 @@ public class AppWorkspaceController {
     public ResponseDTO<?> updateWorkspace(@RequestBody WorkspaceVO workspaceVO) {
         return ResponseDTO.ok(appWorkspaceService.modifyWorkspace(workspaceVO));
     }
+
+    @DeleteMapping("/{workspaceId}")
+    public ResponseDTO<?> deleteWorkspace(@PathVariable("workspaceId") Long workspaceId){
+        return ResponseDTO.ok(appWorkspaceService.deleteWorkspace(workspaceId));
+    }
 }

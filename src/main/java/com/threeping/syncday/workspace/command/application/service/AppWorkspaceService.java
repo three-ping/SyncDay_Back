@@ -6,4 +6,6 @@ public interface AppWorkspaceService {
     WorkspaceVO addWorkspace(WorkspaceVO newWorkspace);
 
     WorkspaceVO modifyWorkspace(WorkspaceVO workspaceVO);
+
+    WorkspaceVO deleteWorkspace(Long workspaceId);
 }
