@@ -1,6 +1,7 @@
 package com.threeping.syncday.proj.query.service;
 
 import com.threeping.syncday.proj.query.aggregate.Proj;
+import com.threeping.syncday.proj.query.aggregate.dto.ProjAndWorkspaceDTO;
 import com.threeping.syncday.proj.query.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.query.repository.ProjMapper;
 import org.modelmapper.ModelMapper;
@@ -34,5 +35,12 @@ public class ProjServiceImpl implements ProjService {
     public ProjDTO getProjById(Long projId) {
         Proj proj = projMapper.selectProjById(projId);
         return modelMapper.map(proj, ProjDTO.class);
+    }
+
+
+    @Override
+    public List<ProjAndWorkspaceDTO> getProjInfosByUserId(Long userId) {
+
+        return projMapper.selectProjAndWorkspacesByUserId(userId);
     }
 }

@@ -5,9 +5,11 @@ import com.threeping.syncday.workspace.query.service.WorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("api/workspaces")
+@RestController
+@RequestMapping("/api/workspaces")
 public class WorkspaceController {
 
     private final WorkspaceService workSpaceService;
@@ -22,8 +24,13 @@ public class WorkspaceController {
         return ResponseDTO.ok(workSpaceService.getAllWorkspaces());
     }
 
-    @GetMapping("/{projId}")
+    @GetMapping("/projs/{projId}")
     public ResponseDTO<?> findWorkspacesByProjId(@PathVariable("projId") Long projId){
         return ResponseDTO.ok(workSpaceService.getWorkspacesByProjId(projId));
+    }
+
+    @GetMapping("/{workspaceId}")
+    public ResponseDTO<?> findWorkspaceById(@PathVariable("workspaceId") Long workspaceId){
+        return ResponseDTO.ok(workSpaceService.getWorkspaceInfo(workspaceId));
     }
 }

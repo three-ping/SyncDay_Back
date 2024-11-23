@@ -1,6 +1,7 @@
 package com.threeping.syncday.workspace.query.service;
 
 import com.threeping.syncday.workspace.query.aggregate.WorkspaceDTO;
+import com.threeping.syncday.workspace.query.aggregate.WorkspaceInfoDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,5 +46,21 @@ class WorkspaceServiceTests {
         assertNotNull(workspaceDTOS);
 
         workspaceDTOS.forEach(x-> log.info("x: {}", x));
+    }
+
+    @DisplayName("워크스페이스 ID로 워크스페이스 정보 조회")
+    @Test
+    void testGetWorkspaceInfoById(){
+
+        // given
+        Long workspaceId = 10L;
+
+        // when
+        WorkspaceInfoDTO workspaceInfo = workspaceService.getWorkspaceInfo(workspaceId);
+
+        // then
+        assertNotNull(workspaceInfo);
+
+        log.info("workspaceInfo: {}", workspaceInfo);
     }
 }
