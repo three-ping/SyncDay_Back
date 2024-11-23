@@ -27,7 +27,7 @@ public class DomainProjServiceImpl implements DomainProjService {
 
         // 프로젝트가 없는 경우
         if(foundProj == null) {
-            throw new CommonException(ErrorCode.NOT_FOUND_PROJ);
+            throw new CommonException(ErrorCode.PROJ_NOT_FOUND);
         }
 
         // 프로젝트 오너가 아닌 경우
