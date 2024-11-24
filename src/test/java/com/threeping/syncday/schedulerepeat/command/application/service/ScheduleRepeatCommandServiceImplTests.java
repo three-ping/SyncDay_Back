@@ -1,10 +1,10 @@
 package com.threeping.syncday.schedulerepeat.command.application.service;
 
-import com.threeping.syncday.common.enumtype.MeetingStatus;
-import com.threeping.syncday.common.enumtype.PublicStatus;
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateScheduleRepeatDTO;
+import com.threeping.syncday.schedulerepeat.command.aggregate.entity.MeetingStatus;
+import com.threeping.syncday.schedulerepeat.command.aggregate.entity.PublicStatus;
+import com.threeping.syncday.schedulerepeat.command.aggregate.entity.RecurrenceType;
 import com.threeping.syncday.schedulerepeat.command.aggregate.entity.ScheduleRepeat;
-import com.threeping.syncday.schedulerepeat.command.aggregate.enumtype.RecurrenceType;
 import com.threeping.syncday.schedulerepeat.command.domain.repository.ScheduleRepeatRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import java.sql.Timestamp;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,6 +37,8 @@ class ScheduleRepeatCommandServiceImplTests {
     void createScheduleRepeatTest(){
         CreateScheduleRepeatDTO createScheduleRepeatDTO = new CreateScheduleRepeatDTO();
         createScheduleRepeatDTO.setUserId(1L);
+        createScheduleRepeatDTO.setStartTime(new Timestamp(System.currentTimeMillis()-1));
+        createScheduleRepeatDTO.setEndTime(new Timestamp(System.currentTimeMillis()));
         createScheduleRepeatDTO.setPublicStatus(PublicStatus.PUBLIC);
         createScheduleRepeatDTO.setMeetingStatus(MeetingStatus.ACTIVE);
         createScheduleRepeatDTO.setRecurrenceType(RecurrenceType.EVERY_WEEK_DAY);

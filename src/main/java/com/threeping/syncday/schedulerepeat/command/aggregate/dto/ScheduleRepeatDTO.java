@@ -25,5 +25,5 @@ public class ScheduleRepeatDTO {
     private Long personalRecurrenceSelectedDays;
     private PersonalMonthlyType personalMonthlyType;
     private Timestamp repeatEnd;
-    private Long userid;
+    private Long userId;
 }

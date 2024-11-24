@@ -2,7 +2,6 @@ package com.threeping.syncday.schedulerepeat.command.application.service;
 
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateScheduleRepeatDTO;
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.ScheduleRepeatDTO;
-import com.threeping.syncday.schedulerepeat.command.aggregate.dto.UpdateScheduleRepeatDTO;
 
 public interface ScheduleRepeatCommandService {
     ScheduleRepeatDTO createScheduleRepeat(CreateScheduleRepeatDTO createScheduleRepeatDTO);
@@ -14,8 +13,9 @@ public interface ScheduleRepeatCommandService {
 
     void sendMailToScheduleRepeatParticipants(Long scheduleRepeatId, CreateScheduleRepeatDTO createScheduleRepeatDTO);
 
-    ScheduleRepeatDTO updateAllScheduleRepeat(Long scheduleRepeatId, CreateScheduleRepeatDTO createScheduleRepeatDTO);
+//    ScheduleRepeatDTO updateAllScheduleRepeat(Long scheduleRepeatId, CreateScheduleRepeatDTO createScheduleRepeatDTO);
+//
+//    ScheduleRepeatDTO updatePartialScheduleRepeat(Long scheduleRepeatId, CreateScheduleRepeatDTO createScheduleRepeatDTO);
 
-    ScheduleRepeatDTO updatePartialScheduleRepeat(Long scheduleRepeatId, CreateScheduleRepeatDTO createScheduleRepeatDTO);
-
+    void deleteScheduleRepeat(Long scheduleRepeatId);
 }

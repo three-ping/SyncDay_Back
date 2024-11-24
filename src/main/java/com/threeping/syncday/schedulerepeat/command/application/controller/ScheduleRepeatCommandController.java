@@ -3,12 +3,8 @@ package com.threeping.syncday.schedulerepeat.command.application.controller;
 import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateScheduleRepeatDTO;
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.ScheduleRepeatDTO;
-import com.threeping.syncday.schedulerepeat.command.aggregate.dto.UpdateScheduleRepeatDTO;
 import com.threeping.syncday.schedulerepeat.command.application.service.ScheduleRepeatCommandService;
-import com.threeping.syncday.user.command.domain.vo.ResponseNormalLoginVO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,23 +36,29 @@ public class ScheduleRepeatCommandController {
         ScheduleRepeatDTO scheduleRepeatDTO = scheduleRepeatCommandService.createScheduleRepeat(createScheduleRepeatDTO);
         Long scheduleRepeatId = scheduleRepeatDTO.getScheduleRepeatId();
         scheduleRepeatCommandService.createScheduleRepeatParticipants(scheduleRepeatId,createScheduleRepeatDTO);
-        scheduleRepeatCommandService.sendMailToScheduleRepeatParticipants(scheduleRepeatId,createScheduleRepeatDTO);
         scheduleRepeatCommandService.createRepeatedSchedule(scheduleRepeatId,createScheduleRepeatDTO);
+        scheduleRepeatCommandService.sendMailToScheduleRepeatParticipants(scheduleRepeatId,createScheduleRepeatDTO);
         return ResponseDTO.ok(scheduleRepeatDTO);
     }
 
-    @PutMapping("{scheduleRepeatId}")
-    private ResponseDTO<?> updateAllScheduleRepeat(@PathVariable Long scheduleRepeatId,
-                                                @RequestBody CreateScheduleRepeatDTO CreateScheduleRepeatDTO) {
-        ScheduleRepeatDTO scheduleRepeatDTO = scheduleRepeatCommandService.updateAllScheduleRepeat(scheduleRepeatId,CreateScheduleRepeatDTO);
-        return ResponseDTO.ok(scheduleRepeatDTO);
+    @DeleteMapping("/{scheduleRepeatId}")
+    private ResponseDTO<?> deleteScheduleRepeat(@PathVariable Long scheduleRepeatId){
+        scheduleRepeatCommandService.deleteScheduleRepeat(scheduleRepeatId);
+        return ResponseDTO.ok(null);
     }
 
-    @PutMapping("part/{scheduleRepeatId}")
-    private ResponseDTO<?> updatePartialScheduleRepeat(@PathVariable Long scheduleRepeatId,
-                                                       @RequestBody CreateScheduleRepeatDTO createScheduleRepeatDTO){
-        ScheduleRepeatDTO scheduleRepeatDTO = scheduleRepeatCommandService.updatePartialScheduleRepeat(scheduleRepeatId,createScheduleRepeatDTO);
-        return ResponseDTO.ok(scheduleRepeatDTO);
-    }
+//    @PutMapping("{scheduleRepeatId}")
+//    private ResponseDTO<?> updateAllScheduleRepeat(@PathVariable Long scheduleRepeatId,
+//                                                @RequestBody CreateScheduleRepeatDTO CreateScheduleRepeatDTO) {
+//        ScheduleRepeatDTO scheduleRepeatDTO = scheduleRepeatCommandService.updateAllScheduleRepeat(scheduleRepeatId,CreateScheduleRepeatDTO);
+//        return ResponseDTO.ok(scheduleRepeatDTO);
+//    }
+//
+//    @PutMapping("part/{scheduleRepeatId}")
+//    private ResponseDTO<?> updatePartialScheduleRepeat(@PathVariable Long scheduleRepeatId,
+//                                                       @RequestBody CreateScheduleRepeatDTO createScheduleRepeatDTO){
+//        ScheduleRepeatDTO scheduleRepeatDTO = scheduleRepeatCommandService.updatePartialScheduleRepeat(scheduleRepeatId,createScheduleRepeatDTO);
+//        return ResponseDTO.ok(scheduleRepeatDTO);
+//    }
 
 }
