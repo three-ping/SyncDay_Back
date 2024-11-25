@@ -1,6 +1,6 @@
 package com.threeping.syncday.notification.config;
 
-import com.threeping.syncday.notification.redis.RedisSubscriber;
+import com.threeping.syncday.notification.redis.RedisNotificationSubscriber;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -8,7 +8,7 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
-public class RedisPubSubConfig {
+public class RedisNotificationPubSubConfig {
 
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory){
@@ -18,8 +18,8 @@ public class RedisPubSubConfig {
     }
 
     @Bean
-    public MessageListenerAdapter listenerAdapter(RedisSubscriber redisSubscriber){
-        return new MessageListenerAdapter(redisSubscriber,"onMessage");
+    public MessageListenerAdapter listenerAdapter(RedisNotificationSubscriber redisNotificationSubscriber){
+        return new MessageListenerAdapter(redisNotificationSubscriber,"onMessage");
     }
 
 }
