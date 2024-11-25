@@ -1,5 +1,6 @@
 package com.threeping.syncday.projmember.query.service;
 
+import com.threeping.syncday.projmember.query.aggregate.ProjMember;
 import com.threeping.syncday.projmember.query.aggregate.ProjMemberDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -31,5 +32,34 @@ class ProjMemberServiceTests {
         assertNotNull(projMembers);
 
         projMembers.forEach(x-> log.info("x: {}", x));
+    }
+
+    @DisplayName("프로젝트 ID로 멤버 리스트 조회")
+    @Test
+    void getProjMemberByProjId(){
+
+        // given
+        Long projId = 1L;
+
+        // when
+        List<ProjMemberDTO> projMemberList = projMemberService.getProjMembersByProjId(projId);
+
+        // then
+        assertNotNull(projMemberList);
+        projMemberList.forEach(x-> log.info("x: {}", x));
+    }
+
+
+    @DisplayName("유저 아이디로 프로젝트 조회")
+    @Test
+    void testGetProjsByUserId(){
+
+        // given
+        Long userId = 1L;
+
+        // when
+        List<ProjMemberDTO> projMemberList = projMemberService.getProjsByUserId(userId);
+        assertNotNull(projMemberList);
+        projMemberList.forEach(x-> log.info("x: {}", x));
     }
 }

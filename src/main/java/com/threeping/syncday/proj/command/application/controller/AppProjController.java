@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/proj")
+@RequestMapping("/api/projs")
 public class AppProjController {
     private final AppProjService appProjService;
 
@@ -18,13 +18,13 @@ public class AppProjController {
         this.appProjService = appProjService;
     }
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseDTO<?> createProj(@RequestBody ProjVO newProj){
         log.info("newProj: {}", newProj);
         return ResponseDTO.ok(appProjService.addProj(newProj));
     }
 
-    @PutMapping("/")
+    @PutMapping()
     public ResponseDTO<?> updateProj(@RequestBody ProjVO projVO){
         log.info("projVO: {}", projVO);
         return ResponseDTO.ok(appProjService.modifyProj(projVO));
