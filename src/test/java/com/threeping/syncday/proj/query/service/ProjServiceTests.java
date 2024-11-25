@@ -1,5 +1,6 @@
 package com.threeping.syncday.proj.query.service;
 
+import com.threeping.syncday.proj.query.aggregate.dto.ProjAndWorkspaceDTO;
 import com.threeping.syncday.proj.query.aggregate.dto.ProjDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @Slf4j
 @SpringBootTest
 class ProjServiceTests {
@@ -19,7 +21,7 @@ class ProjServiceTests {
 
     @DisplayName("프로젝트 전체 조회")
     @Test
-    void testGetAllProjs(){
+    void testGetAllProjs() {
 
         //given
 
@@ -35,13 +37,13 @@ class ProjServiceTests {
 
     @DisplayName("프로젝트 ID를 통한 조회")
     @Test
-    void testGetProjById(){
+    void testGetProjById() {
 
         // given
         Long projId = 1L;
 
         // when
-        ProjDTO proj=projService.getProjById(projId);
+        ProjDTO proj = projService.getProjById(projId);
 
         // then
         assertNotNull(proj);
@@ -49,5 +51,21 @@ class ProjServiceTests {
     }
 
 
+    @DisplayName("유저 ID로 프로젝트와 워크스페이스 조회")
+    @Test
+    void testGetProjAndWorkspaceByUserId() {
 
+        // given
+        Long userId = 1L;
+
+        // when
+        List<ProjAndWorkspaceDTO> projs = projService.getProjInfosByUserId(userId);
+
+        // then
+        assertNotNull(projs);
+
+        projs.forEach(projAndWorkspaceDTO -> {
+            log.info("projAndWorkspaceDTO: {}", projAndWorkspaceDTO);
+        });
+    }
 }

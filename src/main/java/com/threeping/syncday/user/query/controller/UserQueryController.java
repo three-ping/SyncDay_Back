@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -46,5 +47,11 @@ public class UserQueryController {
         String email = user.getUsername();
         UserDTO userDTO = userService.findByUserEmail(email);
         return ResponseDTO.ok(userDTO);
+    }
+
+    @GetMapping("/refresh")
+    public ResponseDTO<?> refresh(HttpServletRequest request){
+        // at만 새로 발급받기 위한 end point
+        return ResponseDTO.ok("accessToken 재발급 성공");
     }
 }

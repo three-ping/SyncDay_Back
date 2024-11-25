@@ -1,6 +1,5 @@
 package com.threeping.syncday.schedulerepeat.command.application.service;
 
-
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateScheduleRepeatDTO;
 import com.threeping.syncday.schedulerepeat.command.aggregate.entity.MeetingStatus;
 import com.threeping.syncday.schedulerepeat.command.aggregate.entity.PublicStatus;
@@ -38,7 +37,7 @@ class ScheduleRepeatCommandServiceImplTests {
     void createScheduleRepeatTest(){
         CreateScheduleRepeatDTO createScheduleRepeatDTO = new CreateScheduleRepeatDTO();
         createScheduleRepeatDTO.setUserId(1L);
-        createScheduleRepeatDTO.setStartTime(new Timestamp(System.currentTimeMillis()));
+        createScheduleRepeatDTO.setStartTime(new Timestamp(System.currentTimeMillis()-1));
         createScheduleRepeatDTO.setEndTime(new Timestamp(System.currentTimeMillis()));
         createScheduleRepeatDTO.setPublicStatus(PublicStatus.PUBLIC);
         createScheduleRepeatDTO.setMeetingStatus(MeetingStatus.ACTIVE);
