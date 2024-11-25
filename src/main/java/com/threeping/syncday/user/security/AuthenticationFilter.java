@@ -2,12 +2,9 @@ package com.threeping.syncday.user.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.threeping.syncday.common.ResponseDTO;
-import com.threeping.syncday.user.command.application.dto.UserDTO;
 import com.threeping.syncday.user.command.application.service.UserCommandService;
-import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
-import com.threeping.syncday.user.command.domain.repository.UserRepository;
+import com.threeping.syncday.user.command.domain.aggregate.CustomUser;
 import com.threeping.syncday.user.command.domain.vo.LoginRequestVO;
-import com.threeping.syncday.user.command.domain.vo.ResponseNormalLoginVO;
 import com.threeping.syncday.user.query.service.UserQueryService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -21,20 +18,14 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
-import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -64,17 +55,19 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
-        log.info("attemptAuthentication method start");
+        log.info("로그인 기반 인증 시작");
         log.info("attemptAuthentication method request LocalPort: {}", request.getLocalPort());
         try {
             LoginRequestVO creds = new ObjectMapper().readValue(request.getInputStream(), LoginRequestVO.class);
             log.info("attemptAuthentication method creds객체 정보 : {}", creds);
-            String email = creds.getEmail();
+
+            CustomUser user = (CustomUser) userQueryService.loadUserByUsername(creds.getEmail());
 
             // 인증 토큰 생성
             UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(email, creds.getPassword(), new ArrayList<>());
+                    new UsernamePasswordAuthenticationToken(user, creds.getPassword(), new ArrayList<>());
             log.info("attemptAuthentication authToken(성공 후 생성된 인증 토큰): {}", authToken);
+
             // AuthenticationManager에 전달
             Authentication auth = getAuthenticationManager().authenticate(authToken);
             log.info("Authentication result: {}", auth);  // 이 로그가 찍히는지 확인
@@ -93,9 +86,19 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         log.info("successfulAuthentication! Principal 객체 : {}", authResult);
 
-        String email = ((User) authResult.getPrincipal()).getUsername();
+        // 고유 UserType으로 다운캐스팅
+        CustomUser customUser = (CustomUser) authResult.getPrincipal();
+
+        // accessToken에는 회원 아이디, 회원 번호, 이름, 프로필 사진까지 넣기
+        String email = customUser.getUsername();
+        log.info("email: {}", email);
 
         Claims acessClaims = Jwts.claims().setSubject(email); // 회원 정보
+        acessClaims.put("userName", customUser.getUserName());
+        acessClaims.put("userId", customUser.getUserId());
+        acessClaims.put("profilePhoto", customUser.getProfilePhoto());
+
+        // refreshToken에는 아이디만 넣기
         Claims refreshClaims = Jwts.claims().setSubject(email);
         List<String> roles = authResult.getAuthorities().stream()
                 .map(role -> role.getAuthority())
@@ -144,23 +147,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         // Cookie를 헤더에 담아 전송
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
         // user 상세 정보 조회
-        UserDTO userDetails = userQueryService.findByEmail(email);
+
         // 마지막 로그인 시간 업데이트
         userCommandService.updateLastAccessTime(email);
 
-        // 로그인 성공 후 바로 보여줄 응답객체, 아마 nav바에 들어갈 정보를 담을 듯?
-        ResponseNormalLoginVO responseNormalLoginVO = new ResponseNormalLoginVO(
-                userDetails.getUserId(),
-                userDetails.getUserName(),
-                userDetails.getEmail(),
-                userDetails.getProfilePhoto(),
-                userDetails.getJoinYear(),
-                userDetails.getPosition(),
-                userDetails.getTeamId(),
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-        );
-
-        ResponseDTO<ResponseNormalLoginVO> responseDTO = ResponseDTO.ok(responseNormalLoginVO);
+        ResponseDTO<String> responseDTO = ResponseDTO.ok("로그인에 성공했습니다.");
 
         //JSON 문자열로 변환
         String JSON = new ObjectMapper().writeValueAsString(responseDTO);

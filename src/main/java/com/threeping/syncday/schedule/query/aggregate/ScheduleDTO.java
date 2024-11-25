@@ -6,6 +6,7 @@ import com.threeping.syncday.schedule.command.aggregate.entity.PublicStatus;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 public class ScheduleDTO {
@@ -45,4 +46,7 @@ public class ScheduleDTO {
 
     @JsonProperty("user_id")
     Long userId;
+
+    @JsonProperty("username")
+    String username;
 }

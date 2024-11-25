@@ -1,6 +1,7 @@
 package com.threeping.syncday.schedule.command.Infrastructure;
 
 import com.threeping.syncday.scheduleparticipant.command.application.service.AppScheduleParticipantService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,7 @@ public class InfraScheduleServiceImpl implements InfraScheduleService{
 
     private final AppScheduleParticipantService appScheduleParticipantService;
 
+    @Autowired
     public InfraScheduleServiceImpl(AppScheduleParticipantService appScheduleParticipantService) {
         this.appScheduleParticipantService = appScheduleParticipantService;
     }
