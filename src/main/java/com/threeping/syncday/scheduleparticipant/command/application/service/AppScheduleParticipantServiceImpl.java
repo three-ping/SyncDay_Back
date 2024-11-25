@@ -1,12 +1,18 @@
 package com.threeping.syncday.scheduleparticipant.command.application.service;
 
+import com.threeping.syncday.scheduleparticipant.command.aggregate.dto.ResponseScheduleParticipantDTO;
+import com.threeping.syncday.scheduleparticipant.command.aggregate.dto.ScheduleParticipantNotificationDTO;
+import com.threeping.syncday.scheduleparticipant.command.aggregate.dto.ScheduleParticipantStatusDTO;
+import com.threeping.syncday.scheduleparticipant.command.aggregate.entity.ParticipationStatus;
 import com.threeping.syncday.scheduleparticipant.command.aggregate.entity.ScheduleParticipant;
 import com.threeping.syncday.scheduleparticipant.command.domain.repository.ScheduleParticipantRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,15 +23,17 @@ import java.util.stream.Collectors;
 public class AppScheduleParticipantServiceImpl implements AppScheduleParticipantService{
 
     private final ScheduleParticipantRepository scheduleParticipantRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public AppScheduleParticipantServiceImpl(ScheduleParticipantRepository scheduleParticipantRepository) {
+    public AppScheduleParticipantServiceImpl(ScheduleParticipantRepository scheduleParticipantRepository, ModelMapper modelMapper) {
         this.scheduleParticipantRepository = scheduleParticipantRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional
     @Override
-    public void addScheduleParticipant(Long userId, Long scheduleId, List<Long> attendeeIds) {
+    public void addScheduleParticipant(Long userId, Long scheduleId, List<Long> attendeeIds, Timestamp notificationTime) {
 
         // 참석자 리스트에 있는 attendeeId만 추가
         for (Long attendeeId: attendeeIds) {
@@ -36,6 +44,15 @@ public class AppScheduleParticipantServiceImpl implements AppScheduleParticipant
 
             scheduleParticipantRepository.save(scheduleParticipant);
         }
+
+        // 주최자도 등록
+        ScheduleParticipant scheduleParticipant = new ScheduleParticipant();
+        scheduleParticipant.setUserId(userId);
+        scheduleParticipant.setScheduleId(scheduleId);
+        scheduleParticipant.setParticipationStatus(ParticipationStatus.ATTEND);
+        scheduleParticipant.setNotificationTime(notificationTime);      // 처음 설정한 알람 시각
+
+        scheduleParticipantRepository.save(scheduleParticipant);
     }
 
     @Transactional
@@ -75,5 +92,46 @@ public class AppScheduleParticipantServiceImpl implements AppScheduleParticipant
 
             scheduleParticipantRepository.save(newScheduleParticipant);
         }
+
+        // 주최자도 다시 등록
+        ScheduleParticipant scheduleParticipant = new ScheduleParticipant();
+        scheduleParticipant.setUserId(userId);
+        scheduleParticipant.setScheduleId(scheduleId);
+        scheduleParticipant.setParticipationStatus(ParticipationStatus.ATTEND);
+
+        scheduleParticipantRepository.save(scheduleParticipant);
+    }
+
+    @Override
+    public void deleteScheduleParticipant(Long scheduleId) {
+        scheduleParticipantRepository.deleteByScheduleId(scheduleId);
+    }
+
+    // 참여 상태 수정
+    @Override
+    public ResponseScheduleParticipantDTO updateUserScheduleStatus(ScheduleParticipantStatusDTO newScheduleParticipantStatus) {
+        ScheduleParticipant currentParticipant = scheduleParticipantRepository.findByScheduleIdAndUserId(
+                newScheduleParticipantStatus.getScheduleId(), newScheduleParticipantStatus.getUserId()
+        );
+
+        currentParticipant.setParticipationStatus(newScheduleParticipantStatus.getParticipationStatus());
+
+        scheduleParticipantRepository.save(currentParticipant);
+
+        return modelMapper.map(currentParticipant, ResponseScheduleParticipantDTO.class);
+    }
+
+    // 알람 시각 수정
+    @Override
+    public ResponseScheduleParticipantDTO updateUserScheduleNotification(ScheduleParticipantNotificationDTO newScheduleParticipantNotification) {
+        ScheduleParticipant currentParticipant = scheduleParticipantRepository.findByScheduleIdAndUserId(
+                newScheduleParticipantNotification.getScheduleId(), newScheduleParticipantNotification.getUserId()
+        );
+
+        currentParticipant.setNotificationTime(newScheduleParticipantNotification.getNotificationTime());
+
+        scheduleParticipantRepository.save(currentParticipant);
+
+        return modelMapper.map(currentParticipant, ResponseScheduleParticipantDTO.class);
     }
 }

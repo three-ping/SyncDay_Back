@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,9 +34,10 @@ class AppScheduleParticipantServiceTests {
         Long userId = 12L; // 요청 사용자 ID
         Long scheduleId = 11L; // 일정 ID
         List<Long> attendeeIds = List.of(4L, 5L); // 참석자 ID 목록
+        Timestamp notificationTime = Timestamp.valueOf("2024-11-25T10:00:00.000+09:00");
 
         // when
-        appScheduleParticipantService.addScheduleParticipant(userId, scheduleId, attendeeIds);
+        appScheduleParticipantService.addScheduleParticipant(userId, scheduleId, attendeeIds, notificationTime);
 
         // then
         List<ScheduleParticipant> participants = scheduleParticipantRepository.findByScheduleId(scheduleId);
@@ -50,10 +52,11 @@ class AppScheduleParticipantServiceTests {
         // given
         Long userId = 12L; // 요청 사용자 ID
         Long scheduleId = 11L; // 일정 ID
+        Timestamp notificationTime = Timestamp.valueOf("2024-11-25T10:00:00.000+09:00");
 
         // 기존 참석자 추가
         List<Long> initialAttendees = List.of(4L, 5L);
-        appScheduleParticipantService.addScheduleParticipant(userId, scheduleId, initialAttendees);
+        appScheduleParticipantService.addScheduleParticipant(userId, scheduleId, initialAttendees, notificationTime);
 
         // 새로운 참석자 목록
         List<Long> updatedAttendees = List.of(1L, 2L, 3L);

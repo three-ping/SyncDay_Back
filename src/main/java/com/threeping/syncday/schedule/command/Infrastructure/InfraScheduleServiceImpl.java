@@ -4,6 +4,7 @@ import com.threeping.syncday.scheduleparticipant.command.application.service.App
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -17,12 +18,17 @@ public class InfraScheduleServiceImpl implements InfraScheduleService{
     }
 
     @Override
-    public void requestAddScheduleParticipant(Long userId, Long scheduleId, List<Long> attendeeIds) {
-        appScheduleParticipantService.addScheduleParticipant(userId, scheduleId, attendeeIds);
+    public void requestAddScheduleParticipant(Long userId, Long scheduleId, List<Long> attendeeIds, Timestamp notificationTime) {
+        appScheduleParticipantService.addScheduleParticipant(userId, scheduleId, attendeeIds, notificationTime);
     }
 
     @Override
     public void requestUpdateScheduleParticipant(Long userId, Long scheduleId, List<Long> attendeeIds) {
         appScheduleParticipantService.updateScheduleParticipant(userId, scheduleId, attendeeIds);
+    }
+
+    @Override
+    public void requestDeleteScheduleParticipant(Long scheduleId) {
+        appScheduleParticipantService.deleteScheduleParticipant(scheduleId);
     }
 }

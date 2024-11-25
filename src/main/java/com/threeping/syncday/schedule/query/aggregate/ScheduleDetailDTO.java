@@ -49,6 +49,9 @@ public class ScheduleDetailDTO {
     @JsonProperty("username")
     String username;
 
+    @JsonProperty("notification_time")
+    Timestamp notificationTime;
+
     // 사용자 정보 리스트
     @JsonProperty("user_info")
     List<UserInfoDTO> userInfo;
