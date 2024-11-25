@@ -18,6 +18,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/api/chat")
 public class ChatController {
 
         private final ChatService chatService;
@@ -46,8 +47,8 @@ public class ChatController {
 
     // 채팅방 목록 조회
     @GetMapping("/room")
-    public List<ChatRoom> findAllChatRooms() {
-        return chatService.findUserChat();
+    public List<ChatRoom> findMyChat(@RequestParam Long userId) {
+        return chatService.findUserChat(userId);
     }
 
     // 채팅방 생성

@@ -81,18 +81,18 @@ public class SwaggerConfiguration {
                 .addOpenApiCustomizer(buildSecurityOpenApi()).build();
     }
 
-//    @Bean
-//    @Profile("!Prod")
-//    public GroupedOpenApi chatApi() {
-//
-//        String[] paths = {"/api/chat/**"};
-//
-//        return GroupedOpenApi
-//                .builder()
-//                .group("채팅 관련 api")
-//                .pathsToMatch(paths)
-//                .addOpenApiCustomizer(buildSecurityOpenApi()).build();
-//    }
+    @Bean
+    @Profile("!Prod")
+    public GroupedOpenApi chatApi() {
+
+        String[] paths = {"/api/chat/**"};
+
+        return GroupedOpenApi
+                .builder()
+                .group("채팅 관련 api")
+                .pathsToMatch(paths)
+                .addOpenApiCustomizer(buildSecurityOpenApi()).build();
+    }
 
     @Bean
     @Profile("!Prod")

@@ -29,14 +29,14 @@ public class MongoConfig {
             chatRoomRepository.deleteAll();
 
             // 사용자 목록
-            List<String> users = List.of("김개발", "이코딩", "박디자인", "정그래픽", "최마케팅");
+            List<String> users = List.of("김개발", "이코딩", "박디자인", "정그래픽", "최마케팅", "장그래");
 
             // 채팅방 더미 데이터 생성
             ChatRoom room1 = ChatRoom.builder()
                     .roomId("room1")
-                    .chatRoomName(String.join(", ", "이코딩", "김개발"))
+                    .chatRoomName(String.join(", ", "이코딩", "김개발","장그래"))
                     .creatorId("이코딩")
-                    .memberIds(List.of("이코딩", "김개발"))
+                    .memberIds(List.of("이코딩", "김개발","장그래"))
                     .memberCount(2)
                     .createdAt(LocalDateTime.now())
                     .build();
@@ -69,8 +69,8 @@ public class MongoConfig {
             message1.setRoomId("room1");
             message1.setSenderId("이코딩");
             message1.setReceiverId("김개발");
-            message1.setMemberIds(List.of("이코딩", "김개발"));
-            message1.setChatType(ChatType.PRIVATE); // 개인 채팅
+            message1.setMemberIds(List.of("이코딩", "김개발","장그래"));
+            message1.setChatType(ChatType.GROUP);
             message1.setSentTime(LocalDateTime.now());
 
             ChatMessage message2 = new ChatMessage();

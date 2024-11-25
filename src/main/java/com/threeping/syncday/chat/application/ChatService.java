@@ -41,9 +41,12 @@ public class ChatService {
     private Map<String, ChatMessage> chatMessageMap;
 
     //  채팅방 목록 조회
-    public List<ChatRoom> findUserChat() {
+    public List<ChatRoom> findUserChat(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다.: " + userId));
 
-        return chatRoomRepository.findAll();
+
+        return chatRoomRepository.findChatRoomsByMemberIdsContaining(user.getUserId().toString());
     }
 
     //  특정 채팅방 조회
