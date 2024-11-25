@@ -27,4 +27,10 @@ public class ScheduleController {
     public ResponseDTO<?> getOthersSchedules(@RequestParam Long searchUserId) {
         return ResponseDTO.ok(scheduleService.getOthersSchedulesBySearchUserId(searchUserId));
     }
+
+    @GetMapping("/my/{scheduleId}")
+    public ResponseDTO<?> getMyDetailSchedule(@RequestParam Long userId,
+                                              @PathVariable Long scheduleId) {
+        return ResponseDTO.ok(scheduleService.getMyDetailSchedulesByUserIdAndScheduleId(userId, scheduleId));
+    }
 }

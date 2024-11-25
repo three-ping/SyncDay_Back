@@ -7,11 +7,11 @@ import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.command.aggregate.entity.Proj;
 import com.threeping.syncday.proj.command.domain.repository.ProjRepository;
 import com.threeping.syncday.proj.command.infrastructure.service.InfraProjService;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -43,6 +43,7 @@ public class AppProjServiceImpl implements AppProjService {
         return modelMapper.map(addedProj, ProjDTO.class);
     }
 
+    @Transactional
     @Override
     public ProjDTO modifyProj(ProjVO projVO) {
 
@@ -52,7 +53,7 @@ public class AppProjServiceImpl implements AppProjService {
         Proj foundProj = projRepository.findById(projVO.getProjId()).orElse(null);
         log.info("foundProj: {}", foundProj);
         if (foundProj == null) {
-            throw new CommonException(ErrorCode.NOT_FOUND_PROJ);
+            throw new CommonException(ErrorCode.PROJ_NOT_FOUND);
         }
         foundProj.setProjName(projVO.getProjName());
         foundProj.setStartTime(projVO.getStartTime());
@@ -69,7 +70,7 @@ public class AppProjServiceImpl implements AppProjService {
     public ProjDTO deleteProj(Long projId) {
         Proj existingProj = projRepository.findByProjId(projId);
         if (existingProj == null) {
-            throw new CommonException(ErrorCode.NOT_FOUND_PROJ);
+            throw new CommonException(ErrorCode.PROJ_NOT_FOUND);
         }
         projRepository.delete(existingProj);
         return modelMapper.map(existingProj, ProjDTO.class);

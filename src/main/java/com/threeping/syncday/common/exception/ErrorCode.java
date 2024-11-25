@@ -54,9 +54,28 @@ public enum ErrorCode {
 
     // 도메인 별 에러 코드
     // 04: 프로젝트
-    NOT_FOUND_PROJ(4040400,HttpStatus.NOT_FOUND,"해당ID의 프로젝트가 존재하지 않습니다"),
-    INVALID_REQUEST_PROJ(4010401, HttpStatus.UNAUTHORIZED,"수정 권한이 없습니다"),
+    PROJ_NOT_FOUND(4040400,HttpStatus.NOT_FOUND,"해당ID의 프로젝트가 존재하지 않습니다"),
+    PROJ_INVALID_REQUEST(4010401, HttpStatus.UNAUTHORIZED,"수정 권한이 없습니다"),
 
+    // 05: 프로젝트 멤버
+    PROJ_MEMBER_NOT_FOUND(4040500, HttpStatus.NOT_FOUND,"존재하지 않는 멤버입니다."),
+    // 06: 워크스페이스
+
+    WORKSPACE_NOT_FOUND(4040600, HttpStatus.NOT_FOUND,"존재하지 않는 워크스페이스입니다."),
+
+    // 07: 카드보드
+
+    // 08: 카드
+
+    // 09: 카드 댓글
+
+    // 10: 첨부파일
+
+    // 11: 워스 북마크
+
+    // 12: 카드 북마크
+
+    // 13: 카드 태그
 
     //500
     INTERNAL_SERVER_ERROR(50000, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다");

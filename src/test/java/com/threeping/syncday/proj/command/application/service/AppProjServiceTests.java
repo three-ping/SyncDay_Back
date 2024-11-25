@@ -3,12 +3,12 @@ package com.threeping.syncday.proj.command.application.service;
 import com.threeping.syncday.proj.command.aggregate.entity.VcsType;
 import com.threeping.syncday.proj.command.aggregate.vo.ProjVO;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 

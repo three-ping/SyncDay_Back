@@ -9,6 +9,4 @@ public interface AppScheduleService {
     ScheduleDTO modifySchedule(ScheduleDTO newSchedule, Long scheduleId);
 
     ScheduleDTO deleteSchedule(Long scheduleId);
-
-//    ScheduleDTO getScheduleById(Long scheduleId);
 }

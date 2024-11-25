@@ -31,4 +31,10 @@ public class ProjController {
         return ResponseDTO.ok(projService.getProjById(projId));
     }
 
+    /* userId에 해당하는 프로젝트와 워크스페이스 리스트 반환 */
+    @GetMapping("users/{userId}")
+    public ResponseDTO<?> findProjInfosByUserId(@PathVariable("userId") Long userId){
+        return ResponseDTO.ok(projService.getProjInfosByUserId(userId));
+    }
+
 }

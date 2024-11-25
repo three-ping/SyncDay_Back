@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.threeping.syncday.cardboard.query.repository.CardBoardMapper">
+    <resultMap id="cardBoardResultMap" type="com.threeping.syncday.cardboard.query.aggregate.CardBoard">
+        <id property="cardBoardId" column="cardboard_id"></id>
+        <result property="title" column="title"></result>
+        <result property="createdAt" column="created_at"></result>
+        <result property="startTime" column="start_time"></result>
+        <result property="endTime" column="end_time"></result>
+        <result property="progressStatus" column="progress_status"></result>
+        <result property="vcsType" column="vcs_type"></result>
+        <result property="vcsMilestoneUrl" column="vcs_milestone_url"></result>
+        <result property="workspaceId" column="workspace_id"></result>
+    </resultMap>
+
+    <select id="selectAllCardBoards" resultMap="cardBoardResultMap">
+        SELECT
+                CARDBOARD_ID
+               ,TITLE
+               ,CREATED_AT
+               ,START_TIME
+               ,END_TIME
+               ,PROGRESS_STATUS
+               ,VCS_TYPE
+               ,VCS_MILESTONE_URL
+               ,WORKSPACE_ID
+
+          FROM TBL_CARDBOARD
+    </select>
+
+    <select id="selectCardBoardsByWorkspaceId" resultMap="cardBoardResultMap" parameterType="long">
+        SELECT
+                CARDBOARD_ID
+               ,TITLE
+               ,CREATED_AT
+               ,START_TIME
+               ,END_TIME
+               ,PROGRESS_STATUS
+               ,VCS_TYPE
+               ,VCS_MILESTONE_URL
+               ,WORKSPACE_ID
+          FROM  TBL_CARDBOARD
+          WHERE WORKSPACE_ID = #{ workspaceId }
+    </select>
+
+</mapper>
