@@ -49,4 +49,7 @@ public class ScheduleDTO {
 
     @JsonProperty("attendee_ids")
     List<Long> attendeeIds;
+
+    @JsonProperty("notification_time")
+    Timestamp notificationTime;
 }
