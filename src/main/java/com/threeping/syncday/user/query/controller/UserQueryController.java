@@ -4,6 +4,7 @@ import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.user.command.application.dto.UserDTO;
 import com.threeping.syncday.user.command.domain.vo.ResponseNormalLoginVO;
 import com.threeping.syncday.user.query.service.UserQueryService;
+import com.threeping.syncday.user.query.service.UserSearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,10 +22,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserQueryController {
 
     private final UserQueryService userService;
+    private final UserSearchService userSearchService;
 
     @Autowired
-    public UserQueryController(UserQueryService userService) {
+    public UserQueryController(UserQueryService userService,
+                               UserSearchService userSearchService) {
         this.userService = userService;
+        this.userSearchService = userSearchService;
     }
 
     @GetMapping("/health")
@@ -53,5 +57,10 @@ public class UserQueryController {
     public ResponseDTO<?> refresh(HttpServletRequest request){
         // at만 새로 발급받기 위한 end point
         return ResponseDTO.ok("accessToken 재발급 성공");
+    }
+
+    @GetMapping("/search")
+    public ResponseDTO<?> searchUser(@RequestParam String keyword){
+        return ResponseDTO.ok(userSearchService.searchUser(keyword));
     }
 }

@@ -1,5 +1,6 @@
 package com.threeping.syncday.user.command.domain.aggregate;
 
+import com.threeping.syncday.user.config.UserEntityListener;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,6 +8,7 @@ import java.sql.Timestamp;
 
 @Table(name = "TBL_USER")
 @Entity
+@EntityListeners(UserEntityListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
