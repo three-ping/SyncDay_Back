@@ -49,13 +49,15 @@ dependencies {
     implementation 'org.webjars:stomp-websocket:2.3.3-1'
     implementation 'org.webjars:sockjs-client:1.1.2'
 
+//
 //    // websocket aws
 //    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-//
+
 //    // file upload
 //    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
 //    compileOnly 'commons-io:commons-io:2.11.0'
-    
+
+
     // Model mapper
     // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
     implementation 'org.modelmapper:modelmapper:3.1.1'

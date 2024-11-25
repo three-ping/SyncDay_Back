@@ -1,7 +1,9 @@
 package com.threeping.syncday.user.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
+import com.threeping.syncday.user.command.domain.aggregate.CustomUser;
 import com.threeping.syncday.user.query.service.UserQueryService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -12,7 +14,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.webresources.StandardRoot;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,6 +36,9 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserQueryService userService;
     private final JwtUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
+
+    private static final String REDIS_RT_PREFIX = "RT:";
+    private static final String REDIS_BL_PREFIX = "BL:";
 
     public JwtFilter(UserQueryService userService, JwtUtil jwtUtil, RedisTemplate<String, String> redisTemplate) {
         this.userService = userService;
@@ -54,95 +61,135 @@ public class JwtFilter extends OncePerRequestFilter {
                 || path.startsWith("/swagger-custom-ui.html");
     }
 
-    // authentication filter 전에 동작하는 필터(토큰 유효성 검사)
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
-        log.info("doFilterInternal method start");
-        // 1 ) AT Check
         try {
+            log.info("JWT 인증 필터 시작");
             String accessToken = extractAccessToken(request);
-            if(accessToken != null) {
-                // AT 존재한다면 유효성 검사
-                log.info("AT 유효성 검사 시작");
+
+            if (accessToken != null) {
                 processAccessToken(accessToken, request, response);
             } else {
-                // AT null이면 RT 검사(새로고침 등) RT로 인증 처리
                 processRefreshToken(request, response);
             }
-        } catch (ExpiredJwtException e) {
-            // 2 ) AT Expired
-            log.info("AT 만료된 로그");
-            handleExpiredAccessToken(request, response);
-        } catch (JwtException e) {
-            throw new CommonException(ErrorCode.TOKEN_UNKNOWN_ERROR);
+
+            filterChain.doFilter(request, response);
+        } catch (CommonException e) {
+            handleAuthenticationException(response, e);
         }
-        filterChain.doFilter(request, response);
     }
 
     private void processAccessToken(String accessToken, HttpServletRequest request, HttpServletResponse response) {
-        // redis에 BL(로그아웃한 회원의 accessToken인지 확인)
-        log.info("accessToken 블랙리스트 체크 시작");
-        String logout = redisTemplate.opsForValue().get("BL:"+ accessToken);
-        // null이 아니다 == 해커가 탈취해서 재요청한 것(블랙리스트에 동륵되어 있는 거 가져옴)
-        if(logout != null) {
-            log.info("로그아웃된 accessToken을 가지고 온 경우 실행되는 예외");
+        if (jwtUtil.isTokenExpired(accessToken)) {
+            log.info("만료된 AT 감지, 재발급 프로세스 시작");
+            handleExpiredAccessToken(accessToken, request, response);
+            return;
+        }
+
+        validateAccessToken(accessToken);
+        authenticateWithToken(accessToken);
+    }
+
+    private void handleExpiredAccessToken(String expiredToken, HttpServletRequest request, HttpServletResponse response) {
+        // 1. 만료된 토큰 블랙리스트 처리
+        addToBlacklist(expiredToken);
+
+        // 2. RT로 새로운 AT 발급
+        String refreshToken = extractRefreshTokenFromCookie(request);
+        String userEmail = jwtUtil.getEmailFromToken(refreshToken);
+
+        // 3. RT 유효성 검증
+        validateRefreshToken(refreshToken, userEmail);
+
+        // 4. 새로운 AT 발급 및 설정
+        String newAccessToken = jwtUtil.generateAccessToken(userEmail);
+        response.addHeader("Authorization", "Bearer " + newAccessToken);
+
+        // 5. 새로운 AT로 인증 처리
+        authenticateWithToken(newAccessToken);
+    }
+
+    private void addToBlacklist(String token) {
+        String userEmail = jwtUtil.getEmailFromToken(token);
+        Long remainingTime = jwtUtil.getRemainingTime(token);
+        redisTemplate.opsForValue().set(
+                REDIS_BL_PREFIX + token,
+                userEmail,
+                remainingTime,
+                TimeUnit.MILLISECONDS
+        );
+    }
+
+    private void validateAccessToken(String token) {
+        // 블랙리스트 체크
+        String blacklisted = redisTemplate.opsForValue().get(REDIS_BL_PREFIX + token);
+        if (blacklisted != null) {
+            log.info("블랙리스트에 등록된 토큰 감지");
             throw new CommonException(ErrorCode.LOGOUT_ACCESS_TOKEN);
         }
-        log.info("processAccessToken method start");
-        Claims claims = jwtUtil.parseClaims(accessToken);
+    }
+
+    private void authenticateWithToken(String token) {
+        Claims claims = jwtUtil.parseClaims(token);
         Authentication authentication = getAuthentication(claims);
-        // 요청마다 Authentication 객체 재설정
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
+    private Authentication getAuthentication(Claims claims) {
+        String email = claims.getSubject();
+        List<String> roles = claims.get("auth", List.class);
+        List<SimpleGrantedAuthority> authorities = roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+
+        CustomUser user = (CustomUser) userService.loadUserByUsername(email);
+        return new UsernamePasswordAuthenticationToken(user, "", authorities);
+    }
+
     private void processRefreshToken(HttpServletRequest request, HttpServletResponse response) {
-        // At가 없고 Rt만 있는 경우 인증흐름
-        // 1) RT 검증
-        // 2) RT 기반으로 새로운 AT 발급
-        // 3) 새 AT에서 Claims 추출
-        // 4) Claims 기반으로 Authentication 객체 설정
-        // 5) SecurityContext에 Authentication 객체 저장
-        log.info("processRefreshToken method start");
-//        String refreshToken = extractRefreshTokenFromCookie(request);
+        String refreshToken = extractRefreshTokenFromCookie(request);
+        String userEmail = jwtUtil.getEmailFromToken(refreshToken);
 
-        String refreshToken = null;
-        try {
-            refreshToken = extractRefreshTokenFromCookie(request);
-        } catch (CommonException e) {
-            log.info("쿠키에서 Refresh Token을 찾지 못했습니다. 헤더에서 검사합니다.");
+        validateRefreshToken(refreshToken, userEmail);
+
+        TokenPair tokenPair = handleTokenIssue(refreshToken, userEmail);
+        setAuthenticationResponse(response, tokenPair);
+        authenticateWithToken(tokenPair.accessToken());
+    }
+
+    private TokenPair handleTokenIssue(String refreshToken, String userEmail) {
+        String newAccessToken = jwtUtil.generateAccessToken(userEmail);
+
+        return new TokenPair(newAccessToken, refreshToken);
+    }
+
+    private void validateRefreshToken(String refreshToken, String userEmail) {
+        String storedToken = redisTemplate.opsForValue().get(REDIS_RT_PREFIX + userEmail);
+
+        if (storedToken == null) {
+            log.info("저장된 RT 없음");
+            throw new CommonException(ErrorCode.EXPIRED_TOKEN_ERROR);
         }
 
-        // 2. 헤더에서 Refresh Token 추출 시도
-        if (refreshToken == null) {
-            refreshToken = extractRefreshTokenFromHeader(request);
+        if (!storedToken.equals(refreshToken)) {
+            log.info("RT 불일치");
+            redisTemplate.delete(REDIS_RT_PREFIX + userEmail);
+            throw new CommonException(ErrorCode.ACCESS_DENIED);
         }
+    }
 
-        if(refreshToken == null) {
-            log.info("rt이 존재하지 않음");
-            throw new CommonException(ErrorCode.NOT_FOUND_REFRESH_TOKEN);
+    private void setAuthenticationResponse(HttpServletResponse response, TokenPair tokenPair) {
+        response.addHeader("Authorization", "Bearer " + tokenPair.accessToken());
+    }
+
+    private String extractAccessToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
-
-        String email = jwtUtil.getEmailFromToken(refreshToken);
-
-        validateRefreshToken(refreshToken, email);
-
-        // rt 재발급 조건 확인 및 처리
-        TokenPair tokenPair = handleTokenIssue(refreshToken, email, request);
-
-        // 응답헤더 설정
-        response.addHeader("Authorization", "Bearer " + tokenPair.accessToken);
-        log.info("rt기반으로 재발급된 accessToken: " + tokenPair.accessToken);
-
-        // Authentication 객체 새로 생성
-        Claims claims = jwtUtil.parseClaims(tokenPair.accessToken);
-        log.info("새로 발급된 accessToken으로 파싱한 Claims: {}", claims);
-        Authentication authentication = getAuthentication(claims); // 문제가 생기는 부분들
-
-        // SecurityContextHolder에 저장
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return null;
     }
 
     private String extractRefreshTokenFromCookie(HttpServletRequest request) {
@@ -164,7 +211,6 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-
         String refreshToken = Arrays.stream(cookies)
                 .filter(cookie -> "refreshToken".equals(cookie.getName()))
                 .findFirst()
@@ -177,97 +223,18 @@ public class JwtFilter extends OncePerRequestFilter {
         return refreshToken;
     }
 
-    // 웹소켓 연결 시 필요한 인증 토큰 헤더에 추가
-    private String extractRefreshTokenFromHeader(HttpServletRequest request) {
-        log.info("헤더에서 rt토큰 추출 시도");
+    private void handleAuthenticationException(HttpServletResponse response, CommonException e) throws IOException {
+        response.setStatus(e.getErrorCode().getHttpStatus().value());
+        response.setContentType("application/json;charset=UTF-8");
 
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            String token = bearerToken.substring(7);
-            log.info("헤더에서 추출한 Refresh Token: {}", token);
-            return token;
-        }
-
-        log.info("Authorization 헤더에 Refresh Token이 없습니다.");
-        return null;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(response.getWriter(),
+                Map.of("error", e.getErrorCode().getMessage()));
     }
-
-    private Authentication getAuthentication(Claims claims) {
-        // 토큰에서 Claims 추출
-        log.info("getAuthentication method 시작");
-        String email = claims.getSubject();
-        log.info("추출된 유저 email: {}", email);
-        List<String> roles = claims.get("auth", List.class);
-        List<SimpleGrantedAuthority> authorities = roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
-        UserDetails userDetails = userService.loadUserByUsername(email);
-        log.info("loadUserByUsername으로 찾은 userDetails: {}", userDetails);
-        // Authentication 객체 생성 및 반환
-        return new UsernamePasswordAuthenticationToken(userDetails,
-                "",
-                authorities);
-    }
-
-    private void handleExpiredAccessToken(HttpServletRequest request, HttpServletResponse response) {
-        log.info("handleExpiredAccessToken method start");
-
-        String refreshToken = extractRefreshTokenFromCookie(request);
-        log.info("At가 만료되었고 at 재발급을 위해 쿠키로부터 추출한 rt: {}", refreshToken);
-        String userEmail = jwtUtil.getEmailFromToken(refreshToken);
-
-        validateRefreshToken(refreshToken, userEmail);
-
-        String newAccessToken = jwtUtil.generateAccessToken(userEmail);
-        log.info("refreshToken 유효성 검사 통과 이후 새로 발급한 accessToken: {}", newAccessToken);
-
-        response.addHeader("Authorization", "Bearer " + newAccessToken);
-    }
-
-    private void validateRefreshToken(String refreshToken, String userEmail) {
-        log.info("refreshToken 유효성 검사 method 시작");
-        // 2-1 ) RT null 체크
-        if(refreshToken == null) {
-            log.info("refresh token이 존재하지 않은 경우의 예외");
-            throw new CommonException(ErrorCode.TOKEN_TYPE_ERROR);
-        }
-
-        String storesRefreshToken = redisTemplate.opsForValue().get("RT:" + userEmail);
-        log.info("Redis에 저장된 storesRefreshToken: {}", storesRefreshToken);
-
-        // 2-2 ) Redis에 저장된 토큰 null 체크
-        if(storesRefreshToken == null) {
-            // Redis에 TTL을 설정해놓았기 때문에 null == expired
-            log.info("refresh token이 만료된 경우의 예외");
-            throw new CommonException(ErrorCode.EXPIRED_TOKEN_ERROR);
-        }
-
-        // 2-3) Redis에 저장된 Rt와 가져온 Rt 체크
-        if(!storesRefreshToken.equals(refreshToken)) {
-            redisTemplate.delete("RT:" + userEmail);
-            log.info("저장된 rt와 가져온 rt가 일치하지 않을 경우의 예외(재로그인할 것)");
-            throw new CommonException(ErrorCode.ACCESS_DENIED);
-        }
-    }
-
-    private TokenPair handleTokenIssue(String refreshToken, String email, HttpServletRequest request) {
-        String newAccessToken = jwtUtil.generateAccessToken(email);
-
-        return new TokenPair(newAccessToken, refreshToken);
-    }
-
-    private String extractAccessToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
-
 
     // 1. 불변(Immutable) 데이터 객체
     // 2. 생성자, getter, equals(), hashCode(), toString() 자동 생성
     // 3. 간결한 문법으로 DTO 생성 가능
-    record TokenPair (String accessToken, String refreshToken) {}
+    private record TokenPair (String accessToken, String refreshToken) {}
 }
+
