@@ -31,7 +31,9 @@ public class OAuth2Controller {
     @GetMapping("/github/access_token")
     public ResponseDTO<?> getGithubAccessToken(@RequestParam String code) {
         log.info("code: {}", code);
-        return ResponseDTO.ok(oAuth2Service.getGithubAccessToken(code));
+        String at = oAuth2Service.getGithubAccessToken(code);
+        log.info("at: {}", at);
+        return ResponseDTO.ok(at);
     }
 
 }
