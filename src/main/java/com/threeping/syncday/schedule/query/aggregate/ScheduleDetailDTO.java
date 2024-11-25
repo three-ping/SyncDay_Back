@@ -9,8 +9,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-public class ScheduleDTO {
-
+public class ScheduleDetailDTO {
     @JsonProperty("schedule_id")
     Long scheduleId;
 
@@ -49,4 +48,8 @@ public class ScheduleDTO {
 
     @JsonProperty("username")
     String username;
+
+    // 사용자 정보 리스트
+    @JsonProperty("user_info")
+    List<UserInfoDTO> userInfo;
 }

@@ -3,7 +3,24 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.threeping.syncday.schedule.query.repository.ScheduleMapper">
-    <resultMap id="scheduleResultMap" type="com.threeping.syncday.schedule.query.aggregate.Schedule">
+
+    <resultMap id="scheduleResultMap" type="com.threeping.syncday.schedule.query.aggregate.ScheduleDTO">
+        <result property="scheduleId" column="schedule_id"></result>
+        <result property="title" column="title"></result>
+        <result property="content" column="content"></result>
+        <result property="startTime" column="start_time"></result>
+        <result property="endTime" column="end_time"></result>
+        <result property="updateTime" column="update_time"></result>
+        <result property="publicStatus" column="public_status"></result>
+        <result property="scheduleRepeatId" column="schedule_repeat_id"></result>
+        <result property="repeatOrder" column="repeat_order"></result>
+        <result property="meetingStatus" column="meeting_status"></result>
+        <result property="meetingroomId" column="meetingroom_id"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="username" column="username"></result>
+    </resultMap>
+
+    <resultMap id="scheduleDetailResultMap" type="com.threeping.syncday.schedule.query.aggregate.ScheduleDetailDTO">
         <id property="scheduleId" column="schedule_id"></id>
         <result property="title" column="title"></result>
         <result property="content" column="content"></result>
@@ -16,41 +33,93 @@
         <result property="meetingStatus" column="meeting_status"></result>
         <result property="meetingroomId" column="meetingroom_id"></result>
         <result property="userId" column="user_id"></result>
+        <result property="username" column="username"></result>
+
+        <!-- 사용자 정보 리스트 -->
+        <collection property="userInfo" resultMap="userInfoResultMap"/>
+    </resultMap>
+
+    <resultMap id="userInfoResultMap" type="com.threeping.syncday.schedule.query.aggregate.UserInfoDTO">
+        <result property="userId" column="user_id_from_participant"/>
+        <result property="username" column="username_from_user"/>
+        <result property="participationStatus" column="participation_status"/>
     </resultMap>
 
     <select id="selectMySchedulesByUserId" resultMap="scheduleResultMap" parameterType="long">
-        SELECT SCHEDULE_ID
-             , TITLE
-             , CONTENT
-             , START_TIME
-             , END_TIME
-             , UPDATE_TIME
-             , PUBLIC_STATUS
-             , SCHEDULE_REPEAT_ID
-             , REPEAT_ORDER
-             , MEETING_STATUS
-             , MEETINGROOM_ID
-             , USER_ID
-          FROM TBL_SCHEDULE
-         WHERE USER_ID = #{userId}
+        SELECT S.SCHEDULE_ID
+             , S.TITLE
+             , S.CONTENT
+             , S.START_TIME
+             , S.END_TIME
+             , S.UPDATE_TIME
+             , S.PUBLIC_STATUS
+             , S.SCHEDULE_REPEAT_ID
+             , S.REPEAT_ORDER
+             , S.MEETING_STATUS
+             , S.MEETINGROOM_ID
+             , S.USER_ID
+             , U.USERNAME
+          FROM TBL_SCHEDULE S
+          LEFT JOIN TBL_USER U ON S.USER_ID = U.USER_ID
+         WHERE S.USER_ID = #{userId}
+            OR S.SCHEDULE_ID IN (
+               SELECT SP.SCHEDULE_ID
+                 FROM TBL_SCHEDULE_PARTICIPANT SP
+                WHERE SP.USER_ID = #{userId}
+                  AND SP.PARTICIPATION_STATUS = 'ATTEND'
+         )
     </select>
 
     <select id="selectOthersSchedulesBySearchUserId" resultMap="scheduleResultMap" parameterType="long">
-        SELECT SCHEDULE_ID
-             , TITLE
-             , CONTENT
-             , START_TIME
-             , END_TIME
-             , UPDATE_TIME
-             , PUBLIC_STATUS
-             , SCHEDULE_REPEAT_ID
-             , REPEAT_ORDER
-             , MEETING_STATUS
-             , MEETINGROOM_ID
-             , USER_ID
-          FROM TBL_SCHEDULE
-         WHERE USER_ID = #{userId}
-           AND PUBLIC_STATUS = 'PUBLIC'
+        SELECT S.SCHEDULE_ID
+             , S.TITLE
+             , S.CONTENT
+             , S.START_TIME
+             , S.END_TIME
+             , S.UPDATE_TIME
+             , S.PUBLIC_STATUS
+             , S.SCHEDULE_REPEAT_ID
+             , S.REPEAT_ORDER
+             , S.MEETING_STATUS
+             , S.MEETINGROOM_ID
+             , S.USER_ID
+             , U.USERNAME
+          FROM TBL_SCHEDULE S
+          LEFT JOIN TBL_USER U ON S.USER_ID = U.USER_ID
+         WHERE S.USER_ID = #{userId}
+            OR S.SCHEDULE_ID IN (
+               SELECT SP.SCHEDULE_ID
+                 FROM TBL_SCHEDULE_PARTICIPANT SP
+                WHERE SP.USER_ID = #{userId}
+                  AND SP.PARTICIPATION_STATUS = 'ATTEND'
+        )
     </select>
 
+    <select id="selectMyDetailSchedulesByUserIdAndScheduleId" resultMap="scheduleDetailResultMap" parameterType="map">
+        SELECT S.SCHEDULE_ID
+             , S.TITLE
+             , S.CONTENT
+             , S.START_TIME
+             , S.END_TIME
+             , S.UPDATE_TIME
+             , S.PUBLIC_STATUS
+             , S.SCHEDULE_REPEAT_ID
+             , S.REPEAT_ORDER
+             , S.MEETING_STATUS
+             , S.MEETINGROOM_ID
+             , S.USER_ID
+             , OWNER.USERNAME AS username -- 일정 소유자의 이름
+             , P.USER_ID AS user_id_from_participant
+             , PARTICIPANT.USERNAME AS username_from_user -- 참여자의 이름
+             , P.PARTICIPATION_STATUS
+          FROM TBL_SCHEDULE S
+          LEFT JOIN TBL_USER OWNER -- 일정 소유자와 조인
+            ON S.USER_ID = OWNER.USER_ID
+          LEFT JOIN TBL_SCHEDULE_PARTICIPANT P
+            ON S.SCHEDULE_ID = P.SCHEDULE_ID
+          LEFT JOIN TBL_USER PARTICIPANT -- 참여자와 조인
+            ON P.USER_ID = PARTICIPANT.USER_ID
+         WHERE S.USER_ID = #{userId}
+           AND S.SCHEDULE_ID = #{scheduleId}
+    </select>
 </mapper>
