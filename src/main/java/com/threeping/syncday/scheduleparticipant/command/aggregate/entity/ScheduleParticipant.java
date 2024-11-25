@@ -3,9 +3,11 @@ package com.threeping.syncday.scheduleparticipant.command.aggregate.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 @Data
 @Entity
-@Table(name = "TBL_SCHEDULE_PARTICIPANT")
+@Table(name = "TBL_USER_SCHEDULE")
 @IdClass(ScheduleParticipantPK.class)
 public class ScheduleParticipant {
 
@@ -18,6 +20,9 @@ public class ScheduleParticipant {
     private Long scheduleId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "participation_status")
+    @Column(name = "status")
     private ParticipationStatus participationStatus = ParticipationStatus.PENDING;
+
+    @Column(name = "notification_time")
+    private Timestamp notificationTime;
 }
