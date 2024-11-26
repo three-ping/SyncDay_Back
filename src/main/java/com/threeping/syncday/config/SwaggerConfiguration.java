@@ -111,11 +111,24 @@ public class SwaggerConfiguration {
     @Profile("!Prod")
     public GroupedOpenApi calendarApi() {
 
-        String[] paths = {"/api/calendar/**"};
+        String[] paths = {"/api/schedule/**"};
 
         return GroupedOpenApi
                 .builder()
                 .group("일정 관련 api")
+                .pathsToMatch(paths)
+                .addOpenApiCustomizer(buildSecurityOpenApi()).build();
+    }
+
+    @Bean
+    @Profile("!Prod")
+    public GroupedOpenApi meetingroomApi() {
+
+        String [] paths = {"/api/meetingroom/**", "/api/meetingroom_reservation/**"};
+
+        return GroupedOpenApi
+                .builder()
+                .group("회의실 관련 api")
                 .pathsToMatch(paths)
                 .addOpenApiCustomizer(buildSecurityOpenApi()).build();
     }

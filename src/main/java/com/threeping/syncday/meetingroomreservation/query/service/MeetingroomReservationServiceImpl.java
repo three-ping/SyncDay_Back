@@ -29,4 +29,21 @@ public class MeetingroomReservationServiceImpl implements MeetingroomReservation
                 meetingroomReservations.stream().map(meetingroomReservation -> modelMapper.map(meetingroomReservation, MeetingroomReservationDTO.class)).collect(Collectors.toList());
         return meetingroomReservationDTOs;
     }
+
+    @Override
+    public List<MeetingroomReservationDTO> getMeetingroomReservationsByRoomId(Long meetingRoomId) {
+        // 특정 meetingRoomId로 조회 후 DTO로 변환
+        List<MeetingroomReservation> meetingroomReservations = meetingroomReservationMapper.selectMeetingroomReservationsByRoomId(meetingRoomId);
+        return meetingroomReservations.stream()
+                .map(meetingroomReservation -> modelMapper.map(meetingroomReservation, MeetingroomReservationDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MeetingroomReservationDTO> getMeetingroomReservationsByPlace(String meetingRoomPlace) {
+        List<MeetingroomReservation> reservations = meetingroomReservationMapper.selectMeetingroomReservationsByPlace(meetingRoomPlace);
+        return reservations.stream()
+                .map(reservation -> modelMapper.map(reservation, MeetingroomReservationDTO.class))
+                .collect(Collectors.toList());
+    }
 }

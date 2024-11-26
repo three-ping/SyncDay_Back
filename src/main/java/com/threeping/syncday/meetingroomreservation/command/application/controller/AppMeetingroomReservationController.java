@@ -30,4 +30,6 @@ public class AppMeetingroomReservationController {
         appMeetingroomReservationService.deleteMeetingroomReservationByScheduleId(scheduleId);
         return ResponseDTO.ok("Deleted reservations for schedule ID: " + scheduleId);
     }
+
+
 }

@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @EntityListeners(ProjectEntityListener.class)
 @Table(name="TBL_PROJ")
 @Data
-public class Proj {
+public class  Proj {
     @Id
     @Column(name="proj_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
