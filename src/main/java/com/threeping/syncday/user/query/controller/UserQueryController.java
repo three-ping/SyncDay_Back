@@ -3,6 +3,7 @@ package com.threeping.syncday.user.query.controller;
 import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.user.command.application.dto.UserDTO;
 import com.threeping.syncday.user.command.domain.vo.ResponseNormalLoginVO;
+import com.threeping.syncday.user.query.dto.UserSearchResponse;
 import com.threeping.syncday.user.query.service.UserQueryService;
 import com.threeping.syncday.user.query.service.UserSearchService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,6 +60,16 @@ public class UserQueryController {
         return ResponseDTO.ok("accessToken 재발급 성공");
     }
 
+    @Operation(summary = "회원 검색",
+            description = "키워드로 회원을 검색합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "회원 검색 성공",
+                            content = @Content(schema = @Schema(implementation = UserSearchResponse.class))
+                    )
+            }
+    )
     @GetMapping("/search")
     public ResponseDTO<?> searchUser(@RequestParam String keyword){
         return ResponseDTO.ok(userSearchService.searchUser(keyword));
