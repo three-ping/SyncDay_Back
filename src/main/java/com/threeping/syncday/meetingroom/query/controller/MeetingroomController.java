@@ -26,4 +26,10 @@ public class MeetingroomController {
     public ResponseDTO<?> findAllMeetingrooms() {
         return ResponseDTO.ok(meetingroomService.getAllMeetingrooms());
     }
+
+    // 특정 회의실 조회
+    @GetMapping("/{meetingroomId}")
+    public ResponseDTO<?> findMeetingroomById(@PathVariable Long meetingroomId) {
+        return ResponseDTO.ok(meetingroomService.getMeetingroomById(meetingroomId));
+    }
 }

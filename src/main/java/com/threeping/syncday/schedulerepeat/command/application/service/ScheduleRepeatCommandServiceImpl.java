@@ -4,10 +4,7 @@ import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.schedule.command.aggregate.entity.MeetingStatus;
 import com.threeping.syncday.schedule.command.aggregate.entity.PublicStatus;
-import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateRepeatedScheduleDTO;
-import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateScheduleRepeatDTO;
-import com.threeping.syncday.schedulerepeat.command.aggregate.dto.RepeatDTO;
-import com.threeping.syncday.schedulerepeat.command.aggregate.dto.SendScheduleRepeatMailDTO;
+import com.threeping.syncday.schedulerepeat.command.aggregate.dto.*;
 import com.threeping.syncday.schedulerepeat.command.aggregate.entity.ScheduleRepeat;
 import com.threeping.syncday.schedulerepeat.command.aggregate.vo.ScheduleDurationVO;
 import com.threeping.syncday.schedulerepeat.command.domain.repository.ScheduleRepeatRepository;
@@ -19,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -40,14 +38,15 @@ public class ScheduleRepeatCommandServiceImpl implements ScheduleRepeatCommandSe
     }
 
     @Override
-    public Long createScheduleRepeat(CreateScheduleRepeatDTO createScheduleRepeatDTO) {
+    public ScheduleRepeatDTO createScheduleRepeat(CreateScheduleRepeatDTO createScheduleRepeatDTO) {
         if (createScheduleRepeatDTO.getStartTime().after(createScheduleRepeatDTO.getEndTime())) {
             throw new CommonException(ErrorCode.INVALID_REPEAT_SCHEDULE_START_END);
         }
         ScheduleRepeat scheduleRepeat = new ScheduleRepeat();
         createScheduleRepeatDtoToEntity(createScheduleRepeatDTO, scheduleRepeat);
         scheduleRepeatRepository.save(scheduleRepeat);
-        return scheduleRepeat.getScheduleRepeatId();
+
+        return entityToDTO(scheduleRepeat);
     }
 
     @Override
@@ -87,13 +86,93 @@ public class ScheduleRepeatCommandServiceImpl implements ScheduleRepeatCommandSe
         infraScheduleRepeatService.sendMailToRepeatScheduleParticipants(sendScheduleRepeatMailDTO);
     }
 
+//    @Override
+//    public ScheduleRepeatDTO updateAllScheduleRepeat(Long scheduleRepeatId,
+//                                                     CreateScheduleRepeatDTO createScheduleRepeatDTO) {
+//        ScheduleRepeat scheduleRepeat = scheduleRepeatRepository.findById(scheduleRepeatId)
+//                .orElseThrow(()-> new CommonException(ErrorCode.INVALID_INPUT_VALUE));
+//        scheduleRepeatRepository.delete(scheduleRepeat);
+//        // 일정에서 scheduleRepeatId로 삭제하는 메소드
+//        ScheduleRepeatDTO scheduleRepeatDTO = createScheduleRepeat(createScheduleRepeatDTO);
+//        createRepeatedSchedule(scheduleRepeatDTO.getScheduleRepeatId(),createScheduleRepeatDTO);
+//        createRepeatedSchedule();
+//    }
+//
+//    @Override
+//    public ScheduleRepeatDTO updatePartialScheduleRepeat(Long scheduleRepeatId,
+//                                                         CreateScheduleRepeatDTO createScheduleRepeatDTO) {
+//        ScheduleRepeat oldScheduleRepeat = scheduleRepeatRepository.findById(scheduleRepeatId)
+//                .orElseThrow(()-> new CommonException(ErrorCode.INVALID_INPUT_VALUE));
+//        CreateScheduleRepeatDTO oldDTO = entityToCreateDTO(oldScheduleRepeat);
+//        oldDTO.setRepeatEnd(
+//                Timestamp.valueOf(createScheduleRepeatDTO.getStartTime().toLocalDateTime().minusSeconds(1L))
+//        );
+//        oldDTO.setUserName(createScheduleRepeatDTO.getUserName());
+//        oldDTO.setParticipants(createScheduleRepeatDTO.getParticipants());
+//        return null;
+//    }
+
+    @Override
+    public void deleteScheduleRepeat(Long scheduleRepeatId) {
+        ScheduleRepeat scheduleRepeat = scheduleRepeatRepository.findById(scheduleRepeatId)
+                .orElseThrow(()->new CommonException(ErrorCode.INVALID_INPUT_VALUE));
+        scheduleRepeatRepository.delete(scheduleRepeat);
+    }
+
+    private CreateScheduleRepeatDTO entityToCreateDTO(ScheduleRepeat oldScheduleRepeat) {
+        CreateScheduleRepeatDTO createScheduleRepeatDTO = new CreateScheduleRepeatDTO();
+        createScheduleRepeatDTO.setTitle(oldScheduleRepeat.getTitle());
+        createScheduleRepeatDTO.setContent(oldScheduleRepeat.getContent());
+        createScheduleRepeatDTO.setStartTime(oldScheduleRepeat.getStartTime());
+        createScheduleRepeatDTO.setEndTime(oldScheduleRepeat.getEndTime());
+        createScheduleRepeatDTO.setPublicStatus(oldScheduleRepeat.getPublicStatus());
+        createScheduleRepeatDTO.setMeetingStatus(oldScheduleRepeat.getMeetingStatus());
+        createScheduleRepeatDTO.setRecurrenceType(oldScheduleRepeat.getRecurrenceType());
+        createScheduleRepeatDTO.setPersonalRecurrenceUnit(oldScheduleRepeat.getPersonalRecurrenceUnit());
+        createScheduleRepeatDTO.setPersonalRecurrenceInterval(oldScheduleRepeat.getPersonalRecurrenceInterval());
+        createScheduleRepeatDTO.setPersonalRecurrenceSelectedDays(oldScheduleRepeat.getPersonalRecurrenceSelectedDays());
+        createScheduleRepeatDTO.setPersonalMonthlyType(oldScheduleRepeat.getPersonalMonthlyType());
+        createScheduleRepeatDTO.setRepeatEnd(oldScheduleRepeat.getRepeatEnd());
+        createScheduleRepeatDTO.setUserId(oldScheduleRepeat.getUserId());
+        return createScheduleRepeatDTO;
+    }
+
+    private ScheduleRepeat changeScheduleRepeat(Long scheduleRepeatId,
+                                                  UpdateScheduleRepeatDTO updateScheduleRepeatDTO) {
+        ScheduleRepeat scheduleRepeat = scheduleRepeatRepository.findById(scheduleRepeatId)
+                .orElseThrow(()-> new CommonException(ErrorCode.INVALID_INPUT_VALUE));
+        scheduleRepeat.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+        if(!updateScheduleRepeatDTO.getTitle().isBlank()){
+            scheduleRepeat.setTitle(updateScheduleRepeatDTO.getTitle());
+        }
+        if(!updateScheduleRepeatDTO.getContent().isBlank()){
+            scheduleRepeat.setContent(updateScheduleRepeatDTO.getContent());
+        }
+        if(updateScheduleRepeatDTO.getStartTime() != null){
+            scheduleRepeat.setStartTime(updateScheduleRepeatDTO.getStartTime());
+        }
+        if(updateScheduleRepeatDTO.getEndTime() != null){
+            scheduleRepeat.setEndTime(updateScheduleRepeatDTO.getEndTime());
+        }
+        if(updateScheduleRepeatDTO.getPublicStatus() != null){
+            scheduleRepeat.setPublicStatus(updateScheduleRepeatDTO.getPublicStatus());
+        }
+        if(updateScheduleRepeatDTO.getMeetingStatus() != null){
+            scheduleRepeat.setMeetingStatus(updateScheduleRepeatDTO.getMeetingStatus());
+        }
+        scheduleRepeatRepository.save(scheduleRepeat);
+
+
+        return scheduleRepeat;
+    }
+
 
     private void createScheduleRepeatDtoToEntity(CreateScheduleRepeatDTO createScheduleRepeatDTO, ScheduleRepeat scheduleRepeat) {
         scheduleRepeat.setTitle(createScheduleRepeatDTO.getTitle());
         scheduleRepeat.setContent(createScheduleRepeatDTO.getContent());
         scheduleRepeat.setStartTime(createScheduleRepeatDTO.getStartTime());
         scheduleRepeat.setEndTime(createScheduleRepeatDTO.getEndTime());
-        scheduleRepeat.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+        scheduleRepeat.setUpdateTime(Timestamp.from(Instant.now()));
         scheduleRepeat.setPublicStatus(createScheduleRepeatDTO.getPublicStatus());
         scheduleRepeat.setMeetingStatus(createScheduleRepeatDTO.getMeetingStatus());
         scheduleRepeat.setRecurrenceType(createScheduleRepeatDTO.getRecurrenceType());
@@ -148,6 +227,26 @@ public class ScheduleRepeatCommandServiceImpl implements ScheduleRepeatCommandSe
         repeatDTO.setEndTime(createScheduleRepeatDTO.getEndTime());
         repeatDTO.setRepeatEnd(createScheduleRepeatDTO.getRepeatEnd());
         return repeatDTO;
+    }
+
+    private ScheduleRepeatDTO entityToDTO(ScheduleRepeat scheduleRepeat){
+        ScheduleRepeatDTO scheduleRepeatDTO = new ScheduleRepeatDTO();
+        scheduleRepeatDTO.setTitle(scheduleRepeat.getTitle());
+        scheduleRepeatDTO.setContent(scheduleRepeat.getContent());
+        scheduleRepeatDTO.setStartTime(scheduleRepeat.getStartTime());
+        scheduleRepeatDTO.setEndTime(scheduleRepeat.getEndTime());
+        scheduleRepeatDTO.setUpdateTime(scheduleRepeat.getUpdateTime());
+        scheduleRepeatDTO.setMeetingStatus(scheduleRepeat.getMeetingStatus());
+        scheduleRepeatDTO.setPublicStatus(scheduleRepeat.getPublicStatus());
+        scheduleRepeatDTO.setRecurrenceType(scheduleRepeat.getRecurrenceType());
+        scheduleRepeatDTO.setPersonalRecurrenceUnit(scheduleRepeat.getPersonalRecurrenceUnit());
+        scheduleRepeatDTO.setPersonalRecurrenceInterval(scheduleRepeat.getPersonalRecurrenceInterval());
+        scheduleRepeatDTO.setPersonalRecurrenceSelectedDays(scheduleRepeat.getPersonalRecurrenceSelectedDays());
+        scheduleRepeatDTO.setRepeatEnd(scheduleRepeat.getRepeatEnd());
+        scheduleRepeatDTO.setScheduleRepeatId(scheduleRepeat.getScheduleRepeatId());
+        scheduleRepeatDTO.setUserId(scheduleRepeat.getUserId());
+
+        return scheduleRepeatDTO;
     }
 
 
