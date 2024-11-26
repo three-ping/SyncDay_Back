@@ -67,7 +67,14 @@ public class SwaggerConfiguration {
                 .pathsToMatch(paths)
                 .addOpenApiCustomizer(buildSecurityOpenApi()).build();
     }
-
+    @Bean
+    @Profile("!Prod")
+    public GroupedOpenApi workspaceApi(){
+        String[] paths = {"/api/workspaces/**"};
+        return GroupedOpenApi.builder().group("워크스페이스 관련 api")
+                .pathsToMatch(paths)
+                .addOpenApiCustomizer(buildSecurityOpenApi()).build();
+    }
     @Bean
     @Profile("!Prod")
     public GroupedOpenApi cardboardApi() {
