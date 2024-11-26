@@ -121,7 +121,7 @@
             ON S.SCHEDULE_ID = US.SCHEDULE_ID
           LEFT JOIN TBL_USER PARTICIPANT -- 참여자와 조인
             ON US.USER_ID = PARTICIPANT.USER_ID
-         WHERE S.USER_ID = #{userId}
+         WHERE US.USER_ID = #{userId}
            AND S.SCHEDULE_ID = #{scheduleId}
     </select>
 
