@@ -76,7 +76,7 @@ public class AppMeetingroomReservationServiceImpl implements AppMeetingroomReser
         Timestamp startTime = meetingroomReservationDTO.getStartTime();
         Timestamp endTime = meetingroomReservationDTO.getEndTime();
 
-        while (!startTime.after(endTime)) {
+        while (startTime.before(endTime)) {
             MeetingroomReservation reservation = new MeetingroomReservation();
             reservation.setSchedule(schedule.getScheduleId());
             reservation.setMeetingRoom(meetingRoom.getMeetingroomId());

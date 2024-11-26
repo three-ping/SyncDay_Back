@@ -6,10 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/meetingroomreservation")
+@RequestMapping("api/meetingroom_reservation")
 @Slf4j
 public class MeetingroomReservationController {
 
@@ -24,5 +25,17 @@ public class MeetingroomReservationController {
     @GetMapping
     public ResponseDTO<?> findAllMeetingroomReservations() {
         return ResponseDTO.ok(meetingroomReservationService.getAllMeetingroomReservations());
+    }
+
+    @GetMapping("/by-room")
+    public ResponseDTO<?> findMeetingroomReservationsByRoomId(@RequestParam("meetingroom_id") Long meetingroomId) {
+        log.info("Fetching reservations for meetingRoomId: {}", meetingroomId);
+        return ResponseDTO.ok(meetingroomReservationService.getMeetingroomReservationsByRoomId(meetingroomId));
+    }
+
+    @GetMapping("/by-place")
+    public ResponseDTO<?> findMeetingroomReservationsByPlace(@RequestParam("meetingroom_place") String meetingroomPlace) {
+        log.info("Fetching reservations for meetingRoomPlace: {}", meetingroomPlace);
+        return ResponseDTO.ok(meetingroomReservationService.getMeetingroomReservationsByPlace(meetingroomPlace));
     }
 }

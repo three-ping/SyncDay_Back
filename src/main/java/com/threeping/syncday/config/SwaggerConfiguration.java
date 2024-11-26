@@ -111,7 +111,7 @@ public class SwaggerConfiguration {
     @Profile("!Prod")
     public GroupedOpenApi calendarApi() {
 
-        String[] paths = {"/api/calendar/**"};
+        String[] paths = {"/api/schedule/**"};
 
         return GroupedOpenApi
                 .builder()

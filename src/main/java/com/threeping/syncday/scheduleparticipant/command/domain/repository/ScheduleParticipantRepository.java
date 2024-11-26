@@ -10,4 +10,8 @@ public interface ScheduleParticipantRepository extends JpaRepository<SchedulePar
     List<ScheduleParticipant> findByScheduleId(Long scheduleId);
 
     void deleteByScheduleIdAndUserId(Long scheduleId, Long userId);
+
+    void deleteByScheduleId(Long scheduleId);
+
+    ScheduleParticipant findByScheduleIdAndUserId(Long scheduleId, Long userId);
 }
