@@ -50,9 +50,9 @@
         SELECT S.SCHEDULE_ID
              , S.TITLE
              , S.CONTENT
-             , CONVERT_TZ(S.START_TIME, '+00:00', '+09:00') AS START_TIME
-             , CONVERT_TZ(S.END_TIME, '+00:00', '+09:00') AS END_TIME
-             , CONVERT_TZ(S.UPDATE_TIME, '+00:00', '+09:00') AS UPDATE_TIME
+             , S.START_TIME
+             , S.END_TIME
+             , S.UPDATE_TIME
              , S.PUBLIC_STATUS
              , S.SCHEDULE_REPEAT_ID
              , S.REPEAT_ORDER
@@ -75,9 +75,9 @@
         SELECT S.SCHEDULE_ID
              , S.TITLE
              , S.CONTENT
-             , CONVERT_TZ(S.START_TIME, '+00:00', '+09:00') AS START_TIME
-             , CONVERT_TZ(S.END_TIME, '+00:00', '+09:00') AS END_TIME
-             , CONVERT_TZ(S.UPDATE_TIME, '+00:00', '+09:00') AS UPDATE_TIME
+             , S.START_TIME
+             , S.END_TIME
+             , S.UPDATE_TIME
              , S.PUBLIC_STATUS
              , S.SCHEDULE_REPEAT_ID
              , S.REPEAT_ORDER
@@ -100,9 +100,9 @@
         SELECT S.SCHEDULE_ID
              , S.TITLE
              , S.CONTENT
-             , CONVERT_TZ(S.START_TIME, '+00:00', '+09:00') AS START_TIME
-             , CONVERT_TZ(S.END_TIME, '+00:00', '+09:00') AS END_TIME
-             , CONVERT_TZ(S.UPDATE_TIME, '+00:00', '+09:00') AS UPDATE_TIME
+             , S.START_TIME
+             , S.END_TIME
+             , S.UPDATE_TIME
              , S.PUBLIC_STATUS
              , S.SCHEDULE_REPEAT_ID
              , S.REPEAT_ORDER
@@ -129,9 +129,9 @@
         SELECT S.SCHEDULE_ID
              , S.TITLE
              , S.CONTENT
-             , CONVERT_TZ(S.START_TIME, '+00:00', '+09:00') AS START_TIME
-             , CONVERT_TZ(S.END_TIME, '+00:00', '+09:00') AS END_TIME
-             , CONVERT_TZ(S.UPDATE_TIME, '+00:00', '+09:00') AS UPDATE_TIME
+             , S.START_TIME
+             , S.END_TIME
+             , S.UPDATE_TIME
              , S.PUBLIC_STATUS
              , S.SCHEDULE_REPEAT_ID
              , S.REPEAT_ORDER

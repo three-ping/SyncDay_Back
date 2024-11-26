@@ -14,7 +14,7 @@
     <select id="findParticipantsByNotificationTimeBetween" resultMap="scheduleParticipantResultMap" parameterType="map">
         SELECT US.USER_ID,
                US.SCHEDULE_ID,
-               CONVERT_TZ(US.NOTIFICATION_TIME, '+00:00', '+09:00') AS NOTIFICATION_TIME,
+               US.NOTIFICATION_TIME,
                US.STATUS
           FROM TBL_USER_SCHEDULE US
          WHERE US.NOTIFICATION_TIME BETWEEN #{start} AND #{end}
