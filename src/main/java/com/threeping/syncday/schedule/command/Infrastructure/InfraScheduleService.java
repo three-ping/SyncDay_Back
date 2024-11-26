@@ -7,6 +7,4 @@ public interface InfraScheduleService {
     void requestAddScheduleParticipant(Long userId, Long scheduleId, List<Long> attendeeIds, Timestamp notificationTime);
 
     void requestUpdateScheduleParticipant(Long userId, Long scheduleId, List<Long> attendeeIds);
-
-    void requestDeleteScheduleParticipant(Long scheduleId);
 }
