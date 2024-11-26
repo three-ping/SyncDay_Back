@@ -75,13 +75,11 @@ public class WebSecurity {
                         .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/swagger-custom-ui.html")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/docs/login")).permitAll()
-                        .requestMatchers("/auth/**", "/ws/**").permitAll()  // 웹소켓 설정
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
         )
                 // manager 등록
                 .authenticationManager(authenticationManager)
                 // session 방식 사용 x
-
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // jwt filter 전에 로그아웃 필터 끼기
                 .logout(logout -> logout

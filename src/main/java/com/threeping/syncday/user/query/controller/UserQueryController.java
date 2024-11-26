@@ -4,6 +4,7 @@ import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.user.command.application.dto.UserDTO;
 import com.threeping.syncday.user.command.domain.vo.ResponseNormalLoginVO;
 import com.threeping.syncday.user.query.service.UserQueryService;
+import com.threeping.syncday.user.query.service.UserSearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,10 +22,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserQueryController {
 
     private final UserQueryService userService;
+    private final UserSearchService userSearchService;
 
     @Autowired
-    public UserQueryController(UserQueryService userService) {
+    public UserQueryController(UserQueryService userService,
+                               UserSearchService userSearchService) {
         this.userService = userService;
+        this.userSearchService = userSearchService;
     }
 
     @GetMapping("/health")
@@ -45,7 +49,7 @@ public class UserQueryController {
     @GetMapping("/profile")
     public ResponseDTO<?> findMyProfile(@AuthenticationPrincipal User user){
         String email = user.getUsername();
-        UserDTO userDTO = userService.findByUserEmail(email);
+        UserDTO userDTO = userService.findByEmail(email);
         return ResponseDTO.ok(userDTO);
     }
 
@@ -53,5 +57,25 @@ public class UserQueryController {
     public ResponseDTO<?> refresh(HttpServletRequest request){
         // at만 새로 발급받기 위한 end point
         return ResponseDTO.ok("accessToken 재발급 성공");
+    }
+
+    @GetMapping("/search")
+    public ResponseDTO<?> searchUser(@RequestParam String keyword){
+        return ResponseDTO.ok(userSearchService.searchUser(keyword));
+    }
+
+    @Operation(summary = "회원 pk로 조회",
+            description = "회원의 pk를 통해 UserDTO를 조회합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "회원 조회 성공",
+                            content = @Content(schema = @Schema(implementation = UserDTO.class))
+                    )
+            }
+    )
+    @GetMapping("/{userId}")
+    public ResponseDTO<?> findUserById(@PathVariable Long userId){
+        return ResponseDTO.ok(userService.findById(userId));
     }
 }

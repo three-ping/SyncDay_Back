@@ -19,4 +19,27 @@
           FROM TBL_MEETINGROOM_RESERVATION
 <!--        WHERE SCHEDULE_ID = #{schedule}-->
     </select>
+
+
+    <select id="selectMeetingroomReservationsByRoomId" resultMap="meetingroomReservationResultMap">
+        SELECT
+        MEETINGROOM_RESERVATION_ID,
+        MEETING_TIME,
+        MEETINGROOM_ID,
+        SCHEDULE_ID
+        FROM TBL_MEETINGROOM_RESERVATION
+        WHERE MEETINGROOM_ID = #{meetingRoomId}
+    </select>
+
+    <select id="selectMeetingroomReservationsByPlace" resultMap="meetingroomReservationResultMap">
+        SELECT
+        r.MEETINGROOM_RESERVATION_ID,
+        r.MEETING_TIME,
+        r.MEETINGROOM_ID,
+        r.SCHEDULE_ID
+        FROM TBL_MEETINGROOM_RESERVATION r
+        JOIN TBL_MEETINGROOM m ON r.MEETINGROOM_ID = m.MEETINGROOM_ID
+        WHERE m.MEETINGROOM_PLACE = #{meetingRoomPlace}
+    </select>
+
 </mapper>

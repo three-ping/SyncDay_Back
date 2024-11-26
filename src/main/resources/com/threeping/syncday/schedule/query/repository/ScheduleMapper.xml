@@ -34,6 +34,7 @@
         <result property="meetingroomId" column="meetingroom_id"></result>
         <result property="userId" column="user_id"></result>
         <result property="username" column="username"></result>
+        <result property="notificationTime" column="notification_time"></result>
 
         <!-- 사용자 정보 리스트 -->
         <collection property="userInfo" resultMap="userInfoResultMap"/>
@@ -42,7 +43,7 @@
     <resultMap id="userInfoResultMap" type="com.threeping.syncday.schedule.query.aggregate.UserInfoDTO">
         <result property="userId" column="user_id_from_participant"/>
         <result property="username" column="username_from_user"/>
-        <result property="participationStatus" column="participation_status"/>
+        <result property="participationStatus" column="status"/>
     </resultMap>
 
     <select id="selectMySchedulesByUserId" resultMap="scheduleResultMap" parameterType="long">
@@ -63,10 +64,10 @@
           LEFT JOIN TBL_USER U ON S.USER_ID = U.USER_ID
          WHERE S.USER_ID = #{userId}
             OR S.SCHEDULE_ID IN (
-               SELECT SP.SCHEDULE_ID
-                 FROM TBL_SCHEDULE_PARTICIPANT SP
-                WHERE SP.USER_ID = #{userId}
-                  AND SP.PARTICIPATION_STATUS = 'ATTEND'
+               SELECT US.SCHEDULE_ID
+                 FROM TBL_USER_SCHEDULE US
+                WHERE US.USER_ID = #{userId}
+                  AND US.STATUS = 'ATTEND'
          )
     </select>
 
@@ -88,10 +89,10 @@
           LEFT JOIN TBL_USER U ON S.USER_ID = U.USER_ID
          WHERE S.USER_ID = #{userId}
             OR S.SCHEDULE_ID IN (
-               SELECT SP.SCHEDULE_ID
-                 FROM TBL_SCHEDULE_PARTICIPANT SP
-                WHERE SP.USER_ID = #{userId}
-                  AND SP.PARTICIPATION_STATUS = 'ATTEND'
+               SELECT US.SCHEDULE_ID
+                 FROM TBL_USER_SCHEDULE US
+                WHERE US.USER_ID = #{userId}
+                  AND US.STATUS = 'ATTEND'
         )
     </select>
 
@@ -109,17 +110,35 @@
              , S.MEETINGROOM_ID
              , S.USER_ID
              , OWNER.USERNAME AS username -- 일정 소유자의 이름
-             , P.USER_ID AS user_id_from_participant
+             , US.USER_ID AS user_id_from_participant
              , PARTICIPANT.USERNAME AS username_from_user -- 참여자의 이름
-             , P.PARTICIPATION_STATUS
+             , US.STATUS AS status
+             , US.NOTIFICATION_TIME AS notification_time -- 알림 시간
           FROM TBL_SCHEDULE S
           LEFT JOIN TBL_USER OWNER -- 일정 소유자와 조인
             ON S.USER_ID = OWNER.USER_ID
-          LEFT JOIN TBL_SCHEDULE_PARTICIPANT P
-            ON S.SCHEDULE_ID = P.SCHEDULE_ID
+          LEFT JOIN TBL_USER_SCHEDULE US
+            ON S.SCHEDULE_ID = US.SCHEDULE_ID
           LEFT JOIN TBL_USER PARTICIPANT -- 참여자와 조인
-            ON P.USER_ID = PARTICIPANT.USER_ID
-         WHERE S.USER_ID = #{userId}
+            ON US.USER_ID = PARTICIPANT.USER_ID
+         WHERE US.USER_ID = #{userId}
            AND S.SCHEDULE_ID = #{scheduleId}
+    </select>
+
+    <select id="selectByScheduleId" resultMap="scheduleResultMap" parameterType="long">
+        SELECT S.SCHEDULE_ID
+             , S.TITLE
+             , S.CONTENT
+             , S.START_TIME
+             , S.END_TIME
+             , S.UPDATE_TIME
+             , S.PUBLIC_STATUS
+             , S.SCHEDULE_REPEAT_ID
+             , S.REPEAT_ORDER
+             , S.MEETING_STATUS
+             , S.MEETINGROOM_ID
+             , S.USER_ID
+        FROM TBL_SCHEDULE S
+        WHERE S.SCHEDULE_ID = #{scheduleId}
     </select>
 </mapper>
