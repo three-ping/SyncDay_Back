@@ -2,12 +2,10 @@ package com.threeping.syncday.proj.query.controller;
 
 import com.threeping.syncday.proj.query.service.ProjService;
 import com.threeping.syncday.common.ResponseDTO;
+import com.threeping.syncday.proj.query.service.ProjectSearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/projs")
@@ -15,10 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProjController {
 
     private final ProjService projService;
+    private final ProjectSearchService searchService;
 
     @Autowired
-    public ProjController(ProjService projService){
+    public ProjController(ProjService projService, ProjectSearchService searchService){
         this.projService = projService;
+        this.searchService = searchService;
     }
 
     @GetMapping("/")
@@ -37,4 +37,8 @@ public class ProjController {
         return ResponseDTO.ok(projService.getProjInfosByUserId(userId));
     }
 
+    @GetMapping("/search")
+    public ResponseDTO<?> searchProjs(@RequestParam String keyword){
+        return ResponseDTO.ok(searchService.searchProject(keyword));
+    }
 }

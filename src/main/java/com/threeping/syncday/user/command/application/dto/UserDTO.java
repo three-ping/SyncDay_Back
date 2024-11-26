@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 public class UserDTO {
 
-    @Schema(description = "유저 고유 번호(PK)", example = "10", type = "Long")
+    @Schema(description = "유저 고유 번호(PK)", example = "11", type = "Long")
     private Long userId;
 
     @Schema(description = "유저 이름", example = "장그래")
@@ -22,7 +22,7 @@ public class UserDTO {
     @Schema(description = "유저 비밀번호", example = "null")
     private String password;
 
-    @Schema(description = "유저 회사 내선 번호", example = "null")
+    @Schema(description = "유저 회사 내선 번호", example = "031-0000-0000")
     private String phoneNumber;
 
     @Schema(description = "유저 프로필사진", example = "dachshund.jpg")

@@ -14,6 +14,14 @@
         <result property="vcsProjUrl" column="vcs_proj_url"/>
     </resultMap>
 
+    <!-- ES 검색용 ProjectQueryDto resultMap 추가 -->
+    <resultMap id="projSearchMap" type="com.threeping.syncday.proj.query.aggregate.dto.ProjectQueryDTO">
+        <id property="projectId" column="proj_id"></id>
+        <result property="projectName" column="proj_name"></result>
+        <result property="createdAt" column="created_at"></result>
+        <result property="vcsType" column="vcs_type"/>
+    </resultMap>
+
     <select id="selectAllProjs" resultMap="projResultMap">
         SELECT PROJ_ID
              , PROJ_NAME
@@ -23,6 +31,23 @@
              , PROGRESS_STATUS
              , VCS_TYPE
              , VCS_PROJ_URL
+        FROM TBL_PROJ
+    </select>
+
+    <select id="findProjById" resultMap="projSearchMap" parameterType="long">
+        SELECT PROJ_ID
+             , PROJ_NAME
+             , CREATED_AT
+             , VCS_TYPE
+        FROM TBL_PROJ
+        WHERE PROJ_ID = #{ projId }
+    </select>
+
+    <select id="findAllProjs" resultMap="projSearchMap">
+        SELECT PROJ_ID
+             , PROJ_NAME
+             , CREATED_AT
+             , VCS_TYPE
         FROM TBL_PROJ
     </select>
 
