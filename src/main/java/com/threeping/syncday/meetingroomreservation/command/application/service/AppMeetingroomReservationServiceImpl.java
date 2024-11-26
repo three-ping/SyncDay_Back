@@ -62,6 +62,7 @@ public class AppMeetingroomReservationServiceImpl implements AppMeetingroomReser
         scheduleDTO.setMeetingStatus(MeetingStatus.ACTIVE);
         scheduleDTO.setPublicStatus(PublicStatus.PUBLIC);
         scheduleDTO.setUserId(meetingroomReservationDTO.getUserId());
+        scheduleDTO.setAttendeeIds(new ArrayList<>());
 
         ScheduleDTO newScheduleDTO = infraMeetingroomReservationService.requestAddSchedule(scheduleDTO);
         log.info("New schedule: {}", newScheduleDTO);
@@ -87,6 +88,7 @@ public class AppMeetingroomReservationServiceImpl implements AppMeetingroomReser
 
             // 수동으로 DTO로 매핑
             MeetingroomReservationDTO responseDTO = new MeetingroomReservationDTO();
+            responseDTO.setScheduleId(schedule.getScheduleId());
             responseDTO.setMeetingroomReservationId(savedReservation.getMeetingroomReservationId());
             responseDTO.setMeetingroomId(newScheduleDTO.getMeetingroomId());
 
@@ -124,5 +126,6 @@ public class AppMeetingroomReservationServiceImpl implements AppMeetingroomReser
         // Schedule 관련 삭제 작업 수행
         infraMeetingroomReservationService.requestDeleteSchedule(scheduleId);
     }
+
 }
 

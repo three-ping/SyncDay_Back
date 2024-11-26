@@ -59,7 +59,7 @@ public class SwaggerConfiguration {
     @Profile("!Prod")
     public GroupedOpenApi projectApi() {
 
-        String[] paths = {"/api/proj/**"};
+        String[] paths = {"/api/projs/**"};
 
         return GroupedOpenApi
                 .builder()
@@ -67,12 +67,19 @@ public class SwaggerConfiguration {
                 .pathsToMatch(paths)
                 .addOpenApiCustomizer(buildSecurityOpenApi()).build();
     }
-
+    @Bean
+    @Profile("!Prod")
+    public GroupedOpenApi workspaceApi(){
+        String[] paths = {"/api/workspaces/**"};
+        return GroupedOpenApi.builder().group("워크스페이스 관련 api")
+                .pathsToMatch(paths)
+                .addOpenApiCustomizer(buildSecurityOpenApi()).build();
+    }
     @Bean
     @Profile("!Prod")
     public GroupedOpenApi cardboardApi() {
 
-        String[] paths = {"/api/cardboard/**"};
+        String[] paths = {"/api/cardboards/**"};
 
         return GroupedOpenApi
                 .builder()
@@ -98,7 +105,7 @@ public class SwaggerConfiguration {
     @Profile("!Prod")
     public GroupedOpenApi cardApi() {
 
-        String[] paths = {"/api/card/**"};
+        String[] paths = {"/api/cards/**"};
 
         return GroupedOpenApi
                 .builder()
@@ -116,6 +123,31 @@ public class SwaggerConfiguration {
         return GroupedOpenApi
                 .builder()
                 .group("일정 관련 api")
+                .pathsToMatch(paths)
+                .addOpenApiCustomizer(buildSecurityOpenApi()).build();
+    }
+
+    @Bean
+    @Profile("!Prod")
+    public GroupedOpenApi meetingroomApi() {
+
+        String [] paths = {"/api/meetingroom/**", "/api/meetingroom_reservation/**"};
+
+        return GroupedOpenApi
+                .builder()
+                .group("회의실 관련 api")
+                .pathsToMatch(paths)
+                .addOpenApiCustomizer(buildSecurityOpenApi()).build();
+    }
+
+    @Bean
+    @Profile("!Prod")
+    public GroupedOpenApi scheduleRepeatApi() {
+        String [] paths = {"/api/schedule-repeat/**"};
+
+        return GroupedOpenApi
+                .builder()
+                .group("반복일정 관련 api")
                 .pathsToMatch(paths)
                 .addOpenApiCustomizer(buildSecurityOpenApi()).build();
     }

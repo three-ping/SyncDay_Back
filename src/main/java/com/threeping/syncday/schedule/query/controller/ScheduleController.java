@@ -40,13 +40,13 @@ public class ScheduleController {
                                                         "success": true,
                                                         "data": [{
                                                                     "title": "결혼식",
-                                                                    "start_time": "2024-11-30 13:50:00",
-                                                                    "end_time": "2024-11-30 14:50:00"
+                                                                    "start_time": "2024-11-30T13:50:00.000Z",
+                                                                    "end_time": "2024-11-30T14:50:00.000Z"
                                                                   },
                                                                   {
                                                                     "title": "워크숍",
-                                                                    "start_time": "2024-12-06 09:00:00",
-                                                                    "end_time": "2024-12-07 18:00:00"
+                                                                    "start_time": "2024-12-06T09:00:00.000Z",
+                                                                    "end_time": "2024-12-07T18:00:00.000Z"
                                                                   }]
                                                         "error": null
                                                     }
@@ -76,8 +76,8 @@ public class ScheduleController {
                                                     {
                                                         "success": true,
                                                         "data": {
-                                                                    "start_time": "2024-11-30 13:50:00",
-                                                                    "end_time": "2024-11-30 14:50:00"
+                                                                    "start_time": "2024-11-30T13:50:00.000Z",
+                                                                    "end_time": "2024-11-30T14:50:00.000Z"
                                                         },
                                                         "error": null
                                                     }

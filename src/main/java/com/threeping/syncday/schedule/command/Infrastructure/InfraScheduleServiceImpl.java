@@ -26,9 +26,4 @@ public class InfraScheduleServiceImpl implements InfraScheduleService{
     public void requestUpdateScheduleParticipant(Long userId, Long scheduleId, List<Long> attendeeIds) {
         appScheduleParticipantService.updateScheduleParticipant(userId, scheduleId, attendeeIds);
     }
-
-    @Override
-    public void requestDeleteScheduleParticipant(Long scheduleId) {
-        appScheduleParticipantService.deleteScheduleParticipant(scheduleId);
-    }
 }

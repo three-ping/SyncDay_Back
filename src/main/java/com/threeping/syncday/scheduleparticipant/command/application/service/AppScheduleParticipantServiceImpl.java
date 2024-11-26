@@ -102,11 +102,6 @@ public class AppScheduleParticipantServiceImpl implements AppScheduleParticipant
         scheduleParticipantRepository.save(scheduleParticipant);
     }
 
-    @Override
-    public void deleteScheduleParticipant(Long scheduleId) {
-        scheduleParticipantRepository.deleteByScheduleId(scheduleId);
-    }
-
     // 참여 상태 수정
     @Override
     public ResponseScheduleParticipantDTO updateUserScheduleStatus(ScheduleParticipantStatusDTO newScheduleParticipantStatus) {

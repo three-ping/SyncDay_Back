@@ -97,9 +97,7 @@ public class AppScheduleServiceImpl implements AppScheduleService{
             throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
         scheduleRepository.delete(newSchedule);
-
-        infraScheduleService.requestDeleteScheduleParticipant(scheduleId);
-
+        
         return modelMapper.map(newSchedule, ScheduleDTO.class);
     }
 }
