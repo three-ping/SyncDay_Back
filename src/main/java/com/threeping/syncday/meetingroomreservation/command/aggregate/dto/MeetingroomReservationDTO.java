@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 public class MeetingroomReservationDTO {
 
     private Long meetingroomId;
+    private Long scheduleId;
     private Long meetingroomReservationId; // 필드 추가
     private Timestamp startTime;
     private Timestamp endTime;
