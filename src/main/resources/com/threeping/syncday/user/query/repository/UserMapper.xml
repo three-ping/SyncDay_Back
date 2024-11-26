@@ -46,6 +46,24 @@
         email = #{email}
     </select>
 
+    <select id="findByUserId" resultMap="userResultMap" parameterType="long">
+        SELECT
+        user_id,
+        username,
+        email,
+        password,
+        phone_number,
+        profile_photo,
+        join_year,
+        position,
+        team_id,
+        last_access_time
+        FROM
+        TBL_USER
+        WHERE
+        user_id = #{userId}
+    </select>
+
     <!-- ES 검색용 쿼리 추가 -->
     <select id="findUserWithTeamName" resultMap="userSearchDtoMap" parameterType="long">
         SELECT

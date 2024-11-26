@@ -69,10 +69,10 @@ class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
-    public UserDTO findByUserEmail(String email) {
-        UserEntity user = userMapper.findByEmail(email);
+    public UserDTO findById(Long userId) {
+        UserEntity user = userMapper.findByUserId(userId);
 
-        if (user == null) {
+        if(user == null) {
             throw new CommonException(ErrorCode.NOT_FOUND_USER);
         }
 
@@ -80,12 +80,13 @@ class UserQueryServiceImpl implements UserQueryService {
         userDTO.setUserId(user.getUserId());
         userDTO.setUserName(user.getUserName());
         userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPassword());
         userDTO.setProfilePhoto(user.getProfilePhoto());
         userDTO.setPhoneNumber(user.getPhoneNumber());
         userDTO.setPosition(user.getPosition());
         userDTO.setJoinYear(timeStampToString(user.getJoinYear()));
-        userDTO.setLastAccessTime(user.getLastAccessTime().toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME));
         userDTO.setTeamId(user.getTeamId());
+        userDTO.setLastAccessTime(user.getLastAccessTime().toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME));
 
         return userDTO;
     }

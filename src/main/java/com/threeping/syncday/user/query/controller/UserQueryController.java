@@ -49,7 +49,7 @@ public class UserQueryController {
     @GetMapping("/profile")
     public ResponseDTO<?> findMyProfile(@AuthenticationPrincipal User user){
         String email = user.getUsername();
-        UserDTO userDTO = userService.findByUserEmail(email);
+        UserDTO userDTO = userService.findByEmail(email);
         return ResponseDTO.ok(userDTO);
     }
 
@@ -62,5 +62,20 @@ public class UserQueryController {
     @GetMapping("/search")
     public ResponseDTO<?> searchUser(@RequestParam String keyword){
         return ResponseDTO.ok(userSearchService.searchUser(keyword));
+    }
+
+    @Operation(summary = "회원 pk로 조회",
+            description = "회원의 pk를 통해 UserDTO를 조회합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "회원 조회 성공",
+                            content = @Content(schema = @Schema(implementation = UserDTO.class))
+                    )
+            }
+    )
+    @GetMapping("/{userId}")
+    public ResponseDTO<?> findUserById(@PathVariable Long userId){
+        return ResponseDTO.ok(userService.findById(userId));
     }
 }

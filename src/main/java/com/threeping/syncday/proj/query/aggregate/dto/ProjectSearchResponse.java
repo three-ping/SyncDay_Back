@@ -10,7 +10,6 @@ import lombok.ToString;
 public class ProjectSearchResponse {
     private Long projectId;
     private String projectName;
-    private String description;
     private String vcsType;
     private String createAt;
 }

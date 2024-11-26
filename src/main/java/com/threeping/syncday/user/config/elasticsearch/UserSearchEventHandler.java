@@ -19,7 +19,7 @@ public class UserSearchEventHandler {
         this.userSearchRepository = userSearchRepository;
     }
 
-    // userEntity의 수정/삭제 이벤트가 발생하면 ES 정보도 즉시 동기화하는 메서드
+    // userEntity의 수정/생성 이벤트가 발생하면 ES 정보도 즉시 동기화하는 메서드
     @EventListener
     public void handleUserEvent(UserEventDTO dto) {
         UserSearchDocument document = UserSearchDocument

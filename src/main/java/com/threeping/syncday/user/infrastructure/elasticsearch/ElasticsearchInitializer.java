@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+@Component("user_init")
 @RequiredArgsConstructor
 @Slf4j
 public class ElasticsearchInitializer {
@@ -20,14 +20,14 @@ public class ElasticsearchInitializer {
 
     @PostConstruct
     public void init() {
-        log.info("ES 동기화 시작!");
+        log.info("유저 ES 동기화 시작!");
         synchronizeAll();
     }
 
     // 수동 동기화 메서드 추가
     public void synchronizeAll() {
         userSearchRepository.deleteAll();
-        log.info("ES db와 동기화를 위해 es db 모두 비우기");
+//        log.info("ES db와 동기화를 위해 es db 모두 비우기");
 
         List<UserQueryDTO> users = userMapper.findAllUsersWithTeamName();
         log.info("db에서 저장된 유저 수: ", users.size());
