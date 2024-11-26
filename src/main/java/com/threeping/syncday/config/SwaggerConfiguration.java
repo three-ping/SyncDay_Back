@@ -59,7 +59,7 @@ public class SwaggerConfiguration {
     @Profile("!Prod")
     public GroupedOpenApi projectApi() {
 
-        String[] paths = {"/api/proj/**"};
+        String[] paths = {"/api/projs/**"};
 
         return GroupedOpenApi
                 .builder()
@@ -72,7 +72,7 @@ public class SwaggerConfiguration {
     @Profile("!Prod")
     public GroupedOpenApi cardboardApi() {
 
-        String[] paths = {"/api/cardboard/**"};
+        String[] paths = {"/api/cardboards/**"};
 
         return GroupedOpenApi
                 .builder()
@@ -98,7 +98,7 @@ public class SwaggerConfiguration {
     @Profile("!Prod")
     public GroupedOpenApi cardApi() {
 
-        String[] paths = {"/api/card/**"};
+        String[] paths = {"/api/cards/**"};
 
         return GroupedOpenApi
                 .builder()
