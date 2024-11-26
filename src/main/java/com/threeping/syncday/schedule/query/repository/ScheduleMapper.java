@@ -15,4 +15,6 @@ public interface ScheduleMapper {
 
     List<ScheduleDetailDTO> selectMyDetailSchedulesByUserIdAndScheduleId(@Param("userId") Long userId,
                                                                          @Param("scheduleId") Long scheduleId);
+
+    ScheduleDTO selectByScheduleId(Long scheduleId);
 }
