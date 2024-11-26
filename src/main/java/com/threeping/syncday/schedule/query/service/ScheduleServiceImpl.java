@@ -51,4 +51,9 @@ public class ScheduleServiceImpl implements ScheduleService {
                         .collect(Collectors.toList());
         return scheduleDTOS;
     }
+
+    @Override
+    public ScheduleDTO getScheduleByScheduleId(Long scheduleId){
+        return scheduleMapper.selectByScheduleId(scheduleId);
+    }
 }

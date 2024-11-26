@@ -124,4 +124,21 @@
          WHERE S.USER_ID = #{userId}
            AND S.SCHEDULE_ID = #{scheduleId}
     </select>
+
+    <select id="selectByScheduleId" resultMap="scheduleResultMap" parameterType="long">
+        SELECT S.SCHEDULE_ID
+             , S.TITLE
+             , S.CONTENT
+             , CONVERT_TZ(S.START_TIME, '+00:00', '+09:00') AS START_TIME
+             , CONVERT_TZ(S.END_TIME, '+00:00', '+09:00') AS END_TIME
+             , CONVERT_TZ(S.UPDATE_TIME, '+00:00', '+09:00') AS UPDATE_TIME
+             , S.PUBLIC_STATUS
+             , S.SCHEDULE_REPEAT_ID
+             , S.REPEAT_ORDER
+             , S.MEETING_STATUS
+             , S.MEETINGROOM_ID
+             , S.USER_ID
+        FROM TBL_SCHEDULE S
+        WHERE S.SCHEDULE_ID = #{scheduleId}
+    </select>
 </mapper>
