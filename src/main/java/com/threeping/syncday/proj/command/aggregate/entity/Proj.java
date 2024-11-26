@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="TBL_PROJ")
 @Data
-public class Proj {
+public class  Proj {
     @Id
     @Column(name="proj_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
