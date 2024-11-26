@@ -1,7 +1,7 @@
 package com.threeping.syncday.notification.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.threeping.syncday.notification.redis.RedisNotificationPublisher;
+import com.threeping.syncday.notification.redis.RedisNotificationStorage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,14 +14,11 @@ import java.time.LocalDateTime;
 @Slf4j
 public class NotificationServiceImpl implements NotificationService{
 
-    private final RedisNotificationPublisher redisNotificationPublisher;
-    private final ObjectMapper objectMapper;
+    private final RedisNotificationStorage redisNotificationStorage;
 
     @Autowired
-    public NotificationServiceImpl(RedisNotificationPublisher redisNotificationPublisher,
-                                   ObjectMapper objectMapper){
-        this.redisNotificationPublisher = redisNotificationPublisher;
-        this.objectMapper = objectMapper;
+    public NotificationServiceImpl(RedisNotificationStorage redisNotificationStorage){
+        this.redisNotificationStorage = redisNotificationStorage;
     }
     @Override
     public void sendScheduleNotification(Long userId, Long scheduleId, Timestamp notificationTime){
@@ -29,10 +26,11 @@ public class NotificationServiceImpl implements NotificationService{
         String redisKey = "schedule_notification:" + userId + ":" + scheduleId;
         String redisValue = userId + ":" + scheduleId;
         long ttlInSeconds = Duration
-                .between(LocalDateTime.now(),notificationTime.toLocalDateTime())
+                .between(LocalDateTime.now(),notificationTime.toLocalDateTime().minusHours(9))
                 .getSeconds();
+        log.info("now:{}, notice time: {}",LocalDateTime.now(),notificationTime.toLocalDateTime());
         if (ttlInSeconds > 0) {
-            redisNotificationPublisher.publishWithTTL(redisKey,redisValue,ttlInSeconds);
+            redisNotificationStorage.storeWithTTL(redisKey,redisValue,ttlInSeconds);
             log.info("Notification scheduled for user: '{}' with TTL of {} seconds", userId, ttlInSeconds);
         } else {
             log.warn("TTL for schedule ID '{}' is already expired or invalid.", scheduleId);

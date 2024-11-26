@@ -1,7 +1,7 @@
 package com.threeping.syncday.notification.controller;
 
 import com.threeping.syncday.notification.infrastructure.InfraNotificationService;
-import com.threeping.syncday.schedule.query.aggregate.ScheduleDetailDTO;
+import com.threeping.syncday.schedule.query.aggregate.ScheduleDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,10 +38,11 @@ public class NotificationSseController {
 
     public void sendScheduleNotification(Long userId, Long scheduleId){
         SseEmitter emitter = emitters.get(userId.toString());
-        ScheduleDetailDTO scheduleDetailDTO = infraNotificationService.findScheduleById(userId,scheduleId);
+        ScheduleDTO scheduleDTO = infraNotificationService.findScheduleByScheduleId(scheduleId);
         if (emitter != null){
             try {
-                emitter.send(SseEmitter.event().name(scheduleDetailDTO.getTitle()).data(scheduleDetailDTO));
+                emitter.send(SseEmitter.event().name(scheduleDTO.getTitle()).data(scheduleDTO));
+                log.info("sse send");
             } catch (Exception e) {
                 emitters.remove(userId.toString());
             }

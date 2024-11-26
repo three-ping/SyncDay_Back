@@ -11,4 +11,6 @@ public interface ScheduleService {
     List<ScheduleDTO> getOthersSchedulesBySearchUserId(Long searchUserId);
 
     List<ScheduleDetailDTO> getMyDetailSchedulesByUserIdAndScheduleId(Long userId, Long scheduleId);
+
+    ScheduleDTO getScheduleByScheduleId(Long scheduleId);
 }
