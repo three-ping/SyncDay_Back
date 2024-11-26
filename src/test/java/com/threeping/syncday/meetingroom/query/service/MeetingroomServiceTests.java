@@ -4,6 +4,7 @@ import com.threeping.syncday.meetingroom.query.aggregate.MeetingroomDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -35,10 +36,18 @@ class MeetingroomServiceTests {
 
     }
 
-//    @DisplayName("팀 아이디로 회의실 조회")
-//    @Test
-//    void testGetMeetingroomsByTeamId() {
-//
-//
-//    }
+    @DisplayName("특정 회의실 조회")
+    @Test
+    void testGetMeetingroomById() {
+        // given: 테스트 데이터베이스에 존재하는 meetingroomId
+        Long meetingroomId = 1L;
+
+        // when: 서비스 메소드를 호출하여 결과를 조회
+        MeetingroomDTO meetingroomDTO = meetingroomService.getMeetingroomById(meetingroomId);
+
+        // then: 결과 검증
+        assertNotNull(meetingroomDTO, "회의실 정보는 null이 아니어야 합니다.");
+        log.info("조회된 회의실 정보: {}", meetingroomDTO);
+
+    }
 }
