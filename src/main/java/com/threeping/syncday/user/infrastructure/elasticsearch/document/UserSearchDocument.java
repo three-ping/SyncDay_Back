@@ -6,7 +6,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.data.elasticsearch.annotations.Setting;
 
 @Document(indexName = "user_search")
 @Getter
@@ -14,7 +13,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 public class UserSearchDocument {
     @Id
     private Long userId;
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Text, analyzer = "nori_mixed")
     private String name;
     @Field(type = FieldType.Keyword)
     private String email;
