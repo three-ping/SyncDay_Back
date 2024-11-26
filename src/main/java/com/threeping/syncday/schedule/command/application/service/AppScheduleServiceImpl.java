@@ -98,7 +98,7 @@ public class AppScheduleServiceImpl implements AppScheduleService{
         }
         scheduleRepository.delete(newSchedule);
 
-        infraScheduleService.requestDeleteScheduleParticipant(scheduleId);
+//        infraScheduleService.requestDeleteScheduleParticipant(scheduleId);
 
         return modelMapper.map(newSchedule, ScheduleDTO.class);
     }
