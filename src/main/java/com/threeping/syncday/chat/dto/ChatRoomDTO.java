@@ -11,8 +11,8 @@ import java.util.List;
 public class ChatRoomDTO {
     private String roomId;
     private String chatRoomName;
-    private String creatorId;
+    private Long creatorId;
     private int memberCount;
-    private List<String> memberIds;
+    private List<Long> memberIds;
     private LocalDateTime createdAt;
 }

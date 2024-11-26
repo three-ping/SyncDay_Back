@@ -13,10 +13,9 @@ public class ChatMessageDTO {
     private String messageId;
     private String message;
     private String roomId;
-    private String senderId;
-    private String receiverId;
+    private Long senderId;
     private int memberCount;
-    private List<String> memberIds;
+    private List<Long> memberIds;
     private ChatType chatType;
     private LocalDateTime sentTime;
 

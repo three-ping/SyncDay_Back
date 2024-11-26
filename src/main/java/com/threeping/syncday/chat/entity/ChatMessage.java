@@ -18,10 +18,10 @@ public class ChatMessage {
     private String messageId;
     private String message;
     private String roomId;
-    private String senderId;
-    private String receiverId;
+    private Long senderId;
+    private Long receiverId;
     private int memberCount;
-    private List<String> memberIds;
+    private List<Long> memberIds;
     private ChatType chatType;
 
     @CreationTimestamp

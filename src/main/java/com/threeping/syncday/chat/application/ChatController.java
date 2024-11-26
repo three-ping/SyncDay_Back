@@ -17,7 +17,6 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/chat")
 public class ChatController {
 
@@ -65,7 +64,7 @@ public class ChatController {
 
     // 채팅방 나가기
     @PostMapping("/room/{roomId}/leave")
-    public ChatRoom leaveChatRoom(@PathVariable String roomId, @RequestParam String userId) {
+    public ChatRoom leaveChatRoom(@PathVariable String roomId, @RequestParam Long userId) {
         return chatService.leaveChatRoom(roomId, userId);
     }
 

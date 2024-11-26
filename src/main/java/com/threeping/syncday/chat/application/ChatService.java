@@ -9,6 +9,8 @@ import com.threeping.syncday.chat.repository.ChatMessageRepository;
 import com.threeping.syncday.chat.repository.ChatRoomRepository;
 import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.command.domain.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ChatService {
 
+    private static final Logger log = LoggerFactory.getLogger(ChatService.class);
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
@@ -38,15 +42,17 @@ public class ChatService {
         this.messagingTemplate = messagingTemplate;
     }
 
-    private Map<String, ChatMessage> chatMessageMap;
 
     //  채팅방 목록 조회
     public List<ChatRoom> findUserChat(Long userId) {
+        log.info("유저 채팅 목록 찾는 서비스 메서드 시작");
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다.: " + userId));
 
+        List<ChatRoom> chatRoomList = chatRoomRepository.findChatRoomsByMemberIdsContaining(userId);
+        log.info("채팅룸 리스트 엔티티: {}", chatRoomList);
 
-        return chatRoomRepository.findChatRoomsByMemberIdsContaining(user.getUserId().toString());
+        return chatRoomList;
     }
 
     //  특정 채팅방 조회
@@ -72,15 +78,22 @@ public class ChatService {
 //
 //            // 1:1 채팅방 중복 방지
 //            if (memberIds.size() == 2) {
+
 //                ChatRoom existingRoom = chatRoomRepository.find1to1ChatRoom(memberIds.get(0), memberIds.get(1));
 //                if (existingRoom != null) {
 //                    return existingRoom; // 이미 존재하면 해당 방 반환
 //                }
 //            }
+        List<UserEntity> userList = userRepository.findAllById(chatRoomDTO.getMemberIds());
+
+        String roomName = userList.stream()
+                .map(UserEntity::getUserName)
+                .collect(Collectors.joining(", "));
+
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(chatRoomDTO.getRoomId())
-                .chatRoomName(String.join(",", chatRoomDTO.getMemberIds()))
+                .chatRoomName(roomName)
                 .creatorId(chatRoomDTO.getCreatorId())
                 .createdAt(LocalDateTime.now())
                 .memberCount(chatRoomDTO.getMemberIds().size())
@@ -91,11 +104,11 @@ public class ChatService {
 
 
     //  특정 채팅방 퇴장
-    public ChatRoom leaveChatRoom(String roomId, String userId) {
+    public ChatRoom leaveChatRoom(String roomId, Long userId) {
         ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
 
-        List<String> memberIds = new ArrayList<>(chatRoom.getMemberIds());
+        List<Long> memberIds = new ArrayList<>(chatRoom.getMemberIds());
         memberIds.remove(userId);
         chatRoom.setMemberIds(memberIds);
 
@@ -177,11 +190,10 @@ public class ChatService {
     chatMessage.setSenderId(chatMessage.getSenderId());
     chatMessage.setMessage(chatMessage.getMessage());
     chatMessage.setMessageId(chatMessage.getMessageId());
-    chatMessage.setReceiverId(chatMessage.getReceiverId());
     chatMessage.setMemberCount(chatMessage.getMemberCount());
     chatMessage.setMemberIds(chatMessage.getMemberIds());
     chatMessage.setSentTime(LocalDateTime.now());
-    chatMessage.setChatType(ChatType.valueOf(chatMessage.getChatType().name()));
+    chatMessage.setChatType(chatMessageDTO.getChatType());
 
     chatMessageRepository.save(chatMessage);
         }
