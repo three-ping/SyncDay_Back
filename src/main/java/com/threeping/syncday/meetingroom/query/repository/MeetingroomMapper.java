@@ -9,4 +9,6 @@ import java.util.List;
 public interface MeetingroomMapper {
 
     List<Meetingroom> selectAllMeetingrooms();
+
+    Meetingroom selectMeetingroomById(Long meetingroomId);
 }

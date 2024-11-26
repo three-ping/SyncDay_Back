@@ -120,6 +120,19 @@ public class SwaggerConfiguration {
                 .addOpenApiCustomizer(buildSecurityOpenApi()).build();
     }
 
+    @Bean
+    @Profile("!Prod")
+    public GroupedOpenApi meetingroomApi() {
+
+        String [] paths = {"/api/meetingroom/**", "/api/meetingroom_reservation/**"};
+
+        return GroupedOpenApi
+                .builder()
+                .group("회의실 관련 api")
+                .pathsToMatch(paths)
+                .addOpenApiCustomizer(buildSecurityOpenApi()).build();
+    }
+
 
     public OpenApiCustomizer buildSecurityOpenApi() {
         // jwt token을 한번 설정하면 header에 값을 넣어주는 코드

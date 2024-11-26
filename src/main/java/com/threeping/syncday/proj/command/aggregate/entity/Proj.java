@@ -1,5 +1,6 @@
 package com.threeping.syncday.proj.command.aggregate.entity;
 
+import com.threeping.syncday.proj.query.config.ProjectEntityListener;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
@@ -7,9 +8,10 @@ import org.hibernate.annotations.ColumnDefault;
 import java.sql.Timestamp;
 
 @Entity
+@EntityListeners(ProjectEntityListener.class)
 @Table(name="TBL_PROJ")
 @Data
-public class Proj {
+public class  Proj {
     @Id
     @Column(name="proj_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
