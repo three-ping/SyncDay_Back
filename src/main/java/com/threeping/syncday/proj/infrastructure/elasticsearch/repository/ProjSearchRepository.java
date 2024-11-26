@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ProjSearchRepository extends ElasticsearchRepository<ProjectSearchDocument, Long> {
-    @Query("{\"bool\": {\"should\": [{\"match\": {\"projectName\": \"?0\"}}, {\"match\": {\"description\": \"?0\"}}]}}")
+    @Query("{\"bool\": {\"should\": [{\"match\": {\"projectName\": \"?0\"}}, {\"match\": {\"vcsType\": \"?0\"}}]}}")
     List<ProjectSearchDocument> searchByKeyword(String keyword);
 }
