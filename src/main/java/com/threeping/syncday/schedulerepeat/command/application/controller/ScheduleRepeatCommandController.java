@@ -5,6 +5,8 @@ import com.threeping.syncday.schedulerepeat.command.aggregate.dto.CreateSchedule
 import com.threeping.syncday.schedulerepeat.command.aggregate.dto.ScheduleRepeatDTO;
 import com.threeping.syncday.schedulerepeat.command.application.service.ScheduleRepeatCommandService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,8 @@ public class ScheduleRepeatCommandController {
             responses = {
                 @ApiResponse(
                         responseCode = "200",
-                        description = "일정반복 등록 성공"
+                        description = "일정반복 등록 성공",
+                        content = @Content(schema = @Schema(implementation = ScheduleRepeatDTO.class))
                 )
             }
     )
@@ -41,6 +44,16 @@ public class ScheduleRepeatCommandController {
         return ResponseDTO.ok(scheduleRepeatDTO);
     }
 
+    @Operation(summary = "일정반복 삭제.",
+            description = "일정반복을 삭제하고, 일정반복 참여자를 삭제한 뒤, 반복일정들을 삭제합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "일정반복 삭제 성공",
+                            content = @Content(schema = @Schema(implementation = ScheduleRepeatDTO.class))
+                    )
+            }
+    )
     @DeleteMapping("/{scheduleRepeatId}")
     private ResponseDTO<?> deleteScheduleRepeat(@PathVariable Long scheduleRepeatId){
         scheduleRepeatCommandService.deleteScheduleRepeat(scheduleRepeatId);
