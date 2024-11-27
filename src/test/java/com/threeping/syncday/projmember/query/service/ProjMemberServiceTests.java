@@ -2,6 +2,7 @@ package com.threeping.syncday.projmember.query.service;
 
 import com.threeping.syncday.projmember.query.aggregate.ProjMember;
 import com.threeping.syncday.projmember.query.aggregate.ProjMemberDTO;
+import com.threeping.syncday.projmember.query.aggregate.dto.UserProjInfoDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,16 +51,19 @@ class ProjMemberServiceTests {
     }
 
 
-    @DisplayName("유저 아이디로 프로젝트 조회")
+    @DisplayName("유저 ID로 프로젝트 정보 조회")
     @Test
-    void testGetProjsByUserId(){
-
+    void getProjInfosByUserId(){
         // given
         Long userId = 1L;
 
         // when
-        List<ProjMemberDTO> projMemberList = projMemberService.getProjsByUserId(userId);
-        assertNotNull(projMemberList);
-        projMemberList.forEach(x-> log.info("x: {}", x));
+        List<UserProjInfoDTO> projInfos = projMemberService.getProjsByUserId(userId);
+
+        // then
+        assertNotNull(projInfos);
+
+        projInfos.forEach(x-> log.info("x: {}", x));
+
     }
 }

@@ -1,5 +1,5 @@
 package com.threeping.syncday.cardboard.query.controller;
-import com.threeping.syncday.cardboard.query.service.CardBoardService;
+import com.threeping.syncday.cardboard.query.service.CardboardService;
 import com.threeping.syncday.common.ResponseDTO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/cardboards")
-public class CardBoardController {
+public class CardboardController {
 
-    private final CardBoardService cardBoardService;
+    private final CardboardService cardBoardService;
 
-    public CardBoardController(CardBoardService cardBoardService) {
+    public CardboardController(CardboardService cardBoardService) {
         this.cardBoardService = cardBoardService;
     }
 

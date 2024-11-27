@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-public class CardBoardVO {
+public class CardboardVO {
 
     @JsonProperty("cardboard_id")
     private Long cardboardId;

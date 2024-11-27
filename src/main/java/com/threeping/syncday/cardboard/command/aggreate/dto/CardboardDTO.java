@@ -1,15 +1,17 @@
-package com.threeping.syncday.cardboard.query.aggregate;
+package com.threeping.syncday.cardboard.command.aggreate.dto;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.threeping.syncday.cardboard.command.aggreate.entity.VcsType;
 import lombok.Data;
 
 import java.sql.Timestamp;
 
 @Data
-public class CardBoardDTO {
+public class CardboardDTO {
 
-    @JsonProperty("card_board_id")
-    private String cardBoardId;
+    @JsonProperty("cardboard_id")
+    private Long cardboardId;
 
     @JsonProperty("title")
     private String title;
@@ -27,12 +29,13 @@ public class CardBoardDTO {
     private Byte progressStatus;
 
     @JsonProperty("vcs_type")
-    private String vcsType;
+    private VcsType vcsType;
 
     @JsonProperty("vcs_milestone_url")
     private String vcsMilestoneUrl;
 
     @JsonProperty("workspace_id")
-    private String workspaceId;
+    private Long workspaceId;
+
 
 }
