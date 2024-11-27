@@ -21,4 +21,9 @@ public class CardCommentServiceImpl implements CardCommentService {
     public List<CardCommentDTO> getCommentsByCardId(Long cardId) {
         return cardCommentMapper.selectCardCommentsByCardId(cardId);
     }
+
+    @Override
+    public CardCommentDTO getCommentById(Long cardCommentId) {
+        return cardCommentMapper.selectCardCommentById(cardCommentId);
+    }
 }

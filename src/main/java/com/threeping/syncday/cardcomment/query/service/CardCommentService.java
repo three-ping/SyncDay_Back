@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CardCommentService {
     List<CardCommentDTO> getCommentsByCardId(Long cardId);
+
+    CardCommentDTO getCommentById(Long cardCommentId);
 }

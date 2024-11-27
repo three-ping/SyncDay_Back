@@ -23,4 +23,9 @@ public class CardCommentController {
     public ResponseDTO<?> findCommentsByCardId(@PathVariable("cardId") Long cardId){
         return ResponseDTO.ok(cardCommentService.getCommentsByCardId(cardId));
     }
+
+    @GetMapping("/{cardCommentId}")
+    public ResponseDTO<?> findCommentById(@PathVariable("cardCommentId") Long cardCommentId){
+        return ResponseDTO.ok(cardCommentService.getCommentById(cardCommentId));
+    }
 }

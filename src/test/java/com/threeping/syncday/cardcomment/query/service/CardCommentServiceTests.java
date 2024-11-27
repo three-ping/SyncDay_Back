@@ -22,7 +22,7 @@ class CardCommentServiceTests {
 
     @DisplayName("카드 ID로 댓글 조회")
     @Test
-    void testFindCommentsByCardId(){
+    void testFindCommentsByCardId() {
 
         // given
         Long cardId = 11L;
@@ -32,8 +32,22 @@ class CardCommentServiceTests {
 
         // then
         assertNotNull(cardCommentDTOS);
-        cardCommentDTOS.forEach(x-> log.info("x: {}", x));
+        cardCommentDTOS.forEach(x -> log.info("x: {}", x));
     }
 
+    @DisplayName("카드댓글 ID로 카드 댓글 조회")
+    @Test
+    void testGetCardCommentById(){
 
+        // given
+        Long cardCommentId = 1L;
+
+        // when
+        CardCommentDTO cardCommentDTO = cardCommentService.getCommentById(cardCommentId);
+
+        // then
+        assertNotNull(cardCommentDTO);
+
+        log.info("cardCommentDTO: {}", cardCommentDTO);
+    }
 }

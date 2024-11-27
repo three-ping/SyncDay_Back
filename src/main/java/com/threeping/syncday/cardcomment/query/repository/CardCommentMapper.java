@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper
 public interface CardCommentMapper {
     List<CardCommentDTO> selectCardCommentsByCardId(Long cardId);
-    CardCommentDTO selectCardCommentByCardId(Long cardId);
+    CardCommentDTO selectCardCommentById(Long cardId);
 }
