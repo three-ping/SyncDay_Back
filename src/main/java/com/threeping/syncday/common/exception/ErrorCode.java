@@ -64,7 +64,7 @@ public enum ErrorCode {
     WORKSPACE_NOT_FOUND(4040600, HttpStatus.NOT_FOUND,"존재하지 않는 워크스페이스입니다."),
 
     // 07: 카드보드
-
+    CARDBOARD_NOT_FOUND(4040700,HttpStatus.NOT_FOUND, "카드보드가 존재하지 않습니다"),
     // 08: 카드
 
     // 09: 카드 댓글
