@@ -42,12 +42,12 @@
     <resultMap id="workspaceInfoMap" type="com.threeping.syncday.workspace.query.aggregate.WorkspaceInfoDTO">
         <id property="workspaceId" column="workspace_id"/>
         <result property="workspaceName" column="workspace_name"></result>
-        <collection property="cardBoards" column="workspace_id"
+        <collection property="cardboards" column="workspace_id"
                     select="selectCardBoardsByWorkspaceId"/>
     </resultMap>
 
 
-    <resultMap id="cardBoardMap" type="com.threeping.syncday.workspace.query.aggregate.CardBoardVO">
+    <resultMap id="cardBoardMap" type="com.threeping.syncday.workspace.query.aggregate.CardboardVO">
         <id property="cardboardId" column="cardboard_id"/>
         <result property="title" column="title"/>
         <result property="createdAt" column="created_at"/>
