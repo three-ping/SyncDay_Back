@@ -7,7 +7,7 @@ import lombok.Data;
 import java.sql.Timestamp;
 
 @Data
-public class AppCardVO {
+public class RequestUpdateCardVO {
 
     @JsonProperty("card_id")
     private Long cardId;
@@ -36,8 +36,8 @@ public class AppCardVO {
     @JsonProperty("tag_id")
     private Long tagId;
 
-    @JsonProperty("created_by")
-    private Long createdBy;
+    @JsonProperty("user_id")
+    private Long userId;
 
     @JsonProperty("assignee")
     private Long assignee;
