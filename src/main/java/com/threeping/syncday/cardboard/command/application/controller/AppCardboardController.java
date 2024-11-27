@@ -1,13 +1,10 @@
 package com.threeping.syncday.cardboard.command.application.controller;
 
-import com.threeping.syncday.cardboard.command.aggreate.vo.AddCardboardVO;
+import com.threeping.syncday.cardboard.command.aggreate.vo.AppCardboardVO;
 import com.threeping.syncday.cardboard.command.application.service.AppCardboardService;
 import com.threeping.syncday.common.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/cardboards")
@@ -21,8 +18,18 @@ public class AppCardboardController {
     }
 
     @PostMapping("/")
-    public ResponseDTO<?> createCardBoard(@RequestBody AddCardboardVO cardboardVO) {
+    public ResponseDTO<?> createCardboard(@RequestBody AppCardboardVO cardboardVO) {
         return ResponseDTO.ok(appCardboardService.addCardboard(cardboardVO));
+    }
+
+    @PutMapping("/")
+    public ResponseDTO<?> updateCardboard(@RequestBody AppCardboardVO cardboardVO) {
+        return ResponseDTO.ok(appCardboardService.modifyCardboard(cardboardVO));
+    }
+
+    @DeleteMapping("/{cardboardId}")
+    public ResponseDTO<?> deleteCardboard(@PathVariable("cardboardId") Long cardboardId) {
+        return ResponseDTO.ok(appCardboardService.deleteCardboard(cardboardId));
     }
 
 }

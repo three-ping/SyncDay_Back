@@ -15,5 +15,5 @@ public class WorkspaceInfoDTO {
     private String workspaceName;
 
     @JsonProperty("cardboards")
-    private List<CardboardVO> cardBoards;
+    private List<CardboardVO> cardboards;
 }

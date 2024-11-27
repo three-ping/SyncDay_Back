@@ -16,6 +16,4 @@ public interface WorkspaceMapper {
 
     List<Workspace> selectWorkspacesByProjId(Long projId);
     WorkspaceInfoDTO selectWorkspaceById(@Param("workspaceId") Long workspaceId);
-    List<CardboardVO> selectCardBoardsByWorkspaceId(@Param("workspaceId") Long workspaceId);
-    List<CardVO> selectCardsByCardBoardId(@Param("cardboardId") Long cardboardId);
 }
