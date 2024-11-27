@@ -26,19 +26,17 @@ public class CardboardServiceImpl implements CardboardService {
     @Override
     public List<CardboardDTO> getAllCardBoards() {
         List<Cardboard> cardboards = cardBoardMapper.selectAllCardBoards();
-        List<CardboardDTO> cardboardDTOS = cardboards.stream()
+        return cardboards.stream()
                 .map(cardboard -> modelMapper.map(cardboard, CardboardDTO.class))
                 .collect(Collectors.toList());
-        return cardboardDTOS;
     }
 
     @Override
     public List<CardboardDTO> getCardBoardsByWorkspaceId(Long workspaceId) {
 
         List<Cardboard> cardboards = cardBoardMapper.selectCardBoardsByWorkspaceId(workspaceId);
-        List<CardboardDTO> cardboardDTOS = cardboards.stream()
+        return cardboards.stream()
                 .map(cardboard -> modelMapper.map(cardboard, CardboardDTO.class))
                 .collect(Collectors.toList());
-        return cardboardDTOS;
     }
 }

@@ -1,4 +1,4 @@
-package com.threeping.syncday.cardboard.domain.repository;
+package com.threeping.syncday.cardboard.command.domain.repository;
 
 import com.threeping.syncday.cardboard.command.aggreate.entity.Cardboard;
 import org.springframework.data.jpa.repository.JpaRepository;

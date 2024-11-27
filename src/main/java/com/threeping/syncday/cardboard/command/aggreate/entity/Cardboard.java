@@ -40,4 +40,9 @@ public class Cardboard {
     @Column(name="workspace_id")
     private Long workspaceId;
 
+    @PrePersist
+    public void prePersist(){
+        this.createdAt = new Timestamp(System.currentTimeMillis());
+        this.progressStatus = 0;
+    }
 }

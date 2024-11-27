@@ -2,7 +2,9 @@ package com.threeping.syncday.cardboard.command.aggreate.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.threeping.syncday.cardboard.command.aggreate.entity.VcsType;
+import lombok.Data;
 
+@Data
 public class AddCardboardVO {
 
     @JsonProperty("title")
