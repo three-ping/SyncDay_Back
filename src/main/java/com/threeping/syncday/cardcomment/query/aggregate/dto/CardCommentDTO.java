@@ -1,4 +1,4 @@
-package com.threeping.syncday.cardcomment.aggregate.dto;
+package com.threeping.syncday.cardcomment.query.aggregate.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
