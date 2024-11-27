@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-public class ProjAndMemberInfoDTO {
+public class ProjMemberInfoDTO {
 
     /* projMemberInfo */
     @JsonProperty("proj_member_id")

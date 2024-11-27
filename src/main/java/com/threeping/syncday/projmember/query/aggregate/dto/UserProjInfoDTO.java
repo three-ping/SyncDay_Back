@@ -11,5 +11,5 @@ public class UserProjInfoDTO {
     Long userId;
 
     @JsonProperty("proj_member_infos")
-    List<ProjAndMemberInfoDTO> projMemberInfos;
+    List<ProjMemberInfoDTO> projMemberInfos;
 }

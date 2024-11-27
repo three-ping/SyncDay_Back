@@ -17,10 +17,11 @@ public class ProjMemberServiceImpl implements ProjMemberService {
 
     private final ProjMemberMapper projMemberMapper;
     private final ModelMapper modelMapper;
+
     @Autowired
     public ProjMemberServiceImpl(
-             ProjMemberMapper projMemberMapper
-            ,ModelMapper modelMapper) {
+            ProjMemberMapper projMemberMapper
+            , ModelMapper modelMapper) {
         this.projMemberMapper = projMemberMapper;
         this.modelMapper = modelMapper;
     }
@@ -44,6 +45,6 @@ public class ProjMemberServiceImpl implements ProjMemberService {
     /* 설명. 프로젝트 탭으로 이동시 유저의 아이디를 통해 프로젝트와 워크스페이스 정보 조회 */
     @Override
     public List<UserProjInfoDTO> getProjsByUserId(Long userId) {
-        return List.of();
+        return projMemberMapper.selectProjsByUserId(userId);
     }
 }
