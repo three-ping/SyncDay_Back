@@ -3,7 +3,6 @@ package com.threeping.syncday.proj.command.aggregate.entity;
 import com.threeping.syncday.proj.query.config.ProjectEntityListener;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.sql.Timestamp;
 
