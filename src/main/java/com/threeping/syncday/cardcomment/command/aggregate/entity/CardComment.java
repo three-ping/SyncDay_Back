@@ -29,4 +29,9 @@ public class CardComment {
 
     @Column(name="card_id")
     private Long cardId;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new Timestamp(System.currentTimeMillis());
+    }
 }
