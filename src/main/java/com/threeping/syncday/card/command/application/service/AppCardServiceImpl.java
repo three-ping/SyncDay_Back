@@ -1,5 +1,7 @@
 package com.threeping.syncday.card.command.application.service;
 
+import com.threeping.syncday.card.command.aggregate.dto.CardDTO;
+import com.threeping.syncday.card.command.aggregate.entity.Card;
 import com.threeping.syncday.card.command.aggregate.vo.AppCardVO;
 import com.threeping.syncday.card.command.domain.repository.CardRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,10 @@ public class AppCardServiceImpl implements AppCardService {
     }
 
     @Override
-    public Object addCard(AppCardVO newCard) {
-        return null;
+    public CardDTO addCard(AppCardVO newCard) {
+        Card cardToAdd = modelMapper.map(newCard, Card.class);
+        log.info("cardToAdd: {}", cardToAdd);
+        Card addedCard = cardRepository.save(cardToAdd);
+        return modelMapper.map(addedCard, CardDTO.class);
     }
 }
