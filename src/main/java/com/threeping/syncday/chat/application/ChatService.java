@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,32 +44,27 @@ public class ChatService {
 
 
     //  채팅방 목록 조회
-    public List<ChatRoom> findUserChat(Long userId) {
+    public List<ChatRoomDTO> findUserChat(Long userId) {
         log.info("유저 채팅 목록 찾는 서비스 메서드 시작");
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다.: " + userId));
 
-        List<ChatRoom> chatRoomList = chatRoomRepository.findChatRoomsByMemberIdsContaining(userId);
+        List<ChatRoomDTO> chatRoomList = chatRoomRepository.findChatRoomsByMemberIdsContaining(userId);
         log.info("채팅룸 리스트 엔티티: {}", chatRoomList);
 
         return chatRoomList;
     }
 
     //  특정 채팅방 조회
-    public ChatRoom findChatRoomByRoomId(String roomId) {
-
-        return chatRoomRepository.findChatRoomByRoomId(roomId).orElseThrow(
-                () -> new IllegalArgumentException("해당 {roomId}채팅방이 없습니다." + roomId));
-
+    public ChatRoomDTO findChatRoomByRoomId(String roomId) {
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 채팅방이 없습니다: " + roomId));
+        return convertToChatRoomDTO(chatRoom);
     }
 
-    // 멤버 조회
-//    public List<UserEntity> getAllUsers() {
-//        return userRepository.findAll();
-//    }
 
     //  채팅방 생성(멤버 필터)
-    public ChatRoom createChatRoom(ChatRoomDTO chatRoomDTO) {
+    public ChatRoomDTO createChatRoom(ChatRoomDTO chatRoomDTO) {
         // 멤버 기반 이름 설정
 //            List<String> memberIds = chatRoomDTO.getMemberIds();
 //            String chatRoomName = memberIds.size() == 2
@@ -93,42 +88,41 @@ public class ChatService {
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(chatRoomDTO.getRoomId())
-                .chatRoomName(roomName)
-                .creatorId(chatRoomDTO.getCreatorId())
+                .chatRoomName(chatRoomDTO.getChatRoomName())
                 .createdAt(LocalDateTime.now())
                 .memberCount(chatRoomDTO.getMemberIds().size())
                 .memberIds(chatRoomDTO.getMemberIds())
                 .build();
-        return chatRoomRepository.save(chatRoom);
+        return chatRoomRepository.save(chatRoomDTO);
     }
 
 
     //  특정 채팅방 퇴장
-    public ChatRoom leaveChatRoom(String roomId, Long userId) {
-        ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId(roomId)
+    public ChatRoomDTO leaveChatRoom(String roomId, Long userId) {
+        ChatRoomDTO chatRoomDTO = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
 
-        List<Long> memberIds = new ArrayList<>(chatRoom.getMemberIds());
+        List<Long> memberIds = new ArrayList<>(chatRoomDTO.getMemberIds());
         memberIds.remove(userId);
-        chatRoom.setMemberIds(memberIds);
+        chatRoomDTO.setMemberIds(memberIds);
+        chatRoomDTO.setMemberCount(memberIds.size());
+
 
         LocalDateTime leaveTime = LocalDateTime.now();  // 채팅방 나간 시간
 
-        ChatMessage leaveMessage = new ChatMessage();
+        ChatMessageDTO leaveMessage = new ChatMessageDTO();
         leaveMessage.setRoomId(roomId);
         leaveMessage.setSenderId(userId);
         leaveMessage.setChatType(ChatType.LEAVE);
-        leaveMessage.setSentTime(leaveTime);
+        leaveMessage.setSentTime(LocalDateTime.now());
         chatMessageRepository.save(leaveMessage);
-        ChatRoom updatedChatRoom = chatRoomRepository.save(chatRoom);
 
-        if (chatRoom.getMemberCount() == 0) {   // 채팅방에 멤버가 1명이면 자동 삭제됨
-            chatRoomRepository.delete(chatRoom);
-        } else {
-            chatRoomRepository.save(chatRoom);
+        if (memberIds.isEmpty()) {
+            chatRoomRepository.delete(chatRoomDTO);
+            return null;
         }
 
-        return updatedChatRoom;
+        return chatRoomRepository.save(chatRoomDTO);
     }
 
 
@@ -171,43 +165,61 @@ public class ChatService {
 //        return updatedRoom;
 //    }
 
-        // 채팅방 이름 수정(단체톡방 일 시)
-        public ChatRoom updateRoomName (String roomId, String newRoom) {
-            ChatRoom chatRoom = chatRoomRepository.findChatRoomByRoomId(roomId)
-                    .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
+    // 채팅방 이름 수정(단체톡방 일 시)
+    public ChatRoomDTO updateRoomName(String roomId, String newRoom) {
+        ChatRoomDTO chatRoomDTO = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
 
-            chatRoom.setChatRoomName(newRoom);
-            return chatRoomRepository.save(chatRoom);
-        }
+        chatRoomDTO.setChatRoomName(newRoom);
+        return chatRoomRepository.save(chatRoomDTO);
+    }
 
 
+    //  채팅방 채팅 작성
+    public ChatMessageDTO createMessage(String roomId, ChatMessageDTO chatMessageDTO) {
+        ChatRoomDTO chatRoomDTO = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다."));
 
-//  채팅방 채팅 작성
-        public void createMessage(String roomId, ChatMessageDTO chatMessageDTO) {
+        ChatMessageDTO chatMessage = new ChatMessageDTO();
+        chatMessage.setRoomId(roomId);
+        chatMessage.setSenderId(chatMessageDTO.getSenderId());
+        chatMessage.setSenderName(chatMessageDTO.getSenderName());
+        chatMessage.setContent(chatMessageDTO.getContent());
+        chatMessage.setChatType(chatMessageDTO.getChatType());
+        chatMessage.setSentTime(LocalDateTime.now());
 
-    ChatMessage chatMessage = new ChatMessage();
-    chatMessage.setRoomId(roomId);
-    chatMessage.setSenderId(chatMessage.getSenderId());
-    chatMessage.setMessage(chatMessage.getMessage());
-    chatMessage.setMessageId(chatMessage.getMessageId());
-    chatMessage.setMemberCount(chatMessage.getMemberCount());
-    chatMessage.setMemberIds(chatMessage.getMemberIds());
-    chatMessage.setSentTime(LocalDateTime.now());
-    chatMessage.setChatType(chatMessageDTO.getChatType());
+        return chatMessageRepository.save(chatMessageDTO);
+    }
 
-    chatMessageRepository.save(chatMessage);
-        }
+    // ChatRoomDTO로 전환하여 메세지 db에 저장
+    private ChatRoomDTO convertToChatRoomDTO(ChatRoom chatRoom) {
+        List<String> memberNames = userRepository.findAllById(chatRoom.getMemberIds())
+                .stream()
+                .map(UserEntity::getUserName)
+                .collect(Collectors.toList());
 
-    // 메세지 db에 저장
-    private ChatMessageDTO convertToDto(ChatMessage chat) {
-            ChatMessageDTO messageDTO =  new ChatMessageDTO();
-            messageDTO.setRoomId(chat.getRoomId());
-            messageDTO.setSenderId(chat.getSenderId());
-            messageDTO.setMessage(chat.getMessage());
-            messageDTO.setChatType(ChatType.valueOf(chat.getChatType().name()));
+        return ChatRoomDTO.builder()
+                .roomId(chatRoom.getRoomId())
+                .chatRoomName(chatRoom.getChatRoomName())
+                .memberCount(chatRoom.getMemberCount())
+                .memberIds(chatRoom.getMemberIds())
+                .memberNames(memberNames)
+                .createdAt(chatRoom.getCreatedAt())
+                .build();
+    }
 
-            return messageDTO;
-        }
+    // ChatMessageDTO로 전환하여 메세지 db에 저장
+    private ChatMessageDTO convertToChatMessageDTO(ChatMessage chatMessage) {
+        ChatMessageDTO messageDTO = new ChatMessageDTO();
+        messageDTO.setMessageId(chatMessage.getMessageId());
+        messageDTO.setRoomId(chatMessage.getRoomId());
+        messageDTO.setSenderId(chatMessage.getSenderId());
+        messageDTO.setSenderName(chatMessage.getSenderName());
+        messageDTO.setContent(chatMessage.getContent());
+        messageDTO.setChatType(chatMessage.getChatType());
+        messageDTO.setSentTime(chatMessage.getSentTime());
+        return messageDTO;
+    }
 
 //  채팅방&채팅 내용 검색
 

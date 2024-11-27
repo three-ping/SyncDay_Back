@@ -2,6 +2,7 @@ package com.threeping.syncday.chat.entity;
 
 import jakarta.persistence.Id;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,13 +16,14 @@ import java.util.List;
 public class ChatMessage {
 
     @Id
-    private String messageId;
-    private String message;
+    private ObjectId messageId;
+    private String content;
     private String roomId;
     private Long senderId;
-    private Long receiverId;
+    private String senderName;
     private int memberCount;
     private List<Long> memberIds;
+    private List<String> memberNames;
     private ChatType chatType;
 
     @CreationTimestamp

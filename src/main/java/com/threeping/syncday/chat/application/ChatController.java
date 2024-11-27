@@ -37,7 +37,7 @@ public class ChatController {
             if(ChatType.ENTER.equals(chatMessageDTO.getChatType())) {
                 headerAccessor.getSessionAttributes().put("username", chatMessageDTO.getSenderId());
                 headerAccessor.getSessionAttributes().put("roomId", roomId);
-                chatMessageDTO.setMessage(chatMessageDTO.getSenderId() + "님이 입장하셨습니다.");
+                chatMessageDTO.setContent(chatMessageDTO.getSenderId() + "님이 입장하셨습니다.");
             }
 
             // 메시지를 저장하거나 추가 처리가 필요하면 서비스 호출
@@ -46,13 +46,15 @@ public class ChatController {
 
     // 채팅방 목록 조회
     @GetMapping("/room")
-    public List<ChatRoom> findMyChat(@RequestParam Long userId) {
+    public List<ChatRoomDTO> findMyChat(@RequestParam Long userId) {
+        log.info("유저 {}의 채팅방 목록 조회 요청.", userId);
         return chatService.findUserChat(userId);
     }
 
     // 채팅방 생성
     @PostMapping("/room/create")
-    public ChatRoom createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO){
+    public ChatRoomDTO createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO){
+        log.info("새 채팅방 생성 요청: {}", chatRoomDTO);
         return chatService.createChatRoom(chatRoomDTO);
     }
 
@@ -64,7 +66,8 @@ public class ChatController {
 
     // 채팅방 나가기
     @PostMapping("/room/{roomId}/leave")
-    public ChatRoom leaveChatRoom(@PathVariable String roomId, @RequestParam Long userId) {
+    public ChatRoomDTO leaveChatRoom(@PathVariable String roomId, @RequestParam Long userId) {
+        log.info("유저 {} 채팅방 {} 나가기 요청.", userId, roomId);
         return chatService.leaveChatRoom(roomId, userId);
     }
 

@@ -19,6 +19,7 @@ public class ChatRoom {
     private String chatRoomName;
     private Long creatorId;
     private int memberCount;
+    private List<String> memberNames;
     private List<Long> memberIds;
 
     @CreationTimestamp
