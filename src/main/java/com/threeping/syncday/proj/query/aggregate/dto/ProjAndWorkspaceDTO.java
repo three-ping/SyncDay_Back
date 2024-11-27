@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-public class ProjAndWorkspaceDTO {
+public class  ProjAndWorkspaceDTO {
 
     @JsonProperty("proj_id")
     Long projId;
