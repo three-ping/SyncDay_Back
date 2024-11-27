@@ -38,7 +38,6 @@ public class OAuth2ServiceImpl implements OAuth2Service {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("client_id", env.getProperty("spring.security.oauth2.client.registration.github.client-id"));
         params.add("client_secret", env.getProperty("spring.security.oauth2.client.registration.github.client-secret"));
-        params.add("redirect_uri", env.getProperty("spring.security.oauth2.client.registration.github.redirect_uri"));
         params.add("code", code);
 
         HttpHeaders headers = new HttpHeaders();
@@ -54,6 +53,7 @@ public class OAuth2ServiceImpl implements OAuth2Service {
             );
 
             Map<String, Object> responseBody = response.getBody();
+            log.info("responseBody: {}", responseBody);
             return (String) responseBody.get("access_token");
 
         } catch (HttpClientErrorException e) {

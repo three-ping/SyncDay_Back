@@ -84,8 +84,6 @@ public class AuthDocsController {
         // 토큰 만료 시간 설정
         long accessExpiration =
                 System.currentTimeMillis() + Long.parseLong(env.getProperty("token.access-expiration-time"));
-        long refreshExpiration =
-                System.currentTimeMillis() + Long.parseLong(env.getProperty("token.refresh-expiration-time"));
 
         // AT 생성
         String accessToken = Jwts.builder()
@@ -95,34 +93,10 @@ public class AuthDocsController {
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
                 .compact();
 
-        // RT 생성
-        String refreshToken = Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + refreshExpiration))
-                .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
-                .compact();
-
         response.addHeader("Authorization", "Bearer " + accessToken);
         response.addHeader("Access-Token-Expire", "" + accessExpiration);
-        response.addHeader("Refresh-Token", refreshToken);
-        response.addHeader("Refresh-Token-Expire", "" + refreshExpiration);
 
-        // user 상세 정보 조회
-        UserDTO userDetails = userService.findByEmail(email);
 
-        ResponseNormalLoginVO responseNormalLoginVO = new ResponseNormalLoginVO(
-                userDetails.getUserId(),
-                userDetails.getUserName(),
-                userDetails.getEmail(),
-                userDetails.getProfilePhoto(),
-                userDetails.getJoinYear(),
-                userDetails.getPosition(),
-                userDetails.getTeamId(),
-                userDetails.getLastAccessTime()
-        );
-
-        ResponseDTO<ResponseNormalLoginVO> responseDTO = ResponseDTO.ok(responseNormalLoginVO);
-        return responseDTO;
+        return ResponseDTO.ok("로그인 성공");
     }
 }
