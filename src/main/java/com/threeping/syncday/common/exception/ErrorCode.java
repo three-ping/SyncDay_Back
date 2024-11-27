@@ -66,7 +66,8 @@ public enum ErrorCode {
     // 07: 카드보드
     CARDBOARD_NOT_FOUND(4040700,HttpStatus.NOT_FOUND, "카드보드가 존재하지 않습니다"),
     // 08: 카드
-
+    CARD_NOT_FOUND(4040800,HttpStatus.NOT_FOUND, "존재하지 않는 카드입니다"),
+    CARD_UNAUTHORIZED_REQUEST(4040801, HttpStatus.UNAUTHORIZED, "권한이 없는 요청입니다"),
     // 09: 카드 댓글
 
     // 10: 첨부파일
