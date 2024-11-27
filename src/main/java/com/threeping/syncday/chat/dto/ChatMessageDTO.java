@@ -10,15 +10,13 @@ import java.util.List;
 @Data
 public class ChatMessageDTO {
 
-    private String messageId;
+
     private String message;
     private String roomId;
     private Long senderId;
-    private int memberCount;
-    private List<Long> memberIds;
     private ChatType chatType;
     private LocalDateTime sentTime;
 
-    private FileUploadDTO file;
+//    private FileUploadDTO file;
 
 }
