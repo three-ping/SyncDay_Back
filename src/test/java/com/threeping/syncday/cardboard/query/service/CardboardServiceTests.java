@@ -1,7 +1,6 @@
 package com.threeping.syncday.cardboard.query.service;
 
-import com.threeping.syncday.cardboard.query.aggregate.CardBoardDTO;
-import com.threeping.syncday.workspace.query.aggregate.WorkspaceDTO;
+import com.threeping.syncday.cardboard.query.aggregate.CardboardDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,10 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
-class CardBoardServiceTests {
+class CardboardServiceTests {
 
     @Autowired
-    CardBoardService cardBoardService;
+    CardboardService cardBoardService;
 
 
     @DisplayName("카드보드 전체 조회")
@@ -26,12 +25,12 @@ class CardBoardServiceTests {
         // given
 
         // when
-        List<CardBoardDTO> cardBoards = cardBoardService.getAllCardBoards();
+        List<CardboardDTO> cardBoards = cardBoardService.getAllCardBoards();
 
         // then
         assertNotNull(cardBoards);
-        cardBoards.forEach(cardBoardDTO -> {
-            log.info("cardBoardDTO: {}", cardBoardDTO);
+        cardBoards.forEach(cardboardDTO -> {
+            log.info("cardBoardDTO: {}", cardboardDTO);
         });
 
 
@@ -45,13 +44,13 @@ class CardBoardServiceTests {
         Long workspaceId = 1L;
 
         // when
-        List<CardBoardDTO> cardBoards = cardBoardService.getCardBoardsByWorkspaceId(workspaceId);
+        List<CardboardDTO> cardBoards = cardBoardService.getCardBoardsByWorkspaceId(workspaceId);
 
         // then
         assertNotNull(cardBoards);
 
-        cardBoards.forEach(cardBoardDTO -> {
-            log.info("cardBoardDTO: {}", cardBoardDTO);
+        cardBoards.forEach(cardboardDTO -> {
+            log.info("cardBoardDTO: {}", cardboardDTO);
         });
 
     }

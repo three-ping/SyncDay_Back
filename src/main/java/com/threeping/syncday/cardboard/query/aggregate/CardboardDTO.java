@@ -1,16 +1,15 @@
-package com.threeping.syncday.workspace.query.aggregate;
+package com.threeping.syncday.cardboard.query.aggregate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
-public class CardBoardVO {
+public class CardboardDTO {
 
-    @JsonProperty("cardboard_id")
-    private Long cardboardId;
+    @JsonProperty("card_board_id")
+    private String cardBoardId;
 
     @JsonProperty("title")
     private String title;
@@ -36,6 +35,4 @@ public class CardBoardVO {
     @JsonProperty("workspace_id")
     private String workspaceId;
 
-    @JsonProperty("cards")
-    private List<CardVO> cards;
 }
