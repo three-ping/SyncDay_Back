@@ -37,6 +37,7 @@ public class AppCardboardServiceImpl implements AppCardboardService {
     }
 
     @Override
+    @Transactional
     public CardboardDTO modifyCardboard(AppCardboardVO cardboardVO) {
         Cardboard foundCardboard = cardboardRepository.findById(cardboardVO.getCardboardId()).orElse(null);
         if(foundCardboard == null) {
@@ -45,5 +46,16 @@ public class AppCardboardServiceImpl implements AppCardboardService {
         Cardboard savedCardboard = cardboardRepository.save(foundCardboard);
         log.info("savedCardboard: {}", savedCardboard);
         return modelMapper.map(savedCardboard, CardboardDTO.class);
+    }
+
+    @Override
+    @Transactional
+    public CardboardDTO deleteCardboard(Long cardboardId) {
+        Cardboard foundCardboard = cardboardRepository.findById(cardboardId).orElse(null);
+        if(foundCardboard == null) {
+            throw new CommonException(ErrorCode.CARDBOARD_NOT_FOUND);
+        }
+        cardboardRepository.delete(foundCardboard);
+        return modelMapper.map(foundCardboard, CardboardDTO.class);
     }
 }

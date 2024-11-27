@@ -59,4 +59,20 @@ class AppCardboardServiceTests {
 
         log.info("modifiedCardboardDTO: {}", modifiedCardboardDTO);
     }
+
+    @DisplayName("카드보드 삭제 테스트")
+    @Test
+    void testDeleteCardboard(){
+
+        // given
+        Long cardboardId = 1L;
+
+        // when
+        CardboardDTO cardboardDTO = appCardboardService.deleteCardboard(cardboardId);
+
+        // then
+        assertNotNull(cardboardDTO);
+
+        log.info("cardboardDTO: {}", cardboardDTO);
+    }
 }

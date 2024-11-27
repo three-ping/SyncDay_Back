@@ -43,11 +43,11 @@
         <id property="workspaceId" column="workspace_id"/>
         <result property="workspaceName" column="workspace_name"></result>
         <collection property="cardboards" column="workspace_id"
-                    select="selectCardBoardsByWorkspaceId"/>
+                    select="selectCardboardsByWorkspaceId"/>
     </resultMap>
 
 
-    <resultMap id="cardBoardMap" type="com.threeping.syncday.workspace.query.aggregate.CardboardVO">
+    <resultMap id="cardboardMap" type="com.threeping.syncday.workspace.query.aggregate.CardboardVO">
         <id property="cardboardId" column="cardboard_id"/>
         <result property="title" column="title"/>
         <result property="createdAt" column="created_at"/>
@@ -58,7 +58,7 @@
         <result property="vcsMilestoneUrl" column="vcs_milestone_url"/>
         <result property="workspaceId" column="workspace_id"/>
         <collection property="cards" column="cardboard_id"
-                    select="selectCardsByCardBoardId"/>
+                    select="selectCardsByCardboardId"/>
     </resultMap>
 
     <resultMap id="cardMap" type="com.threeping.syncday.workspace.query.aggregate.CardVO">
@@ -99,7 +99,7 @@
         FROM TBL_WORKSPACE
         WHERE workspace_id = #{workspaceId}
     </select>
-    <select id="selectCardBoardsByWorkspaceId" resultMap="cardBoardMap">
+    <select id="selectCardboardsByWorkspaceId" resultMap="cardboardMap">
         SELECT cardboard_id,
                title,
                created_at,
@@ -109,12 +109,12 @@
                vcs_type,
                vcs_milestone_url,
                workspace_id
-        FROM TBL_CARDBOARD
+        FROM TBL_cardboard
         WHERE workspace_id = #{workspaceId}
         ORDER BY created_at DESC
     </select>
 
-    <select id="selectCardsByCardBoardId" resultMap="cardMap">
+    <select id="selectCardsByCardboardId" resultMap="cardMap">
         SELECT *
         FROM VW_CARD_INFO
         WHERE cardboard_id = #{cardboardId}

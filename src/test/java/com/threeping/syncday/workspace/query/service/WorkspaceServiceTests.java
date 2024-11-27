@@ -53,7 +53,7 @@ class WorkspaceServiceTests {
     void testGetWorkspaceInfoById(){
 
         // given
-        Long workspaceId = 10L;
+        Long workspaceId = 1L;
 
         // when
         WorkspaceInfoDTO workspaceInfo = workspaceService.getWorkspaceInfo(workspaceId);

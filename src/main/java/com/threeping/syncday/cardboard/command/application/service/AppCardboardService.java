@@ -7,4 +7,6 @@ public interface AppCardboardService {
     CardboardDTO addCardboard(AppCardboardVO cardboardVO);
 
     CardboardDTO modifyCardboard(AppCardboardVO cardboardVO);
+
+    CardboardDTO deleteCardboard(Long cardboardId);
 }

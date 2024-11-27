@@ -27,4 +27,9 @@ public class AppCardboardController {
         return ResponseDTO.ok(appCardboardService.modifyCardboard(cardboardVO));
     }
 
+    @DeleteMapping("/{cardboardId}")
+    public ResponseDTO<?> deleteCardboard(@PathVariable("cardboardId") Long cardboardId) {
+        return ResponseDTO.ok(appCardboardService.deleteCardboard(cardboardId));
+    }
+
 }
