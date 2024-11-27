@@ -2,8 +2,9 @@ package com.threeping.syncday.cardcomment.command.aggregate.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
+@AllArgsConstructor
 @Data
 public class RequestAddCardCommentVO {
 
