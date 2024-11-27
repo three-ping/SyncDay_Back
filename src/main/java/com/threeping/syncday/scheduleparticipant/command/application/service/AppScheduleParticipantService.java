@@ -12,8 +12,6 @@ public interface AppScheduleParticipantService {
 
     void updateScheduleParticipant(Long userId, Long scheduleId, List<Long> attendeeIds);
 
-    void deleteScheduleParticipant(Long scheduleId);
-
     ResponseScheduleParticipantDTO updateUserScheduleStatus(ScheduleParticipantStatusDTO newScheduleParticipantStatus);
 
     ResponseScheduleParticipantDTO updateUserScheduleNotification(ScheduleParticipantNotificationDTO newScheduleParticipantNotification);
