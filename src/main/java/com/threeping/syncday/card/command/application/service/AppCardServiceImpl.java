@@ -57,7 +57,7 @@ public class AppCardServiceImpl implements AppCardService {
 
     @Override
     public Boolean removeCard(RequestDeleteCardVO deleteCard) {
-        Card foundCard = cardRepository.findById(deleteCard.getCardId()).orElse(null);
+        Card foundCard = cardRepository.findById(deleteCard.getCardCommentId()).orElse(null);
         if (foundCard == null) {
             throw new CommonException(ErrorCode.CARD_NOT_FOUND);
         } else if (!Objects.equals(foundCard.getCreatedBy(), deleteCard.getUserId())){

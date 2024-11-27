@@ -69,7 +69,8 @@ public enum ErrorCode {
     CARD_NOT_FOUND(4040800,HttpStatus.NOT_FOUND, "존재하지 않는 카드입니다"),
     CARD_UNAUTHORIZED_REQUEST(4040801, HttpStatus.UNAUTHORIZED, "권한이 없는 요청입니다"),
     // 09: 카드 댓글
-
+    CARD_COMMENT_NOT_FOUND(4040900, HttpStatus.NOT_FOUND, "존재하지 않는 카드댓글입니다"),
+    CARD_COMMENT_UNAUTHORIZED_REQUEST(4040901, HttpStatus.UNAUTHORIZED, "권한이 없는 요청입니다."),
     // 10: 첨부파일
 
     // 11: 워스 북마크
