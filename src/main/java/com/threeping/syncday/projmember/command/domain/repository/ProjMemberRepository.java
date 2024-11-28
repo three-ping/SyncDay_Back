@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface ProjMemberRepository extends JpaRepository<ProjMember, Long> {
+    ProjMember findByUserIdAndProjId(Long userId, Long projId);
 }
