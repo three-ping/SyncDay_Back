@@ -3,6 +3,7 @@ package com.threeping.syncday.proj.command.application.service;
 import com.threeping.syncday.proj.command.aggregate.entity.VcsType;
 import com.threeping.syncday.proj.command.aggregate.vo.ProjVO;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
+import com.threeping.syncday.proj.command.aggregate.vo.RequestUpdateVcsInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 @Transactional
 @Slf4j
@@ -23,11 +25,11 @@ class AppProjServiceTests {
 
     @DisplayName("프로젝트 생성 테스트")
     @Test
-    void testCreateProject(){
+    void testCreateProject() {
 
         // given
         Long userId = 1L;
-        String projName ="프로젝트 생성 테스트";
+        String projName = "프로젝트 생성 테스트";
 
         // when
         ProjVO projVO = new ProjVO();
@@ -43,7 +45,7 @@ class AppProjServiceTests {
 
     @DisplayName("프로젝트 수정 테스트")
     @Test
-    void testUpdateProject(){
+    void testUpdateProject() {
         // given
         Long projId = 1L;
         String modifyProjName = "프로젝트 수정 테스트";
@@ -71,7 +73,7 @@ class AppProjServiceTests {
 
     @DisplayName("프로젝트 삭제 테스트")
     @Test
-    void testDeleteProject(){
+    void testDeleteProject() {
 
         // given
         Long projId = 1L;
@@ -81,6 +83,22 @@ class AppProjServiceTests {
 
         assertEquals(projId, deleteProjDTO.getProjId());
         log.info("deleteProjDTO: {}", deleteProjDTO);
+
+    }
+
+    @DisplayName("프로젝트 VCS 정보 수정 테스트")
+    @Test
+    void testUpdateVCSInfo() {
+        // given
+        RequestUpdateVcsInfoVO reqVO = new RequestUpdateVcsInfoVO(1L, 1L, VcsType.GITHUB, "https://gibhub.com.three-ping");
+
+        // when
+        ProjDTO updateProjDTO = appProjService.updateVcsInfo(reqVO);
+
+        // then
+        assertEquals(VcsType.GITHUB, updateProjDTO.getVcsType());
+
+        log.info("updateProjDTO: {}", updateProjDTO);
 
     }
 }

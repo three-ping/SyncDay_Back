@@ -17,4 +17,4 @@ public interface ProjMemberMapper {
 
     List<UserProjInfoDTO> selectProjsByUserId(Long userId);
 
-    ProjMemberDTO selectProjMemberByUserIdAndProjId(@Param("userId") Long userId, @Param("projId") Long projId);}
+    ProjMember selectProjMemberByUserIdAndProjId(@Param("userId") Long userId, @Param("projId") Long projId);}

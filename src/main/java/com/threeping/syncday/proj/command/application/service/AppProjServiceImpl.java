@@ -81,11 +81,16 @@ public class AppProjServiceImpl implements AppProjService {
     public ProjDTO updateVcsInfo(RequestUpdateVcsInfoVO requestUpdateVcsInfoVO) {
         Long userId = requestUpdateVcsInfoVO.getUserId();
         Long projId = requestUpdateVcsInfoVO.getProjId();
-
-        String userRole = infraProjService.requestParticipationStatus(requestUpdateVcsInfoVO.getUserId(), requestUpdateVcsInfoVO.getProjId());
-        if(userRole.equals("OWNER")){
-
+        Proj foundProj = projRepository.findByProjId(projId);
+        if (foundProj == null) {
+            throw new CommonException(ErrorCode.PROJ_NOT_FOUND);
         }
-        return null;
+        String userRole = infraProjService.requestParticipationStatus(requestUpdateVcsInfoVO.getUserId(), requestUpdateVcsInfoVO.getProjId());
+        if (userRole.equals("OWNER")) {
+            foundProj.setVcsType(requestUpdateVcsInfoVO.getVcsType());
+            foundProj.setVcsProjUrl(requestUpdateVcsInfoVO.getVcsProjUrl());
+        }
+        Proj savedProj = projRepository.save(foundProj);
+        return modelMapper.map(savedProj, ProjDTO.class);
     }
 }

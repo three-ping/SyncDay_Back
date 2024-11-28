@@ -2,9 +2,11 @@ package com.threeping.syncday.proj.command.aggregate.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.threeping.syncday.proj.command.aggregate.entity.VcsType;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Data
+@AllArgsConstructor
+@Getter
 public class RequestUpdateVcsInfoVO {
 
     @JsonProperty("user_id")

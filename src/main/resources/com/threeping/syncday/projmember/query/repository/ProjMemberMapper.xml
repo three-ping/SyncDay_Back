@@ -102,7 +102,7 @@
         ORDER BY
             pm.proj_id, w.workspace_id
     </select>
-    <select id="selectProjMemberByUserIdAndProjId" resultMap="projMemberDTOResultMap" parameterType="map">
+    <select id="selectProjMemberByUserIdAndProjId" resultMap="projMemberResultMap" parameterType="map">
         SELECT
             PROJ_MEMBER_ID
              ,BOOKMARK_STATUS

@@ -24,8 +24,7 @@ public class InfraProjServiceImpl implements InfraProjService {
 
     @Override
     public String requestParticipationStatus(Long userId, Long projId) {
-        projMemberService.getProjMemberParticipationStatus(userId, projId);
-        return null;
+        return projMemberService.getProjMemberParticipationStatus(userId, projId);
     }
 
 

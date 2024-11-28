@@ -50,7 +50,7 @@ public class ProjMemberServiceImpl implements ProjMemberService {
 
     @Override
     public String getProjMemberParticipationStatus(Long userId, Long projId) {
-        ProjMemberDTO projMember = projMemberMapper.selectProjMemberByUserIdAndProjId(userId, projId);
+        ProjMember projMember = projMemberMapper.selectProjMemberByUserIdAndProjId(userId, projId);
         return projMember.getParticipationStatus();
     }
 }
