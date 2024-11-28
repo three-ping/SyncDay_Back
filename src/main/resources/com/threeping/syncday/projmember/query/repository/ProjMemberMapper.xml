@@ -102,5 +102,15 @@
         ORDER BY
             pm.proj_id, w.workspace_id
     </select>
-
+    <select id="selectProjMemberByUserIdAndProjId" resultMap="projMemberDTOResultMap" parameterType="map">
+        SELECT
+            PROJ_MEMBER_ID
+             ,BOOKMARK_STATUS
+             ,PARTICIPATION_STATUS
+             ,USER_ID
+             ,PROJ_ID
+        FROM    TBL_PROJ_MEMBER
+        WHERE   USER_ID = #{userId}
+          AND     PROJ_ID = #{projId}
+    </select>
 </mapper>

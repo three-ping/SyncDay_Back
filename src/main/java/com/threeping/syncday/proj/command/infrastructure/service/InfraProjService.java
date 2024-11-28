@@ -6,4 +6,5 @@ public interface InfraProjService {
 
     Boolean requestAddProjOwner(Long projId, Long userId);
 
+    String requestParticipationStatus(Long userId, Long projId);
 }
