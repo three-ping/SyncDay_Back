@@ -2,7 +2,9 @@ package com.threeping.syncday.cardtag.command.aggregate.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name="TBL_CARD_TAG")
 public class CardTag {

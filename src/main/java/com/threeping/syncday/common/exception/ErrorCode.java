@@ -78,7 +78,7 @@ public enum ErrorCode {
     // 12: 카드 북마크
 
     // 13: 카드 태그
-
+    CARD_TAG_NOT_FOUND(4041300, HttpStatus.NOT_FOUND, "존재하지 않는 카드 태그입니다"),
     //500
     INTERNAL_SERVER_ERROR(50000, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다");
 
