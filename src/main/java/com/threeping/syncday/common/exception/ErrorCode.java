@@ -76,7 +76,8 @@ public enum ErrorCode {
     // 11: 워스 북마크
 
     // 12: 카드 북마크
-
+    CARD_BOOKMARK_ALREADY_EXISTS(4001200,HttpStatus.BAD_REQUEST, "카드북마크가 존재합니다"),
+    CARD_BOOKMARK_NOT_FOUND(4041201,HttpStatus.NOT_FOUND, "존재하지 않는 카드 북마크입니다"),
     // 13: 카드 태그
 
     //500
