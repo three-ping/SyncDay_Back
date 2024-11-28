@@ -77,6 +77,11 @@ dependencies {
     // 테스트 코드에서도 롬복 적용(로그 기능 활용을 위한 추가)
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // GithubApp dependency
+    // https://mvnrepository.com/artifact/org.kohsuke/github-api
+    implementation group: 'org.kohsuke', name: 'github-api', version: '1.318'
+
 }
 
 tasks.named('test') {
