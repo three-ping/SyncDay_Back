@@ -36,8 +36,8 @@ public class OAuth2ServiceImpl implements OAuth2Service {
 
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("client_id", env.getProperty("spring.security.oauth2.client.registration.github.client-id"));
-        params.add("client_secret", env.getProperty("spring.security.oauth2.client.registration.github.client-secret"));
+        params.add("client_id", env.getProperty("github.app.oauth2.client-id"));
+        params.add("client_secret", env.getProperty("github.app.oauth2.client-secret"));
         params.add("code", code);
 
         HttpHeaders headers = new HttpHeaders();
@@ -59,46 +59,6 @@ public class OAuth2ServiceImpl implements OAuth2Service {
         } catch (HttpClientErrorException e) {
             log.error("Github API error: {}", e.getResponseBodyAsString());
             throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
-    private Map<String, Object> getGithubUserInfo(String githubAccessToken) {
-        String githubUserInfoUrl = "https://api.github.com/user";
-
-        log.info("githubAccessToken: {}", githubAccessToken);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(githubAccessToken);
-
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        log.info("headers: {}", headers);
-        HttpEntity<MultiValueMap<String, String>> githubUserInfoRequest = new HttpEntity<>(headers);
-
-        try {
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    githubUserInfoUrl,
-                    HttpMethod.GET,
-                    githubUserInfoRequest,
-                    Map.class
-            );
-
-            Map<String, Object> responseBody = response.getBody();
-            Map<String, Object> githubAccount = (Map<String, Object>) responseBody.get("user");
-
-
-            log.info("response: {}", response.getHeaders());
-            log.info("responseBody: {}", responseBody);
-            
-            /* Todo: Response에 맞게 userInfo 수정 */
-            Map<String, Object> userInfo = new HashMap<>();
-            userInfo.put("id", githubAccount.get("id"));
-            
-            return userInfo;
-            
-        } catch (HttpClientErrorException e) {
-            log.error("Github API error: {}", e.getResponseBodyAsString());
-            throw e;
         }
 
     }
