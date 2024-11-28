@@ -79,7 +79,7 @@ public enum ErrorCode {
     CARD_BOOKMARK_ALREADY_EXISTS(4001200,HttpStatus.BAD_REQUEST, "카드북마크가 존재합니다"),
     CARD_BOOKMARK_NOT_FOUND(4041201,HttpStatus.NOT_FOUND, "존재하지 않는 카드 북마크입니다"),
     // 13: 카드 태그
-
+    CARD_TAG_NOT_FOUND(4041300, HttpStatus.NOT_FOUND, "존재하지 않는 카드 태그입니다"),
     //500
     INTERNAL_SERVER_ERROR(50000, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다");
 
