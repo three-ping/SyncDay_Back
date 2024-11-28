@@ -4,7 +4,9 @@ import jakarta.persistence.Id;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,18 +18,13 @@ import java.util.List;
 public class ChatMessage {
 
     @Id
+    @Field("_id")
     private ObjectId messageId;
     private String content;
     private String roomId;
     private Long senderId;
-    private String senderName;
-    private int memberCount;
-    private List<Long> memberIds;
-    private List<String> memberNames;
     private ChatType chatType;
 
-    @CreationTimestamp
+    @CreatedDate
     private LocalDateTime sentTime;
-
-
 }

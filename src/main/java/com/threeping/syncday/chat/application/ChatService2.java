@@ -22,19 +22,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class ChatService3 {
+public class ChatService2 {
 
-    private static final Logger log = LoggerFactory.getLogger(ChatService3.class);
+    private static final Logger log = LoggerFactory.getLogger(ChatService.class);
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public ChatService3(ChatRoomRepository chatRoomRepository,
-                        ChatMessageRepository chatMessageRepository,
-                        UserRepository userRepository,
-                        SimpMessagingTemplate messagingTemplate) {
+    public ChatService(ChatRoomRepository chatRoomRepository,
+                       ChatMessageRepository chatMessageRepository,
+                       UserRepository userRepository,
+                       SimpMessagingTemplate messagingTemplate) {
         this.chatRoomRepository = chatRoomRepository;
         this.chatMessageRepository = chatMessageRepository;
         this.userRepository = userRepository;
@@ -206,11 +206,11 @@ public ChatRoomDTO leaveChatRoom(String roomId, Long userId) {
                 .orElseThrow(() -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다."));
 
         ChatMessageDTO chatMessage = ChatMessageDTO.builder()
-        .roomId(roomId)
-        .senderId(chatMessageDTO.getSenderId())
-        .content(chatMessageDTO.getContent())
-        .chatType(ChatType.TALK)
-        .sentTime(LocalDateTime.now())
+                .roomId(roomId)
+                .senderId(chatMessageDTO.getSenderId())
+                .content(chatMessageDTO.getContent())
+                .chatType(ChatType.TALK)
+                .sentTime(LocalDateTime.now())
                 .build();
 
         chatMessageRepository.save(chatMessageDTO);

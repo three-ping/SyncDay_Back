@@ -12,6 +12,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
@@ -20,40 +21,46 @@ import java.util.Map;
 @RequestMapping("/api/chat")
 public class ChatController {
 
-        private final ChatService chatService;
+    private final ChatService chatService;
 
     @Autowired
-    public ChatController ( ChatService chatService ) {
+    public ChatController(ChatService chatService) {
         this.chatService = chatService;
     }
 
     // 메세지 전송: "/app/message"로 보낸 메시지를 처리
-        @MessageMapping("/room/message/{roomId}") // "/app/{roomId}/message"로 들어오는 정보 처리
-        @SendTo("/topic/room/message/{roomId}")  // 받은 메세지를 이 경로로 보내줌
-        public void sendMessage(ChatMessageDTO chatMessageDTO,
-                                @DestinationVariable String roomId,
-                                SimpMessageHeaderAccessor headerAccessor) {
-            log.info("새 메세지 in {} room: {}", roomId, chatMessageDTO);
-            if(ChatType.ENTER.equals(chatMessageDTO.getChatType())) {
-                headerAccessor.getSessionAttributes().put("username", chatMessageDTO.getSenderId());
-                headerAccessor.getSessionAttributes().put("roomId", roomId);
-                chatMessageDTO.setContent(chatMessageDTO.getSenderId() + "님이 입장하셨습니다.");
-            }
+    @MessageMapping("/room/{roomId}") // "/app/{roomId}/message"로 들어오는 정보 처리
+    @SendTo("/topic/room/{roomId}")  // 받은 메세지를 이 경로로 보내줌
+    public void sendMessage(@DestinationVariable String roomId, ChatMessageDTO chatMessageDTO,
 
-            // 메시지를 저장하거나 추가 처리가 필요하면 서비스 호출
-            chatService.createMessage(roomId, chatMessageDTO);
+                            SimpMessageHeaderAccessor headerAccessor) {
+        log.info("새 메세지 in {} room: {}", roomId, chatMessageDTO);
+        if (ChatType.ENTER.equals(chatMessageDTO.getChatType())) {
+            headerAccessor.getSessionAttributes().put("username", chatMessageDTO.getSenderId());
+            headerAccessor.getSessionAttributes().put("roomId", roomId);
+            chatMessageDTO.setContent(chatMessageDTO.getSenderId() + "님이 입장하셨습니다.");
         }
+
+        // 메시지를 저장하거나 추가 처리가 필요하면 서비스 호출
+        chatService.createMessage(roomId, chatMessageDTO);
+    }
 
     // 채팅방 목록 조회
     @GetMapping("/room")
-    public List<ChatRoomDTO> findMyChat(@RequestParam Long userId) {
+    public List<ChatRoom> findMyChat(@RequestParam Long userId) {
         log.info("유저 {}의 채팅방 목록 조회 요청.", userId);
         return chatService.findUserChat(userId);
     }
 
+    // 특정 채팅방 조회
+    @GetMapping("/room/{roomId}/message")
+    public List<ChatMessageDTO> getChatRoom(@PathVariable String roomId, @RequestParam Long userId) {
+        return chatService.findChatRoomByRoomId(roomId, userId);
+    }
+
     // 채팅방 생성
     @PostMapping("/room/create")
-    public ChatRoomDTO createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO){
+    public ChatRoomDTO createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO) {
         log.info("새 채팅방 생성 요청: {}", chatRoomDTO);
         return chatService.createChatRoom(chatRoomDTO);
     }
@@ -78,4 +85,4 @@ public class ChatController {
 //        return chatService.inviteUser(roomId, userIds);
 //    }
 
- }
+}
