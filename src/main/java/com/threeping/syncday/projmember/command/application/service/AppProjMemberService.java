@@ -6,5 +6,7 @@ import com.threeping.syncday.projmember.command.aggregate.entity.vo.ProjBookmark
 public interface AppProjMemberService {
     Boolean addProjOwner(Long projId, Long userId);
 
-    ProjBookmarkVO toggleProjBookmark(Long projMemberId);
+    Boolean addProjBookmark(Long userId, Long projId);
+
+    Boolean removeProjBookmark(Long userId, Long projId);
 }
