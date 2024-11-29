@@ -1,11 +1,13 @@
 package com.threeping.syncday.workspace.command.aggregate.entity;
 
+import com.threeping.syncday.workspace.query.config.WorkspaceEntityListener;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
 
 @Entity
+@EntityListeners(WorkspaceEntityListener.class)
 @Table(name="TBL_WORKSPACE")
 @Data
 public class Workspace {
