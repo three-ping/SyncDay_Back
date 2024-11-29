@@ -25,8 +25,8 @@ public class UserSearchServiceImpl implements UserSearchService {
     public List<UserSearchResponse> searchUser(String keyword) {
         log.info("유저 검색으로 들어온 키워드: {}", keyword);
 
-        List<UserSearchResponse> responseList = userSearchRepository.
-                findByNameContaining(keyword).stream()
+        List<UserSearchResponse> responseList = userSearchRepository
+                .searchByKeyword(keyword).stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
         log.info("키워드 검색으로 조회된 유저 정보: ", responseList);

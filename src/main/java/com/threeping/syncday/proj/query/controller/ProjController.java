@@ -1,8 +1,13 @@
 package com.threeping.syncday.proj.query.controller;
 
+import com.threeping.syncday.proj.query.aggregate.dto.ProjectSearchResponse;
 import com.threeping.syncday.proj.query.service.ProjService;
 import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.proj.query.service.ProjectSearchService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +42,16 @@ public class ProjController {
         return ResponseDTO.ok(projService.getProjInfosByUserId(userId));
     }
 
+    @Operation(summary = "프로젝트 검색",
+            description = "프로젝트 이름, VCSTAG를 키워드로 회원을 검색합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "프로젝트 검색 성공",
+                            content = @Content(schema = @Schema(implementation = ProjectSearchResponse.class))
+                    )
+            }
+    )
     @GetMapping("/search")
     public ResponseDTO<?> searchProjs(@RequestParam String keyword){
         return ResponseDTO.ok(searchService.searchProject(keyword));

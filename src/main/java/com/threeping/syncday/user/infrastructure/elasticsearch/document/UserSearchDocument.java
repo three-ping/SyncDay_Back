@@ -19,7 +19,7 @@ public class UserSearchDocument {
     private String email;
     @Field(type = FieldType.Keyword)
     private String profileImage;
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Text, analyzer = "nori_mixed")
     private String teamName;
     @Field(type = FieldType.Keyword)
     private String position;
