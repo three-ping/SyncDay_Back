@@ -47,4 +47,10 @@ public class ProjMemberServiceImpl implements ProjMemberService {
     public List<UserProjInfoDTO> getProjsByUserId(Long userId) {
         return projMemberMapper.selectProjsByUserId(userId);
     }
+
+    @Override
+    public String getProjMemberParticipationStatus(Long userId, Long projId) {
+        ProjMember projMember = projMemberMapper.selectProjMemberByUserIdAndProjId(userId, projId);
+        return projMember.getParticipationStatus();
+    }
 }
