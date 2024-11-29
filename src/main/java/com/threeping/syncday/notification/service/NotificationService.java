@@ -3,7 +3,6 @@ package com.threeping.syncday.notification.service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public interface NotificationService {
@@ -13,5 +12,5 @@ public interface NotificationService {
 
     void sendScheduleNotification(Long userId, Long scheduleId);
 
-     HashMap<Long, SseEmitter> getEmitters();
+    ConcurrentHashMap<Long, SseEmitter> getEmitters();
     }
