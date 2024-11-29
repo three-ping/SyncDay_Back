@@ -32,7 +32,6 @@ public class NotificationServiceImpl implements NotificationService {
     public NotificationServiceImpl(RedisNotificationStorage redisNotificationStorage, InfraNotificationService infraNotificationService) {
         this.redisNotificationStorage = redisNotificationStorage;
         this.infraNotificationService = infraNotificationService;
-        log.info("service in this:{}",((Integer)System.identityHashCode(this)));
     }
 
     @PostConstruct
@@ -52,7 +51,6 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public SseEmitter createEmitter(Long userId) {
-        log.info("service in this: {}", ((Integer) System.identityHashCode(this)));
 
         SseEmitter emitter = new SseEmitter(300000L);
         SseEmitter oldEmitter = emitters.put(userId, emitter);
@@ -155,7 +153,5 @@ public class NotificationServiceImpl implements NotificationService {
         }, Duration.ofSeconds(60));
     }
 
-    public ConcurrentHashMap<Long, SseEmitter> getEmitters(){
-        return this.emitters;
-    }
+
 }

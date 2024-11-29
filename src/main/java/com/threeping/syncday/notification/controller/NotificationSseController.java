@@ -1,6 +1,5 @@
 package com.threeping.syncday.notification.controller;
 
-import com.threeping.syncday.notification.infrastructure.InfraNotificationService;
 import com.threeping.syncday.notification.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -20,13 +19,11 @@ public class NotificationSseController {
 
     public NotificationSseController(NotificationService notificationService){
         this.notificationService = notificationService;
-        log.info("controller:{}", ((Integer)System.identityHashCode(notificationService)).toString());
 
     }
 
     @GetMapping( value = "/subscribe/{userId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribe(@PathVariable Long userId){
-        log.info("controller:{}", ((Integer)System.identityHashCode(notificationService)).toString());
         return notificationService.createEmitter(userId);
     }
 
