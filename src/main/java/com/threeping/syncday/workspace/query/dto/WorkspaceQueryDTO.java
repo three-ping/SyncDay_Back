@@ -13,7 +13,7 @@ public class WorkspaceQueryDTO {
     private Long projectId;
     private String projectName;
     private String vcsType;
-    private String vcsUrl;
+    private String vcsRepoUrl;
     private String vcsRepoName;
     private Timestamp createdAt;
 }

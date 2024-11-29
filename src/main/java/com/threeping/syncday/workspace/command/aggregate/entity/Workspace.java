@@ -32,6 +32,9 @@ public class Workspace {
     @Column(name="vcs_type")
     private VcsType vcsType;
 
+    @Column(name = "vcs_repo_name")
+    private String vcsRepoName;
+
     @Column(name="vcs_repo_url")
     private String vcsRepoUrl;
 

@@ -42,7 +42,7 @@ public class ElasticsearchInitializer {
                             .projectName(workspaceDTO.getProjectName())
                             .vcsType(workspaceDTO.getVcsType())
                             .vcsRepoName(workspaceDTO.getVcsRepoName())
-                            .vcsRepoUrl(workspaceDTO.getVcsUrl())
+                            .vcsRepoUrl(workspaceDTO.getVcsRepoUrl())
                             .createdAt(convertToLocalDateTime(workspaceDTO.getCreatedAt()))
                             .build();
                     searchRepository.save(document);

@@ -28,7 +28,7 @@ public class WorkspaceEventDTO {
                 .projectName(workspaceInfo.getProjectName())
                 .vcsType(workspaceInfo.getVcsType())
                 .vcsRepoName(workspaceInfo.getVcsRepoName())
-                .vcsRepoUrl(workspaceInfo.getVcsUrl())
+                .vcsRepoUrl(workspaceInfo.getVcsRepoUrl())
                 .createdAt(convertToLocalDateTime(workspaceInfo.getCreatedAt()))
                 .eventType("CREATE")
                 .build();
@@ -42,7 +42,7 @@ public class WorkspaceEventDTO {
                 .projectName(workspaceInfo.getProjectName())
                 .vcsType(workspaceInfo.getVcsType())
                 .vcsRepoName(workspaceInfo.getVcsRepoName())
-                .vcsRepoUrl(workspaceInfo.getVcsUrl())
+                .vcsRepoUrl(workspaceInfo.getVcsRepoUrl())
                 .createdAt(convertToLocalDateTime(workspaceInfo.getCreatedAt()))
                 .eventType("DELETE")
                 .build();

@@ -10,6 +10,7 @@
         <result property="progressStatus" column="progress_status"></result>
         <result property="vcsType" column="vcs_type"></result>
         <result property="vcsRepoUrl" column="vcs_repo_url"></result>
+        <result property="vcsRepoName" column="vcs_repo_name"></result>
         <result property="projId" column="proj_id"></result>
     </resultMap>
 
@@ -20,7 +21,7 @@
         <result property="projectId" column="proj_id"></result>
         <result property="projectName" column="proj_name"></result>
         <result property="vcsType" column="vcs_type"></result>
-        <result property="vcsUrl" column="vcs_repo_url"></result>
+        <result property="vcsRepoUrl" column="vcs_repo_url"></result>
         <result property="vcsRepoName" column="vcs_repo_name"></result>
         <result property="createdAt" column="created_at"></result>
     </resultMap>
@@ -32,6 +33,7 @@
                ,CREATED_AT
                ,PROGRESS_STATUS
                ,VCS_TYPE
+               ,VCS_REPO_NAME
                ,VCS_REPO_URL
                ,PROJ_ID
           FROM TBL_WORKSPACE
@@ -44,6 +46,7 @@
                ,CREATED_AT
                ,PROGRESS_STATUS
                ,VCS_TYPE
+               ,VCS_REPO_NAME
                ,VCS_REPO_URL
                ,PROJ_ID
         FROM    TBL_WORKSPACE
