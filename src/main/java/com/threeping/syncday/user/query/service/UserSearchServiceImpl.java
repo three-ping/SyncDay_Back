@@ -29,7 +29,6 @@ public class UserSearchServiceImpl implements UserSearchService {
                 .searchByKeyword(keyword).stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
-        log.info("키워드 검색으로 조회된 유저 정보: ", responseList);
 
         return responseList;
     }
