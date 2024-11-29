@@ -22,6 +22,7 @@ public class ChatRoom {
     @Id
     private String roomId;
     private List<Long> memberIds;
+    private String chatRoomName;
 
     public String getChatRoomName(Map<Long, String> userNameMap) {
         List<String> memberNames = memberIds.stream()
