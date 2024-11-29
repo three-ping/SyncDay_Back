@@ -5,6 +5,7 @@ import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.proj.command.aggregate.vo.ProjVO;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.command.aggregate.entity.Proj;
+import com.threeping.syncday.proj.command.aggregate.vo.RequestUpdateVcsInfoVO;
 import com.threeping.syncday.proj.command.domain.repository.ProjRepository;
 import com.threeping.syncday.proj.command.infrastructure.service.InfraProjService;
 import lombok.extern.slf4j.Slf4j;
@@ -74,5 +75,22 @@ public class AppProjServiceImpl implements AppProjService {
         }
         projRepository.delete(existingProj);
         return modelMapper.map(existingProj, ProjDTO.class);
+    }
+
+    @Override
+    public ProjDTO updateVcsInfo(RequestUpdateVcsInfoVO requestUpdateVcsInfoVO) {
+        Long userId = requestUpdateVcsInfoVO.getUserId();
+        Long projId = requestUpdateVcsInfoVO.getProjId();
+        Proj foundProj = projRepository.findByProjId(projId);
+        if (foundProj == null) {
+            throw new CommonException(ErrorCode.PROJ_NOT_FOUND);
+        }
+        String userRole = infraProjService.requestParticipationStatus(requestUpdateVcsInfoVO.getUserId(), requestUpdateVcsInfoVO.getProjId());
+        if (userRole.equals("OWNER")) {
+            foundProj.setVcsType(requestUpdateVcsInfoVO.getVcsType());
+            foundProj.setVcsProjUrl(requestUpdateVcsInfoVO.getVcsProjUrl());
+        }
+        Proj savedProj = projRepository.save(foundProj);
+        return modelMapper.map(savedProj, ProjDTO.class);
     }
 }

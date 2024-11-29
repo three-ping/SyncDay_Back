@@ -11,4 +11,5 @@ public interface ProjMemberService {
 
     List<UserProjInfoDTO> getProjsByUserId(Long userId);
 
+    String getProjMemberParticipationStatus(Long userId, Long projId);
 }

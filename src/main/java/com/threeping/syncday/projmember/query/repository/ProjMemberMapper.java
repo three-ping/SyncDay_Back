@@ -1,8 +1,10 @@
 package com.threeping.syncday.projmember.query.repository;
 
 import com.threeping.syncday.projmember.query.aggregate.ProjMember;
+import com.threeping.syncday.projmember.query.aggregate.ProjMemberDTO;
 import com.threeping.syncday.projmember.query.aggregate.dto.UserProjInfoDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +16,5 @@ public interface ProjMemberMapper {
     List<ProjMember> selectProjMembersByProjId(Long projId);
 
     List<UserProjInfoDTO> selectProjsByUserId(Long userId);
-}
+
+    ProjMember selectProjMemberByUserIdAndProjId(@Param("userId") Long userId, @Param("projId") Long projId);}
