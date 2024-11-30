@@ -10,7 +10,6 @@ public class InfraProjServiceImpl implements InfraProjService {
 
     private final AppProjMemberService appProjMemberService;
     private final ProjMemberService projMemberService;
-
     @Autowired
     public InfraProjServiceImpl(AppProjMemberService appProjMemberService
             , ProjMemberService projMemberService) {
@@ -21,6 +20,11 @@ public class InfraProjServiceImpl implements InfraProjService {
     @Override
     public Boolean requestAddProjOwner(Long projId, Long userId) {
         return appProjMemberService.addProjOwner(projId, userId);
+    }
+
+    @Override
+    public String requestParticipationStatus(Long userId, Long projId) {
+        return projMemberService.getProjMemberParticipationStatus(userId, projId);
     }
 
 

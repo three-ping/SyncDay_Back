@@ -64,19 +64,22 @@ public enum ErrorCode {
     WORKSPACE_NOT_FOUND(4040600, HttpStatus.NOT_FOUND,"존재하지 않는 워크스페이스입니다."),
 
     // 07: 카드보드
-
+    CARDBOARD_NOT_FOUND(4040700,HttpStatus.NOT_FOUND, "카드보드가 존재하지 않습니다"),
     // 08: 카드
-
+    CARD_NOT_FOUND(4040800,HttpStatus.NOT_FOUND, "존재하지 않는 카드입니다"),
+    CARD_UNAUTHORIZED_REQUEST(4040801, HttpStatus.UNAUTHORIZED, "권한이 없는 요청입니다"),
     // 09: 카드 댓글
-
+    CARD_COMMENT_NOT_FOUND(4040900, HttpStatus.NOT_FOUND, "존재하지 않는 카드댓글입니다"),
+    CARD_COMMENT_UNAUTHORIZED_REQUEST(4040901, HttpStatus.UNAUTHORIZED, "권한이 없는 요청입니다."),
     // 10: 첨부파일
 
     // 11: 워스 북마크
 
     // 12: 카드 북마크
-
+    CARD_BOOKMARK_ALREADY_EXISTS(4001200,HttpStatus.BAD_REQUEST, "카드북마크가 존재합니다"),
+    CARD_BOOKMARK_NOT_FOUND(4041201,HttpStatus.NOT_FOUND, "존재하지 않는 카드 북마크입니다"),
     // 13: 카드 태그
-
+    CARD_TAG_NOT_FOUND(4041300, HttpStatus.NOT_FOUND, "존재하지 않는 카드 태그입니다"),
     //500
     INTERNAL_SERVER_ERROR(50000, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다");
 

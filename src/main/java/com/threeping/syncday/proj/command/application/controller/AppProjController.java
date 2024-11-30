@@ -2,6 +2,7 @@ package com.threeping.syncday.proj.command.application.controller;
 
 import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.proj.command.aggregate.vo.ProjVO;
+import com.threeping.syncday.proj.command.aggregate.vo.RequestUpdateVcsInfoVO;
 import com.threeping.syncday.proj.command.application.service.AppProjService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -155,6 +156,14 @@ public class AppProjController {
                     )
             }
     )
+
+
+    @PutMapping("/vcs")
+    public ResponseDTO<?> updateProjVcsInfo(@RequestBody RequestUpdateVcsInfoVO requestUpdateVcsInfoVO){
+        return ResponseDTO.ok(appProjService.updateVcsInfo(requestUpdateVcsInfoVO));
+    }
+
+
     @DeleteMapping("/{projId}")
     public ResponseDTO<?> deleteProj(@PathVariable Long projId){
         return ResponseDTO.ok(appProjService.deleteProj(projId));

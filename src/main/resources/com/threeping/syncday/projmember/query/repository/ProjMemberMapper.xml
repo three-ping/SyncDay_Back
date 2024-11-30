@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.threeping.syncday.projmember.query.repository.ProjMemberMapper">
+
     <resultMap id="projMemberResultMap" type="com.threeping.syncday.projmember.query.aggregate.ProjMember">
         <id property="projMemberId" column="proj_member_id"></id>
         <result property="bookmarkStatus" column="bookmark_status"></result>
@@ -34,17 +35,82 @@
     </select>
 
 
-    <select id="selectProjsByUserId" resultMap="projMemberResultMap" parameterType="long">
+
+
+    <!-- ResultMap for WorkspaceDTO -->
+    <resultMap id="workspaceResultMap" type="com.threeping.syncday.workspace.query.aggregate.WorkspaceDTO">
+        <id property="workspaceId" column="workspace_id"/>
+        <result property="workspaceName" column="workspace_name"/>
+        <result property="createdAt" column="workspace_created_at"/>
+        <result property="progressStatus" column="workspace_progress_status"/>
+        <result property="vcsType" column="workspace_vcs_type"/>
+        <result property="vcsRepoUrl" column="workspace_vcs_repo_url"/>
+        <result property="projId" column="workspace_proj_id"/>
+    </resultMap>
+
+    <!-- ResultMap for ProjMemberInfoDTO -->
+    <resultMap id="projMemberInfoResultMap" type="com.threeping.syncday.projmember.query.aggregate.dto.ProjMemberInfoDTO">
+        <id property="projMemberId" column="proj_member_id"/>
+        <result property="bookmarkStatus" column="bookmark_status"/>
+        <result property="participationStatus" column="participation_status"/>
+        <result property="userId" column="user_id"/>
+        <result property="projId" column="proj_id"/>
+        <result property="projName" column="proj_name"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="createdAt" column="proj_created_at"/>
+        <result property="progressStatus" column="proj_progress_status"/>
+        <result property="vcsType" column="proj_vcs_type"/>
+        <result property="vcsProjUrl" column="vcs_proj_url"/>
+        <collection property="workspaces" resultMap="workspaceResultMap"/>
+    </resultMap>
+
+    <!-- ResultMap for UserProjInfoDTO -->
+    <resultMap id="userProjInfoResultMap" type="com.threeping.syncday.projmember.query.aggregate.dto.UserProjInfoDTO">
+        <id property="userId" column="user_id"/>
+        <collection property="projMemberInfos" resultMap="projMemberInfoResultMap"/>
+    </resultMap>
+
+    <!-- Query to select user's project information -->
+    <select id="selectProjsByUserId" resultMap="userProjInfoResultMap" parameterType="long">
         SELECT
-                PROJ_MEMBER_ID
-               ,BOOKMARK_STATUS
-               ,PARTICIPATION_STATUS
-               ,USER_ID
-               ,PROJ_ID
-        FROM    TBL_PROJ_MEMBER
-        WHERE   USER_ID = #{ userId }
+            pm.proj_member_id,
+            pm.bookmark_status,
+            pm.participation_status,
+            pm.user_id,
+            pm.proj_id,
+            p.proj_name,
+            p.start_time,
+            p.end_time,
+            p.created_at as proj_created_at,
+            p.progress_status as proj_progress_status,
+            p.vcs_type as proj_vcs_type,
+            p.vcs_proj_url,
+            w.workspace_id,
+            w.workspace_name,
+            w.created_at as workspace_created_at,
+            w.progress_status as workspace_progress_status,
+            w.vcs_type as workspace_vcs_type,
+            w.vcs_repo_url as workspace_vcs_repo_url,
+            w.proj_id as workspace_proj_id
+        FROM
+            TBL_PROJ_MEMBER pm
+                INNER JOIN TBL_PROJ p ON pm.proj_id = p.proj_id
+                LEFT JOIN TBL_WORKSPACE w ON p.proj_id = w.proj_id
+        WHERE
+            pm.user_id = #{userId}
+        ORDER BY
+            pm.proj_id, w.workspace_id
     </select>
-
-
-
+    <select id="selectProjMemberByUserIdAndProjId" resultMap="projMemberResultMap" parameterType="map">
+        SELECT
+            PROJ_MEMBER_ID
+             ,BOOKMARK_STATUS
+             ,PARTICIPATION_STATUS
+             ,USER_ID
+             ,PROJ_ID
+        FROM    TBL_PROJ_MEMBER
+        WHERE   USER_ID = #{userId}
+          AND     PROJ_ID = #{projId}
+    </select>
 </mapper>

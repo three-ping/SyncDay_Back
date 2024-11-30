@@ -47,7 +47,7 @@ public class ProjectSearchServiceImpl implements ProjectSearchService {
     }
 
     private String convertToString(LocalDateTime createdAt) {
-        log.info("요청 들어왔는가 확인: {}", createdAt);
+//        log.info("요청 들어왔는가 확인: {}", createdAt);
         return createdAt.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
     }
 }
