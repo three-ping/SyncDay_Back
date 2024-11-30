@@ -17,27 +17,10 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @ToString
-@Builder
 public class ChatRoom {
     @Id
     private String roomId;
     private List<Long> memberIds;
     private String chatRoomName;
 
-    public String getChatRoomName(Map<Long, String> userNameMap) {
-        List<String> memberNames = memberIds.stream()
-                .limit(2)
-                .map(userNameMap::get)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        String nameString = String.join(", ", memberNames);
-        return memberIds.size() > 2
-                ? nameString + " 외 " + (memberIds.size() - 2) + "명"
-                : nameString;
-    }
-
-    public int getMembersCount() {
-        return memberIds.size();
-    }
 }

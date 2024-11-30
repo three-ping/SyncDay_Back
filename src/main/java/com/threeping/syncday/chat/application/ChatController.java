@@ -1,9 +1,11 @@
 package com.threeping.syncday.chat.application;
 
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
-import com.threeping.syncday.chat.dto.ChatRoomDTO;
 import com.threeping.syncday.chat.entity.ChatRoom;
 import com.threeping.syncday.chat.entity.ChatType;
+import com.threeping.syncday.chat.repository.ChatRoomRepository;
+import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
+import com.threeping.syncday.user.command.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -20,10 +22,14 @@ import java.util.List;
 public class ChatController {
 
     private final ChatService chatService;
+    private final UserRepository userRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
     @Autowired
-    public ChatController(ChatService chatService) {
+    public ChatController(ChatService chatService, UserRepository userRepository, ChatRoomRepository chatRoomRepository) {
         this.chatService = chatService;
+        this.userRepository = userRepository;
+        this.chatRoomRepository = chatRoomRepository;
     }
 
     // 메세지 전송: "/app/message"로 보낸 메시지를 처리
@@ -44,9 +50,16 @@ public class ChatController {
 
     // 채팅방 목록 조회
     @GetMapping("/room")
-    public List<ChatRoomDTO> findMyChat(@RequestParam Long userId) {
+    public List<ChatRoom> findMyChat(@RequestParam Long userId) {
+        log.info("유저 채팅 목록 찾기 메서드 시작");
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다: "+userId));
         log.info("유저 {}의 채팅방 목록 조회 요청.", userId);
-        return chatService.findUserChat(userId);
+
+        List<ChatRoom> chatRoomList = chatRoomRepository.findChatRoomsByMemberIdsContaining(userId);
+        log.info("채팅방 리스트 엔티티: {}", chatRoomList);
+
+        return chatRoomList;
     }
 
     // 특정 채팅방 조회
@@ -57,9 +70,9 @@ public class ChatController {
 
     // 채팅방 생성
     @PostMapping("/room/create")
-    public ChatRoomDTO createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO) {
-        log.info("새 채팅방 생성 요청: {}", chatRoomDTO);
-        return chatService.createChatRoom(chatRoomDTO);
+    public ChatRoom createChatRoom(@RequestBody ChatRoom chatRoom) {
+        log.info("새 채팅방 생성 요청: {}", chatRoom);
+        return chatService.createChatRoom(chatRoom);
     }
 
 //    // 채팅방 입장
@@ -70,20 +83,20 @@ public class ChatController {
 
     // 채팅방 나가기
     @PostMapping("/room/{roomId}/leave")
-    public ChatRoomDTO leaveChatRoom(@PathVariable String roomId, @RequestParam Long userId) {
+    public ChatRoom leaveChatRoom(@PathVariable String roomId, @RequestParam Long userId) {
         log.info("유저 {} 채팅방 {} 나가기 요청.", userId, roomId);
         return chatService.leaveChatRoom(roomId, userId);
     }
 
-    // 채팅방 이름 수정
-    @PutMapping("/room/{roomId}/name")
-    public ChatRoomDTO updateRoomName(
-            @PathVariable String roomId,
-            @RequestBody String newRoomName
-    ) {
-        log.info("채팅방 {} 이름 수정 요청: {}", roomId, newRoomName);
-        return chatService.updateRoomName(roomId, newRoomName);
-    }
+//    // 채팅방 이름 수정
+//    @PutMapping("/room/{roomId}/name")
+//    public ChatRoom updateRoomName(
+//            @PathVariable String roomId,
+//            @RequestBody String newRoomName
+//    ) {
+//        log.info("채팅방 {} 이름 수정 요청: {}", roomId, newRoomName);
+//        return chatService.updateRoomName(roomId, newRoomName);
+//    }
 //    // 기존 채팅방에 멤버 초대(추가)
 //    @PostMapping("/room/{roomId}/invite")
 //    public ChatRoom inviteMember(@PathVariable String roomId, @RequestBody Map<String, List<String>> request) {

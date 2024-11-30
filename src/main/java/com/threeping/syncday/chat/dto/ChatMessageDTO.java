@@ -12,16 +12,12 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
 public class ChatMessageDTO {
 
-
-    private ObjectId messageId;
     private String content;
     private String roomId;
     private Long senderId;
     private ChatType chatType;
-    private LocalDateTime sentTime;
 
 //    private FileUploadDTO file;
 

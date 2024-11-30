@@ -1,6 +1,5 @@
 package com.threeping.syncday.chat.repository;
 
-import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import com.threeping.syncday.chat.entity.ChatMessage;
 import com.threeping.syncday.chat.entity.ChatType;
 import org.springframework.data.mongodb.repository.MongoRepository;
