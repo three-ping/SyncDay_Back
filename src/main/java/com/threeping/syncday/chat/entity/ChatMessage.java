@@ -1,5 +1,6 @@
 package com.threeping.syncday.chat.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.bson.types.ObjectId;

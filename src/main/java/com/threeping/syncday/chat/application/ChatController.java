@@ -3,7 +3,6 @@ package com.threeping.syncday.chat.application;
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import com.threeping.syncday.chat.entity.ChatRoom;
 import com.threeping.syncday.chat.entity.ChatType;
-import com.threeping.syncday.chat.repository.ChatRoomRepository;
 import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.command.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +22,11 @@ public class ChatController {
 
     private final ChatService chatService;
     private final UserRepository userRepository;
-    private final ChatRoomRepository chatRoomRepository;
 
     @Autowired
-    public ChatController(ChatService chatService, UserRepository userRepository, ChatRoomRepository chatRoomRepository) {
+    public ChatController(ChatService chatService, UserRepository userRepository) {
         this.chatService = chatService;
         this.userRepository = userRepository;
-        this.chatRoomRepository = chatRoomRepository;
     }
 
     // 메세지 전송: "/app/message"로 보낸 메시지를 처리
@@ -56,7 +53,7 @@ public class ChatController {
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다: "+userId));
         log.info("유저 {}의 채팅방 목록 조회 요청.", userId);
 
-        List<ChatRoom> chatRoomList = chatRoomRepository.findChatRoomsByMemberIdsContaining(userId);
+        List<ChatRoom> chatRoomList = chatService.findUserChat(userId);
         log.info("채팅방 리스트 엔티티: {}", chatRoomList);
 
         return chatRoomList;
