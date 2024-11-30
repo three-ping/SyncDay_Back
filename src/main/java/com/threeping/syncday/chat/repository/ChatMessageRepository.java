@@ -17,5 +17,4 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage,Strin
     List<ChatMessage> findByRoomIdAndSentTimeAfterOrderBySentTimeAsc(String roomId, LocalDateTime sentTime);
 
     List<ChatMessage> findByRoomIdOrderBySentTimeAsc(String roomId);
-
 }

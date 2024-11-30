@@ -44,7 +44,12 @@ public class ChatService {
         log.info("유저 채팅 목록 찾는 서비스 메서드 시작");
 
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다.: " + userId));
+                .orElseThrow(() -> {
+                    log.info("없는 유저입니다: {}", userId);
+                    return new IllegalArgumentException("유저를 찾을 수 없습니다.: " + userId);
+                });
+
+        log.debug("해당 유저: {}", userId);
 
         List<ChatRoom> chatRoomList = chatRoomRepository.findChatRoomsByMemberIdsContaining(userId);
         log.info("채팅방 리스트 엔티티: {}", chatRoomList);

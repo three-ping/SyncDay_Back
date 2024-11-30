@@ -36,37 +36,63 @@ public class MongoConfig {
             chatRoomRepository.deleteAll();
             chatMessageRepository.deleteAll();
 
-            // RDBMS에서 유저 데이터 로드
-            List<UserEntity> users = userRepository.findAll();
-            if (users.size() < 5) {
-                throw new IllegalStateException("초기화를 위해 최소 5명의 유저 데이터가 필요합니다.");
-            }
+            // 유저 데이터 조회 (RDBMS에서)
+            UserEntity user1 = userRepository.findByUserId(1L)
+                    .orElseThrow(() -> new RuntimeException("User 1 not found"));
+            UserEntity user2 = userRepository.findByUserId(2L)
+                    .orElseThrow(() -> new RuntimeException("User 2 not found"));
+            UserEntity user3 = userRepository.findByUserId(3L)
+                    .orElseThrow(() -> new RuntimeException("User 3 not found"));
+            UserEntity user4 = userRepository.findByUserId(4L)
+                    .orElseThrow(() -> new RuntimeException("User 4 not found"));
+            UserEntity user5 = userRepository.findByUserId(5L)
+                    .orElseThrow(() -> new RuntimeException("User 5 not found"));
+            UserEntity user6 = userRepository.findByUserId(6L)
+                    .orElseThrow(() -> new RuntimeException("User 6 not found"));
+            UserEntity user7 = userRepository.findByUserId(7L)
+                    .orElseThrow(() -> new RuntimeException("User 7 not found"));
+            UserEntity user8 = userRepository.findByUserId(8L)
+                    .orElseThrow(() -> new RuntimeException("User 8 not found"));
+            UserEntity user9 = userRepository.findByUserId(9L)
+                    .orElseThrow(() -> new RuntimeException("User 9 not found"));
+            UserEntity user10 = userRepository.findByUserId(10L)
+                    .orElseThrow(() -> new RuntimeException("User 10 not found"));
+            UserEntity user11 = userRepository.findByUserId(11L)
+                    .orElseThrow(() -> new RuntimeException("User 11 not found"));
 
-            // 유저 데이터 출력 (로깅 용도)
-            users.forEach(user -> System.out.println("Loaded User: " + user));
+            // 채팅방 더미 데이터 생성
+            ChatRoom room1 = new ChatRoom();
+            room1.setRoomId("room1");
+            room1.setChatRoomName("일반 채팅방");
+            room1.setMemberIds(Arrays.asList(user1.getUserId(), user2.getUserId(), user11.getUserId()));
 
-            // MongoDB 채팅방 더미 데이터 생성
-            ChatRoom room1 = createChatRoom("room1",
-                    "팀 프로젝트 논의방",
-                    users.subList(0, 3).stream().map(UserEntity::getUserId).toList());
+            ChatRoom room2 = new ChatRoom();
+            room2.setRoomId("room2");
+            room2.setChatRoomName("개발자 채팅방");
+            room2.setMemberIds(Arrays.asList(user2.getUserId(), user3.getUserId(), user11.getUserId()));
 
-            ChatRoom room2 = createChatRoom("room2",
-                    "마케팅 아이디어 공유방",
-                    users.subList(2, 5).stream().map(UserEntity::getUserId).toList());
+            ChatRoom room3 = new ChatRoom();
+            room3.setRoomId("room3");
+            room3.setChatRoomName("기획팀 채팅방");
+            room3.setMemberIds(Arrays.asList(user2.getUserId(), user3.getUserId(), user10.getUserId(),user1.getUserId() ));
 
-            ChatRoom room3 = createChatRoom("room3",
-                    "전체 공지방",
-                    users.stream().map(UserEntity::getUserId).toList());
-
-            chatRoomRepository.saveAll(List.of(room1, room2, room3));
+            chatRoomRepository.saveAll(Arrays.asList(room1, room2));
 
             // MongoDB 채팅 메시지 더미 데이터 생성
-            List<ChatMessage> messages = List.of(
-                    createChatMessage(room1.getRoomId(), users.get(0).getUserId(), "안녕하세요! 회의 시작합니다.", ChatType.GROUP),
-                    createChatMessage(room1.getRoomId(), users.get(1).getUserId(), "네, 준비 완료입니다.", ChatType.GROUP),
-                    createChatMessage(room2.getRoomId(), users.get(3).getUserId(), "이번 아이디어는 어떠세요?", ChatType.GROUP),
-                    createChatMessage(room2.getRoomId(), users.get(4).getUserId(), "좋은 생각입니다. 추가 자료를 준비하겠습니다.", ChatType.GROUP),
-                    createChatMessage(room3.getRoomId(), users.get(2).getUserId(), "내일 전체 회의가 있습니다. 확인 부탁드립니다.", ChatType.GROUP)
+            List<ChatMessage> messages = Arrays.asList(
+                    createChatMessage(room1.getRoomId(), user1.getUserId(), "안녕하세요!",
+                            LocalDateTime.now().minusHours(2), ChatType.TALK),
+                    createChatMessage(room1.getRoomId(), user2.getUserId(), "네, 안녕하세요!",
+                            LocalDateTime.now().minusHours(1), ChatType.TALK),
+                    createChatMessage(room1.getRoomId(), user1.getUserId(), "오늘 날씨가 좋네요.",
+                            LocalDateTime.now().minusMinutes(30), ChatType.TALK),
+
+                    createChatMessage(room2.getRoomId(), user2.getUserId(), "개발자 채팅방에 오신 것을 환영합니다!",
+                            LocalDateTime.now().minusDays(1), ChatType.TALK),
+                    createChatMessage(room2.getRoomId(), user3.getUserId(), "반갑습니다~",
+                            LocalDateTime.now().minusDays(1).plusHours(1), ChatType.TALK),
+                    createChatMessage(room2.getRoomId(), user2.getUserId(), "프로젝트 진행상황 공유해주세요.",
+                            LocalDateTime.now().minusHours(5), ChatType.TALK)
             );
 
             chatMessageRepository.saveAll(messages);
@@ -81,7 +107,7 @@ public class MongoConfig {
         return room;
     }
 
-    private ChatMessage createChatMessage(String roomId, Long senderId, String content, ChatType chatType) {
+    private ChatMessage createChatMessage(String roomId, Long senderId, String content, LocalDateTime sentTime, ChatType chatType) {
         ChatMessage message = new ChatMessage();
         message.setMessageId(new ObjectId());
         message.setRoomId(roomId);
