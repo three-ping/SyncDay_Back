@@ -1,4 +1,4 @@
-package com.threeping.syncday.teamboard.command.service;
+package com.threeping.syncday.teamboard.command.application.service;
 
 import com.threeping.syncday.teamboard.command.aggregate.dto.TeamBoardDTO;
 
