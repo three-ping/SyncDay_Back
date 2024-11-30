@@ -25,4 +25,11 @@ public class TeamPostQueryController {
         PageInfo<TeamPostDTO> teamPostPageInfo = teamPostQueryService.findTeamBoardPostPage(teamBoardId,page,pageSize);
         return ResponseDTO.ok(teamPostPageInfo);
     }
+
+    @GetMapping("/{teamBoardId}/{teamPostId}")
+    public ResponseDTO<?> findTeamPostDetail(@PathVariable Long teamBoardId,
+                                             @PathVariable Long teamPostId){
+        TeamPostDTO teamPostDTO = teamPostQueryService.findTeamPostDetail(teamBoardId,teamPostId);
+        return ResponseDTO.ok(teamPostDTO);
+    }
 }

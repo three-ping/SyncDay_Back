@@ -24,4 +24,16 @@
         FROM TBL_TEAM_POST
         WHERE TEAM_BOARD_ID = #{teamBoardId}
     </select>
+
+    <select id="findTeamPostDetailById" resultMap="teamPostResultMap" parameterType="long">
+        SELECT TEAM_POST_ID
+             , TITLE
+             , CONTENT
+             , CREATED_AT
+             , UPDATED_AT
+             , USER_ID
+             , TEAM_BOARD_ID
+        FROM TBL_TEAM_POST
+        WHERE TEAM_POST_ID = #{teamPostId}
+    </select>
 </mapper>

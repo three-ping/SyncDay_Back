@@ -9,4 +9,6 @@ import java.util.List;
 @Mapper
 public interface TeamPostMapper {
     List<TeamPostDTO> findTeamPostByTeamBoardId(long teamBoardId);
+
+    TeamPostDTO findTeamPostDetailById(Long teamPostId);
 }
