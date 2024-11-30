@@ -9,5 +9,5 @@ public interface UserCommandService {
 
     void updateLastAccessTime(String email);
 
-
+    String getUserNameById(Long senderId);
 }

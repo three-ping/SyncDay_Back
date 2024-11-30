@@ -59,12 +59,14 @@ public class MongoConfig {
                     .orElseThrow(() -> new RuntimeException("User 10 not found"));
             UserEntity user11 = userRepository.findByUserId(11L)
                     .orElseThrow(() -> new RuntimeException("User 11 not found"));
+            UserEntity user12 = userRepository.findByUserId(12L)
+                    .orElseThrow(() -> new RuntimeException("User 12 not found"));
 
             // 채팅방 더미 데이터 생성
             ChatRoom room1 = new ChatRoom();
             room1.setRoomId("room1");
             room1.setChatRoomName("일반 채팅방");
-            room1.setMemberIds(Arrays.asList(user1.getUserId(), user2.getUserId(), user11.getUserId()));
+            room1.setMemberIds(Arrays.asList(user1.getUserId(), user2.getUserId(), user11.getUserId(),user12.getUserId()));
 
             ChatRoom room2 = new ChatRoom();
             room2.setRoomId("room2");
@@ -74,24 +76,25 @@ public class MongoConfig {
             ChatRoom room3 = new ChatRoom();
             room3.setRoomId("room3");
             room3.setChatRoomName("기획팀 채팅방");
-            room3.setMemberIds(Arrays.asList(user2.getUserId(), user3.getUserId(), user10.getUserId(),user1.getUserId() ));
+            room3.setMemberIds(Arrays.asList(user2.getUserId(), user3.getUserId(), user12.getUserId(), user1.getUserId() ));
 
             chatRoomRepository.saveAll(Arrays.asList(room1, room2));
 
             // MongoDB 채팅 메시지 더미 데이터 생성
+// MongoDB 채팅 메시지 더미 데이터 생성
             List<ChatMessage> messages = Arrays.asList(
-                    createChatMessage(room1.getRoomId(), user1.getUserId(), "안녕하세요!",
+                    createChatMessage(room1.getRoomId(), user1.getUserId(), user1.getUserName(), "안녕하세요!",
                             LocalDateTime.now().minusHours(2), ChatType.TALK),
-                    createChatMessage(room1.getRoomId(), user2.getUserId(), "네, 안녕하세요!",
+                    createChatMessage(room1.getRoomId(), user2.getUserId(), user2.getUserName(), "네, 안녕하세요!",
                             LocalDateTime.now().minusHours(1), ChatType.TALK),
-                    createChatMessage(room1.getRoomId(), user1.getUserId(), "오늘 날씨가 좋네요.",
+                    createChatMessage(room1.getRoomId(), user1.getUserId(), user1.getUserName(), "오늘 날씨가 좋네요.",
                             LocalDateTime.now().minusMinutes(30), ChatType.TALK),
 
-                    createChatMessage(room2.getRoomId(), user2.getUserId(), "개발자 채팅방에 오신 것을 환영합니다!",
+                    createChatMessage(room2.getRoomId(), user2.getUserId(), user2.getUserName(), "개발자 채팅방에 오신 것을 환영합니다!",
                             LocalDateTime.now().minusDays(1), ChatType.TALK),
-                    createChatMessage(room2.getRoomId(), user3.getUserId(), "반갑습니다~",
+                    createChatMessage(room2.getRoomId(), user3.getUserId(), user3.getUserName(), "반갑습니다~",
                             LocalDateTime.now().minusDays(1).plusHours(1), ChatType.TALK),
-                    createChatMessage(room2.getRoomId(), user2.getUserId(), "프로젝트 진행상황 공유해주세요.",
+                    createChatMessage(room2.getRoomId(), user2.getUserId(), user2.getUserName(), "프로젝트 진행상황 공유해주세요.",
                             LocalDateTime.now().minusHours(5), ChatType.TALK)
             );
 
@@ -107,11 +110,12 @@ public class MongoConfig {
         return room;
     }
 
-    private ChatMessage createChatMessage(String roomId, Long senderId, String content, LocalDateTime sentTime, ChatType chatType) {
+    private ChatMessage createChatMessage(String roomId, Long senderId, String senderName, String content, LocalDateTime sentTime, ChatType chatType) {
         ChatMessage message = new ChatMessage();
-        message.setMessageId(new ObjectId());
+        message.setMessageId(ObjectId.get());
         message.setRoomId(roomId);
         message.setSenderId(senderId);
+        message.setSenderName(senderName);
         message.setContent(content);
         message.setChatType(chatType);
         message.setSentTime(LocalDateTime.now());

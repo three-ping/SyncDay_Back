@@ -3,6 +3,7 @@ package com.threeping.syncday.chat.application;
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import com.threeping.syncday.chat.entity.ChatRoom;
 import com.threeping.syncday.chat.entity.ChatType;
+import com.threeping.syncday.user.command.application.service.UserCommandServiceImpl;
 import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.command.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,13 @@ public class ChatController {
 
     private final ChatService chatService;
     private final UserRepository userRepository;
+    private final UserCommandServiceImpl userCommandService;
 
     @Autowired
-    public ChatController(ChatService chatService, UserRepository userRepository) {
+    public ChatController(ChatService chatService, UserRepository userRepository, UserCommandServiceImpl userCommandService) {
         this.chatService = chatService;
         this.userRepository = userRepository;
+        this.userCommandService = userCommandService;
     }
 
     // 메세지 전송: "/app/message"로 보낸 메시지를 처리
@@ -35,10 +38,13 @@ public class ChatController {
     public void sendMessage(@DestinationVariable String roomId, ChatMessageDTO chatMessageDTO,
                             SimpMessageHeaderAccessor headerAccessor) {
         log.info("새 메세지 in {} room: {}", roomId, chatMessageDTO);
+        String senderName = userCommandService.getUserNameById(chatMessageDTO.getSenderId());
+        chatMessageDTO.setSenderName(senderName);
+
         if (ChatType.ENTER.equals(chatMessageDTO.getChatType())) {
             headerAccessor.getSessionAttributes().put("username", chatMessageDTO.getSenderId());
             headerAccessor.getSessionAttributes().put("roomId", roomId);
-            chatMessageDTO.setContent(chatMessageDTO.getSenderId() + "님이 입장하셨습니다.");
+            chatMessageDTO.setContent(chatMessageDTO.getSenderName() + "님이 입장하셨습니다.");
         }
 
         // 메시지를 저장하거나 추가 처리가 필요하면 서비스 호출

@@ -203,6 +203,7 @@ public class ChatService {
             ChatMessage message = new ChatMessage();
             message.setRoomId(roomId);
             message.setSenderId(chatMessage.getSenderId());
+            message.setSenderName(chatMessage.getSenderName());
             message.setContent(chatMessage.getContent());
             message.setSentTime(LocalDateTime.now());
             message.setChatType(ChatType.valueOf(chatMessage.getChatType().name()));
@@ -223,6 +224,7 @@ public class ChatService {
         chatMessage.setRoomId(message.getRoomId());
         chatMessage.setContent(message.getContent());
         chatMessage.setSenderId(message.getSenderId());
+        chatMessage.setSenderName(message.getSenderName());
         chatMessage.setChatType(ChatType.valueOf(message.getChatType().name()));
         return chatMessage;
     }
