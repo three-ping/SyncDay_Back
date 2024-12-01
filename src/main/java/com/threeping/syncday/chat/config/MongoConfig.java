@@ -1,142 +1,125 @@
 package com.threeping.syncday.chat.config;
 
 import com.mongodb.client.MongoClient;
+
 import com.threeping.syncday.chat.entity.ChatMessage;
 import com.threeping.syncday.chat.entity.ChatRoom;
 import com.threeping.syncday.chat.entity.ChatType;
 import com.threeping.syncday.chat.repository.ChatMessageRepository;
 import com.threeping.syncday.chat.repository.ChatRoomRepository;
+import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
+import com.threeping.syncday.user.command.domain.repository.UserRepository;
+import org.bson.types.ObjectId;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 
 @Configuration
 public class MongoConfig {
+
     @Bean
     public MongoTemplate mongoTemplate(MongoClient mongoClient) {
         return new MongoTemplate(mongoClient, "chatdb");
     }
 
     @Bean
-    CommandLineRunner init(ChatRoomRepository chatRoomRepository, ChatMessageRepository chatMessageRepository) {
+    CommandLineRunner init(UserRepository userRepository,
+                           ChatRoomRepository chatRoomRepository,
+                           ChatMessageRepository chatMessageRepository) {
         return args -> {
-            chatMessageRepository.deleteAll();
+            // MongoDB 기존 데이터 초기화
             chatRoomRepository.deleteAll();
+            chatMessageRepository.deleteAll();
 
-            // 사용자 목록
-            List<String> users = List.of("김개발", "이코딩", "박디자인", "정그래픽", "최마케팅", "장그래");
+            // 유저 데이터 조회 (RDBMS에서)
+            UserEntity user1 = userRepository.findByUserId(1L)
+                    .orElseThrow(() -> new RuntimeException("User 1 not found"));
+            UserEntity user2 = userRepository.findByUserId(2L)
+                    .orElseThrow(() -> new RuntimeException("User 2 not found"));
+            UserEntity user3 = userRepository.findByUserId(3L)
+                    .orElseThrow(() -> new RuntimeException("User 3 not found"));
+            UserEntity user4 = userRepository.findByUserId(4L)
+                    .orElseThrow(() -> new RuntimeException("User 4 not found"));
+            UserEntity user5 = userRepository.findByUserId(5L)
+                    .orElseThrow(() -> new RuntimeException("User 5 not found"));
+            UserEntity user6 = userRepository.findByUserId(6L)
+                    .orElseThrow(() -> new RuntimeException("User 6 not found"));
+            UserEntity user7 = userRepository.findByUserId(7L)
+                    .orElseThrow(() -> new RuntimeException("User 7 not found"));
+            UserEntity user8 = userRepository.findByUserId(8L)
+                    .orElseThrow(() -> new RuntimeException("User 8 not found"));
+            UserEntity user9 = userRepository.findByUserId(9L)
+                    .orElseThrow(() -> new RuntimeException("User 9 not found"));
+            UserEntity user10 = userRepository.findByUserId(10L)
+                    .orElseThrow(() -> new RuntimeException("User 10 not found"));
+            UserEntity user11 = userRepository.findByUserId(11L)
+                    .orElseThrow(() -> new RuntimeException("User 11 not found"));
+            UserEntity user12 = userRepository.findByUserId(12L)
+                    .orElseThrow(() -> new RuntimeException("User 12 not found"));
 
             // 채팅방 더미 데이터 생성
-            ChatRoom room1 = ChatRoom.builder()
-                    .roomId("room1")
-                    .chatRoomName(String.join(", ", "이코딩", "김개발","장그래"))
-                    .creatorId(2L)
-                    .memberIds(List.of(1L, 2L, 11L))
-                    .memberCount(2)
-                    .createdAt(LocalDateTime.now())
-                    .build();
+            ChatRoom room1 = new ChatRoom();
+            room1.setRoomId("room1");
+            room1.setChatRoomName("일반 채팅방");
+            room1.setMemberIds(Arrays.asList(user1.getUserId(), user2.getUserId(), user11.getUserId(),user12.getUserId()));
 
-            ChatRoom room2 = ChatRoom.builder()
-                    .roomId("room2")
-                    .chatRoomName(String.join(", ", "박디자인", "장그래"))
-                    .creatorId(3L)
-                    .memberIds(List.of(3L, 11L))
-                    .memberCount(2)
-                    .createdAt(LocalDateTime.now())
-                    .build();
+            ChatRoom room2 = new ChatRoom();
+            room2.setRoomId("room2");
+            room2.setChatRoomName("개발자 채팅방");
+            room2.setMemberIds(Arrays.asList(user2.getUserId(), user3.getUserId(), user11.getUserId()));
 
-            ChatRoom room3 = ChatRoom.builder()
-                    .roomId("room3")
-                    .chatRoomName(String.join(", ", "최마케팅", "김개발", "정그래픽"))
-                    .creatorId(5L)
-                    .memberIds(List.of(1L, 4L, 5L))
-                    .memberCount(3)
-                    .createdAt(LocalDateTime.now())
-                    .build();
+            ChatRoom room3 = new ChatRoom();
+            room3.setRoomId("room3");
+            room3.setChatRoomName("기획팀 채팅방");
+            room3.setMemberIds(Arrays.asList(user2.getUserId(), user3.getUserId(), user12.getUserId(), user1.getUserId() ));
 
-            // 채팅방 저장
-            chatRoomRepository.saveAll(List.of(room1, room2, room3));
+            chatRoomRepository.saveAll(Arrays.asList(room1, room2));
 
-            // 채팅 메시지 더미 데이터 생성
-            ChatMessage message1 = new ChatMessage();
-            message1.setMessageId("msg1");
-            message1.setMessage("안녕하세요!");
-            message1.setRoomId("room1");
-            message1.setSenderId(2L);
-            message1.setMemberIds(List.of(2L,1L,11L));
-            message1.setChatType(ChatType.GROUP);
-            message1.setSentTime(LocalDateTime.now());
+            // MongoDB 채팅 메시지 더미 데이터 생성
+// MongoDB 채팅 메시지 더미 데이터 생성
+            List<ChatMessage> messages = Arrays.asList(
+                    createChatMessage(room1.getRoomId(), user1.getUserId(), user1.getUserName(), "안녕하세요!",
+                            LocalDateTime.now().minusHours(2), ChatType.TALK),
+                    createChatMessage(room1.getRoomId(), user2.getUserId(), user2.getUserName(), "네, 안녕하세요!",
+                            LocalDateTime.now().minusHours(1), ChatType.TALK),
+                    createChatMessage(room1.getRoomId(), user1.getUserId(), user1.getUserName(), "오늘 날씨가 좋네요.",
+                            LocalDateTime.now().minusMinutes(30), ChatType.TALK),
 
-            ChatMessage message2 = new ChatMessage();
-            message2.setMessageId("msg2");
-            message2.setMessage("프로젝트 관련해서 이야기 나눠요.");
-            message2.setRoomId("room2");
-            message2.setSenderId(3L);
-            message2.setMemberIds(List.of(3L, 4L));
-            message2.setChatType(ChatType.PRIVATE);
-            message2.setSentTime(LocalDateTime.now());
+                    createChatMessage(room2.getRoomId(), user2.getUserId(), user2.getUserName(), "개발자 채팅방에 오신 것을 환영합니다!",
+                            LocalDateTime.now().minusDays(1), ChatType.TALK),
+                    createChatMessage(room2.getRoomId(), user3.getUserId(), user3.getUserName(), "반갑습니다~",
+                            LocalDateTime.now().minusDays(1).plusHours(1), ChatType.TALK),
+                    createChatMessage(room2.getRoomId(), user2.getUserId(), user2.getUserName(), "프로젝트 진행상황 공유해주세요.",
+                            LocalDateTime.now().minusHours(5), ChatType.TALK)
+            );
 
-            ChatMessage message3 = new ChatMessage();
-            message3.setMessageId("msg3");
-            message3.setMessage("안녕하세요, 함께 이야기해요!");
-            message3.setRoomId("room3");
-            message3.setSenderId(5L);
-            message3.setReceiverId(null); // 그룹 채팅의 경우 null
-            message3.setMemberIds(List.of(5L,1L,4L));
-            message3.setChatType(ChatType.GROUP); // 그룹 채팅
-            message3.setSentTime(LocalDateTime.now());
-
-            ChatMessage message4 = new ChatMessage();
-            message4.setMessageId("msg4");
-            message4.setMessage("일정에 대해 정리해두었습니다.");
-            message4.setRoomId("room3");
-            message4.setSenderId(1L);
-            message4.setMemberIds(List.of(5L,1L,4L));
-            message4.setChatType(ChatType.GROUP);
-            message4.setSentTime(LocalDateTime.now());
-
-            ChatMessage message5 = new ChatMessage();
-            message5.setMessageId("msg5");
-            message5.setMessage("질문이 있습니다.");
-            message5.setRoomId("room1");
-            message5.setSenderId(1L);
-            message5.setMemberIds(List.of(2L,1L));
-            message5.setChatType(ChatType.PRIVATE);
-            message5.setSentTime(LocalDateTime.now());
-
-            // 채팅 메시지 저장
-            chatMessageRepository.saveAll(List.of(message1, message2, message3, message4, message5));
+            chatMessageRepository.saveAll(messages);
         };
     }
 
-    // ChatRoom 생성 함수
-    private ChatRoom createChatRoom(Long creatorId, List<Long> memberIds) {
-        return ChatRoom.builder()
-                .roomId(UUID.randomUUID().toString()) // 고유한 Room ID 생성
-                .chatRoomName("채팅방입니다.") // 채팅방 이름 설정
-                .creatorId(creatorId)
-                .memberCount(memberIds.size())
-                .memberIds(memberIds)
-                .createdAt(LocalDateTime.now())
-                .build();
+    private ChatRoom createChatRoom(String roomId, String name, List<Long> memberIds) {
+        ChatRoom room = new ChatRoom();
+        room.setRoomId(roomId);
+        room.setChatRoomName(name);
+        room.setMemberIds(memberIds);
+        return room;
     }
 
-    // ChatMessage 생성 함수
-    private ChatMessage createChatMessage(String message, String roomId, Long senderId, Long receiverId, List<Long> memberIds, ChatType chatType) {
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setMessageId(UUID.randomUUID().toString());
-        chatMessage.setMessage(message);
-        chatMessage.setRoomId(roomId);
-        chatMessage.setSenderId(senderId);
-        chatMessage.setMemberIds(memberIds);
-        chatMessage.setChatType(chatType);
-        chatMessage.setSentTime(LocalDateTime.now());
-        return chatMessage;
+    private ChatMessage createChatMessage(String roomId, Long senderId, String senderName, String content, LocalDateTime sentTime, ChatType chatType) {
+        ChatMessage message = new ChatMessage();
+        message.setMessageId(ObjectId.get());
+        message.setRoomId(roomId);
+        message.setSenderId(senderId);
+        message.setSenderName(senderName);
+        message.setContent(content);
+        message.setChatType(chatType);
+        message.setSentTime(LocalDateTime.now());
+        return message;
     }
-
 }
+
