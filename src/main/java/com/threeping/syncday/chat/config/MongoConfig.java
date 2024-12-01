@@ -59,24 +59,22 @@ public class MongoConfig {
                     .orElseThrow(() -> new RuntimeException("User 10 not found"));
             UserEntity user11 = userRepository.findByUserId(11L)
                     .orElseThrow(() -> new RuntimeException("User 11 not found"));
-            UserEntity user12 = userRepository.findByUserId(12L)
-                    .orElseThrow(() -> new RuntimeException("User 12 not found"));
 
             // 채팅방 더미 데이터 생성
             ChatRoom room1 = new ChatRoom();
             room1.setRoomId("room1");
-            room1.setChatRoomName("일반 채팅방");
-            room1.setMemberIds(Arrays.asList(user1.getUserId(), user2.getUserId(), user11.getUserId(),user12.getUserId()));
+            room1.setChatRoomName(String.join(",",user2.getUserName(), user11.getUserName()));
+            room1.setMemberIds(Arrays.asList(user2.getUserId(), user11.getUserId()));
 
             ChatRoom room2 = new ChatRoom();
             room2.setRoomId("room2");
-            room2.setChatRoomName("개발자 채팅방");
-            room2.setMemberIds(Arrays.asList(user2.getUserId(), user3.getUserId(), user11.getUserId()));
+            room2.setChatRoomName(String.join(",",user2.getUserName(), user3.getUserName(), user10.getUserName()));
+            room2.setMemberIds(Arrays.asList(user2.getUserId(), user3.getUserId(), user10.getUserId()));
 
             ChatRoom room3 = new ChatRoom();
             room3.setRoomId("room3");
-            room3.setChatRoomName("기획팀 채팅방");
-            room3.setMemberIds(Arrays.asList(user2.getUserId(), user3.getUserId(), user12.getUserId(), user1.getUserId() ));
+            room3.setChatRoomName(String.join(",",user2.getUserName(), user3.getUserName(), user10.getUserName(), user1.getUserName()));
+            room3.setMemberIds(Arrays.asList(user2.getUserId(), user3.getUserId(), user10.getUserId(), user1.getUserId() ));
 
             chatRoomRepository.saveAll(Arrays.asList(room1, room2));
 
