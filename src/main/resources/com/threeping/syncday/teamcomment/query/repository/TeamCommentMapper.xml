@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.threeping.syncday.teamcomment.query.repository.TeamCommentMapper">
+    <resultMap id="teamCommentResultMap" type="com.threeping.syncday.teamcomment.command.aggregate.dto.TeamCommentDTO">
+        <id property="teamCommentId" column="team_comment_id"></id>
+        <result property="content" column="content"></result>
+        <result property="createdAt" column="created_at"></result>
+        <result property="updatedAt" column="updated_at"></result>
+        <result property="teamPostId" column="team_post_id"></result>
+        <result property="userId" column="user_id"></result>
+    </resultMap>
+
+    <select id="findTeamCommentByTeamPostId" resultMap="teamCommentResultMap" parameterType="long">
+        SELECT TEAM_COMMENT_ID
+             , CONTENT
+             , CREATED_AT
+             , UPDATED_AT
+             , TEAM_POST_ID
+             , USER_ID
+          FROM TBL_TEAM_COMMENT
+         WHERE TEAM_POST_ID = #{teamPostId}
+    </select>
+</mapper>
