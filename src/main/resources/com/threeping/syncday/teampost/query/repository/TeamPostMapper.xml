@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.threeping.syncday.teampost.query.repository.TeamPostMapper">
+    <resultMap id="teamPostResultMap" type="com.threeping.syncday.teampost.query.aggregate.dto.TeamPostDTO">
+        <id property="teamPostId" column="team_post_id"></id>
+        <result property="title" column="title"></result>
+        <result property="content" column="content"></result>
+        <result property="createdAt" column="created_at"></result>
+        <result property="updatedAt" column="updated_at"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="teamBoardId" column="team_board_id"></result>
+    </resultMap>
+
+    <select id="findTeamPostByTeamBoardId" resultMap="teamPostResultMap" parameterType="long">
+        SELECT TEAM_POST_ID
+             , TITLE
+             , CONTENT
+             , CREATED_AT
+             , UPDATED_AT
+             , USER_ID
+             , TEAM_BOARD_ID
+        FROM TBL_TEAM_POST
+        WHERE TEAM_BOARD_ID = #{teamBoardId}
+    </select>
+
+    <select id="findTeamPostDetailById" resultMap="teamPostResultMap" parameterType="long">
+        SELECT TEAM_POST_ID
+             , TITLE
+             , CONTENT
+             , CREATED_AT
+             , UPDATED_AT
+             , USER_ID
+             , TEAM_BOARD_ID
+        FROM TBL_TEAM_POST
+        WHERE TEAM_POST_ID = #{teamPostId}
+    </select>
+</mapper>

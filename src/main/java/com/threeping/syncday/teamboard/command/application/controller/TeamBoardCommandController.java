@@ -2,7 +2,7 @@ package com.threeping.syncday.teamboard.command.application.controller;
 
 import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.teamboard.command.aggregate.dto.TeamBoardDTO;
-import com.threeping.syncday.teamboard.command.service.TeamBoardCommandService;
+import com.threeping.syncday.teamboard.command.application.service.TeamBoardCommandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
