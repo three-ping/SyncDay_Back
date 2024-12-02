@@ -14,9 +14,6 @@ public class VcsOrg {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="user_id", nullable = false)
-    private Long userId;
-
     @Enumerated(EnumType.STRING)
     @Column(name="vcs_type", nullable=false)
     private VcsType vcsType;
