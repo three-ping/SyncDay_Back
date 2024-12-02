@@ -14,6 +14,9 @@ public interface WorkSpaceSearchRepository extends ElasticsearchRepository<WorkS
             + "  \"should\": ["
             + "    {\"wildcard\": {"
             + "      \"workspaceName\": \"*?0*\""
+            + "    }},"
+            + "    {\"wildcard\": {"
+            + "      \"vcsType\": \"*?0*\""
             + "    }}"
             + "  ]"
             + "}}")
