@@ -11,6 +11,7 @@
         <result property="endTime" column="end_time"/>
         <result property="meetingRoom" column="meetingroom_id"/>
         <result property="schedule" column="schedule_id"/>
+        <result property="user" column="user_id"/>
     </resultMap>
 
     <select id="selectAllMeetingroomReservations" resultMap="meetingroomReservationResultMap">
@@ -63,7 +64,8 @@
         s.START_TIME AS start_time,
         s.END_TIME AS end_time,
         r.MEETINGROOM_ID AS meetingroom_id,
-        r.SCHEDULE_ID AS schedule_id
+        r.SCHEDULE_ID AS schedule_id,
+        s.USER_ID AS user_id
         FROM TBL_MEETINGROOM_RESERVATION r
         JOIN TBL_SCHEDULE s ON r.SCHEDULE_ID = s.SCHEDULE_ID
         WHERE r.SCHEDULE_ID = #{scheduleId}
