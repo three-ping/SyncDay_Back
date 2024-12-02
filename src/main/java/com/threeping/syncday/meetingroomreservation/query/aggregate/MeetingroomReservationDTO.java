@@ -14,6 +14,15 @@ public class MeetingroomReservationDTO {
    @JsonProperty("meeting_time")
    Timestamp meetingTime;
 
+    @JsonProperty("title")
+    String title;
+
+    @JsonProperty("end_time")
+    Timestamp endTime;
+
+    @JsonProperty("start_time")
+    Timestamp startTime;
+
    @JsonProperty("meetingroom_id")
     Long meetingRoom;
 
