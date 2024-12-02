@@ -17,8 +17,14 @@ public class AppProjMemberController {
         this.appProjMemberService = appProjMemberService;
     }
 
-    @PutMapping("/bookmark/projMemberId")
-    public ResponseDTO<?> toggleProjBookmark(@PathVariable("projMemberId") Long projMemberId){
-        return ResponseDTO.ok(appProjMemberService.toggleProjBookmark(projMemberId));
+    @PostMapping("/bookmark")
+    public ResponseDTO<?> addProjBookmark(@RequestParam Long userId, @RequestParam Long projId){
+        return ResponseDTO.ok(appProjMemberService.addProjBookmark(userId, projId));
+    }
+
+    @DeleteMapping("/bookmark")
+    public ResponseDTO<?> deleteProjBookmark(@RequestParam Long userId, @RequestParam Long projId){
+        return ResponseDTO.ok(appProjMemberService.removeProjBookmark(userId, projId));
+
     }
 }

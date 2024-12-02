@@ -11,11 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Book;
 
 @Slf4j
 @Service
+@Transactional
 public class AppProjMemberServiceImpl implements AppProjMemberService {
 
     private final ProjMemberRepository projMemberRepository;
@@ -41,19 +43,39 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
     }
 
     @Override
-    public ProjBookmarkVO toggleProjBookmark(Long projMemberId) {
-
-        ProjMember projMember = projMemberRepository.findById(projMemberId).orElse(null);
-        if (projMember == null) {
-            throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
-        }
-        BookmarkStatus bookmarkStatus = projMember.getBookmarkStatus();
-        if (bookmarkStatus == BookmarkStatus.NONE) {
-            projMember.setBookmarkStatus(BookmarkStatus.BOOKMARKED);
-        } else {
-            projMember.setBookmarkStatus(BookmarkStatus.NONE);
-        }
-        ProjMember updatedMember = projMemberRepository.save(projMember);
-        return new ProjBookmarkVO(updatedMember.getProjMemberId(), updatedMember.getBookmarkStatus());
+    public Boolean addProjBookmark(Long userId, Long projId) {
+         try {
+            ProjMember member = projMemberRepository.findByUserIdAndProjId(userId, projId);
+            if (member == null) {
+                throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
+            }
+            ProjMember updatedMember = projMemberRepository.save(member);
+            return updatedMember.getBookmarkStatus().equals(BookmarkStatus.BOOKMARKED);
+        } catch(Exception e){
+     throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+         }
     }
+
+    @Override
+    public Boolean removeProjBookmark(Long userId, Long projId) {
+        try {
+            // Find existing project member record
+            ProjMember member = projMemberRepository.findByUserIdAndProjId(userId, projId);
+
+            // Update bookmark status
+            member.setBookmarkStatus(BookmarkStatus.NONE);
+            log.debug("Removing bookmark for member: {}", member);
+
+            // Save the updated member
+            ProjMember updatedMember = projMemberRepository.save(member);
+            return updatedMember.getBookmarkStatus().equals(BookmarkStatus.NONE);
+        } catch (CommonException ce) {
+            throw ce;
+        } catch (Exception e) {
+            log.error("Error removing project bookmark: ", e);
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }
