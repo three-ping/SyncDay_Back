@@ -52,7 +52,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public SseEmitter createEmitter(Long userId) {
 
-        SseEmitter emitter = new SseEmitter(300000L);
+        SseEmitter emitter = new SseEmitter(0L);
         SseEmitter oldEmitter = emitters.put(userId, emitter);
 
         if (oldEmitter != null) {
