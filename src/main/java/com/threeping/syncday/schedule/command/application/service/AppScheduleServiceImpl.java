@@ -49,10 +49,13 @@ public class AppScheduleServiceImpl implements AppScheduleService{
 
         scheduleRepository.saveAndFlush(newSchedule);
 
-        infraScheduleService.requestAddScheduleParticipant(newSchedule.getUserId()
-                , newSchedule.getScheduleId()
-                , newScheduleDTO.getAttendeeIds()
-                , newScheduleDTO.getNotificationTime());
+        // attendeeIds가 null이 아닌 경우에만 infraScheduleService 호출
+        if (newScheduleDTO.getAttendeeIds() != null) {
+            infraScheduleService.requestAddScheduleParticipant(newSchedule.getUserId()
+                    , newSchedule.getScheduleId()
+                    , newScheduleDTO.getAttendeeIds()
+                    , newScheduleDTO.getNotificationTime());
+        }
 
         // 참석자 추가 요청 (반복 생각은 아직 안함)
 
@@ -81,9 +84,12 @@ public class AppScheduleServiceImpl implements AppScheduleService{
 
         scheduleRepository.saveAndFlush(newSchedule);
 
-        infraScheduleService.requestUpdateScheduleParticipant(newSchedule.getUserId()
-                , newSchedule.getScheduleId()
-                , scheduleDTO.getAttendeeIds());
+        // attendeeIds가 null이 아닌 경우에만 infraScheduleService 호출
+        if (scheduleDTO.getAttendeeIds() != null) {
+            infraScheduleService.requestUpdateScheduleParticipant(newSchedule.getUserId()
+                    , newSchedule.getScheduleId()
+                    , scheduleDTO.getAttendeeIds());
+        }
 
         return modelMapper.map(newSchedule, ScheduleDTO.class);
     }
