@@ -1,6 +1,6 @@
-package com.threeping.syncday.workspace.infrastructure.elasticsearch.repository;
+package com.threeping.syncday.cardboard.infrastructure.elasticsearch.repository;
 
-import com.threeping.syncday.workspace.infrastructure.elasticsearch.document.WorkSpaceDocument;
+import com.threeping.syncday.cardboard.infrastructure.elasticsearch.document.CardBoardDocument;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
@@ -8,17 +8,17 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface WorkSpaceSearchRepository extends ElasticsearchRepository<WorkSpaceDocument, Long> {
+public interface CardboardSearchRepository extends ElasticsearchRepository<CardBoardDocument, Long> {
     @Query("{"
             + "\"bool\": {"
             + "  \"should\": ["
             + "    {\"wildcard\": {"
-            + "      \"workspaceName\": \"*?0*\""
+            + "      \"cardboardName\": \"*?0*\""
             + "    }},"
             + "    {\"wildcard\": {"
             + "      \"vcsType\": \"*?0*\""
             + "    }}"
             + "  ]"
             + "}}")
-    List<WorkSpaceDocument> searchByKeyword(String keyword);
+    List<CardBoardDocument> searchByKeyword(String keyword);
 }
