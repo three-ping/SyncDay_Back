@@ -77,23 +77,14 @@ public class ChatService {
                 .collect(Collectors.toList());
     }
 
-    //  채팅방 생성(멤버 필터) : 수정 예정
+    //  채팅방 생성(멤버 필터)
     public ChatRoom createChatRoom(ChatRoom chatRoom) {
         log.info("새 채팅방 생성: {}", chatRoom);
-        // 멤버 기반 이름 설정
-//            List<String> memberIds = chatRoom.getMemberIds();
-//            String chatRoomName = memberIds.size() == 2
-//                    ? "1:1 채팅 - " + memberIds.get(0) + " & " + memberIds.get(1)
-//                    : String.join(", ", memberIds);
-//
-//            // 1:1 채팅방 중복 방지
-//            if (memberIds.size() == 2) {
-//
-//                ChatRoom existingRoom = chatRoomRepository.find1to1ChatRoom(memberIds.get(0), memberIds.get(1));
-//                if (existingRoom != null) {
-//                    return existingRoom; // 이미 존재하면 해당 방 반환
-//                }
 
+        if (chatRoom.getChatRoomName() == null || chatRoom.getChatRoomName().isEmpty()){
+            Map<Long,String> userNameMap = getUserNameMap(chatRoom);
+            chatRoom.setChatRoomName(getChatRoomName(chatRoom, userNameMap));
+        }
 
         return chatRoomRepository.save(chatRoom);
 
@@ -135,43 +126,46 @@ public class ChatService {
 
 
 // 멤버 초대
-//    public ChatRoom inviteUser(String roomId, List<Long> userIds ) {
-//        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-//                .orElseThrow(() -> new RuntimeException("해당 채팅방이 존재하지 않습니다."));
-//
-//        List<Long> memberIds = new ArrayList<>(chatRoom.getMemberIds());
-//        memberIds.addAll(userIds);
-//        chatRoom.setMemberIds(memberIds);
-//
-//        ChatRoom updatedRoom = chatRoomRepository.save(chatRoom);
-//
-//        // 초대된 사용자들의 입장 메시지 생성 및 저장
-//        for (Long userId : userIds) {
-//            UserEntity user = userRepository.findByUserId(userId)
-//                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-//
-//            ChatMessage enterMessage = new ChatMessage();
-//            enterMessage.setRoomId(roomId);
-//            enterMessage.setSenderId(userId);
-//            enterMessage.setContent(user.getUserName() + "님이 입장하셨습니다.");
-//            enterMessage.setChatType(ChatType.ENTER);
-//            enterMessage.setSentTime(LocalDateTime.now());
-//            ChatMessage savedMessage = chatMessageRepository.save(enterMessage);
-//
-//            // 입장 메시지를 WebSocket을 통해 전송
-//            ChatMessageDTO chatMessage = convertToChatMessage(savedMessage);
-//            messagingTemplate.convertAndSend("/topic/messages/" + roomId, chatMessage);
-//    }
-//        // 채팅방 정보 업데이트를 모든 참여자에게 브로드캐스트
-//        messagingTemplate.convertAndSend("/topic/rooms/" + roomId + "/update", updatedRoom);
-//
-//        // 새로 초대된 사용자들에게 채팅방 목록 업데이트 알림
-//        userIds.forEach(userId -> {
-//            messagingTemplate.convertAndSend("/topic/user/" + userId + "/rooms/update", findUserChat());
-//        });
-//
-//        return updatedRoom;
-//    }
+    public ChatRoom inviteUser(String roomId, List<Long> userIds ) {
+        log.info("{} 채팅방에 새로운 유저 초대: ", roomId, userIds);
+
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("해당 채팅방이 존재하지 않습니다."));
+
+        List<Long> memberIds = new ArrayList<>(chatRoom.getMemberIds());
+        memberIds.addAll(userIds);
+        chatRoom.setMemberIds(memberIds);
+
+        ChatRoom updatedRoom = chatRoomRepository.save(chatRoom);
+
+        // 초대된 사용자들의 입장 메시지 생성 및 저장
+        for (Long userId : userIds) {
+            UserEntity user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+            ChatMessage enterMessage = new ChatMessage();
+            enterMessage.setRoomId(roomId);
+            enterMessage.setSenderId(userId);
+            enterMessage.setContent(user.getUserName() + "님이 입장하셨습니다.");
+            enterMessage.setChatType(ChatType.ENTER);
+            enterMessage.setSentTime(LocalDateTime.now());
+            ChatMessage savedMessage = chatMessageRepository.save(enterMessage);
+
+            // 입장 메시지를 WebSocket을 통해 전송
+            ChatMessageDTO chatMessage = convertToChatMessage(savedMessage);
+            messagingTemplate.convertAndSend("/topic/messages/" + roomId, chatMessage);
+        }
+        // 채팅방 정보 업데이트를 모든 참여자에게 브로드캐스트
+        messagingTemplate.convertAndSend("/topic/rooms/" + roomId + "/update", updatedRoom);
+
+        // 새로 초대된 사용자들에게 채팅방 목록 업데이트 알림
+        userIds.forEach(userId -> {
+            messagingTemplate.convertAndSend("/topic/user/" + userId + "/rooms/update", findUserChat(userId));
+        });
+
+        return updatedRoom;
+    }
+
 
 //    // 채팅방 이름 수정(단체톡방 일 시)
 //    public ChatRoom updateRoomName(String roomId, String newRoom) {
