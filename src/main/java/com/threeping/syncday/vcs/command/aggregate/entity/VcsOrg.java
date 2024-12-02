@@ -1,11 +1,9 @@
-package com.threeping.syncday.vcs.aggregate.entity;
+package com.threeping.syncday.vcs.command.aggregate.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name="TBL_VCS_ORG")
