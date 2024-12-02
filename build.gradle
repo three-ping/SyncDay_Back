@@ -35,7 +35,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
-    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
     testImplementation 'org.springframework.security:spring-security-test'
     compileOnly 'org.projectlombok:lombok'
@@ -77,6 +76,10 @@ dependencies {
     // 테스트 코드에서도 롬복 적용(로그 기능 활용을 위한 추가)
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // mybatis 페이징 처리
+    implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.4.6'
+
 }
 
 tasks.named('test') {

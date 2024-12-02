@@ -5,13 +5,9 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ChatRoomRepository extends MongoRepository<ChatRoom, String> {
-    Optional<ChatRoom> findChatRoomByRoomId (String roomId );
+    // 유저의 현재 참여 중인 채팅방 목록 조회
     List<ChatRoom> findChatRoomsByMemberIdsContaining(Long userId);
-
-//    @Query("SELECT c FROM ChatRoom c WHERE userId MEMBER OF c.memberIds")
-//    List<ChatRoom> findByMemberId(@Param("userId") Long userId);   // 사용자가 포함된 채팅방만 조회
 }
