@@ -39,12 +39,12 @@ public class WorkspaceController {
         return ResponseDTO.ok(workSpaceService.getWorkspaceInfo(workspaceId));
     }
 
-    @Operation(summary = "프로젝트 검색",
-            description = "프로젝트 이름, VCSTAG를 키워드로 회원을 검색합니다.",
+    @Operation(summary = "워크스페이스 검색",
+            description = "워크스페이스 이름, VCSTAG를 키워드로 워크스페이스를 검색합니다.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "프로젝트 검색 성공",
+                            description = "워크스페이스 검색 성공",
                             content = @Content(schema = @Schema(implementation = WorkspaceSearchResponse.class))
                     )
             }
