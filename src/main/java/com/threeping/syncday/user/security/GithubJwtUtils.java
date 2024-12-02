@@ -28,7 +28,7 @@ public class GithubJwtUtils {
 
     @Value("${github.app.private-key-path}")
     private String privateKeyPath;
-    
+
     private final ResourceLoader resourceLoader;
 
     public GithubJwtUtils(@Qualifier("webApplicationContext") ResourceLoader resourceLoader) {
@@ -64,16 +64,25 @@ public class GithubJwtUtils {
                 .setIssuedAt(now)
                 .setExpiration(exp)
                 .setIssuer(githubAppId)
+                .setHeaderParam("alg","RS256")
+                .setHeaderParam("typ", "JWT")
                 .signWith(signingKey, signatureAlgorithm);
 
         String token = builder.compact();
         log.debug("Generated JWT token for GitHub App {}", githubAppId);
         log.info("JWT Token structure: {}", token.split("\\.").length); // Should be 3
-
-
+        validateToken(token);
+        log.info("token: {}", token);
         return token;
     }
-
+    private void validateToken(String token) {
+        String[] parts = token.split("\\.");
+        if (parts.length != 3) {
+            throw new IllegalStateException("Invalid JWT token structure");
+        }
+        log.debug("JWT token parts: header={}, payload={}, signature={}",
+                parts[0].length(), parts[1].length(), parts[2].length());
+    }
     private void validatePrivateKey(Key key) {
         if (key == null) {
             throw new IllegalStateException("Private key is null");

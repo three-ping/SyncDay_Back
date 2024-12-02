@@ -31,7 +31,7 @@ public class OAuth2Controller {
     public ResponseDTO<?> handleInstallation(@RequestBody @Valid GithubAppInstallationRequestVO request) {
         try {
             GHAppInstallationToken token = githubInstallationService.getInstallationToken(request.getInstallationId());
-            Map<String, String> installationInfo = githubInstallationService.validateInstallation(request.getInstallationId());
+            Map<String, Object> installationInfo = githubInstallationService.validateInstallation(request.getInstallationId());
 
             Map<String, Object> response = new HashMap<>();
             response.put("token", token.getToken());
