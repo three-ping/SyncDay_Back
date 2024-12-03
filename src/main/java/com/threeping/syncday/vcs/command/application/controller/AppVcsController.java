@@ -21,6 +21,9 @@ public class AppVcsController {
 
     @PostMapping("/install")
     public ResponseDTO<?> handleAppInstallation(@RequestBody VcsInstallationRequestVO requestVO){
+        log.info("requestVO: {}", requestVO);
+        this.vcsInstallationService.handleVcsInstallation(requestVO);
+        log.info("requestVO: {}", requestVO);
         return null;
 
     }
