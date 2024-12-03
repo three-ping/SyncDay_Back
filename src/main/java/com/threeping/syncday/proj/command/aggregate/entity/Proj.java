@@ -1,6 +1,7 @@
 package com.threeping.syncday.proj.command.aggregate.entity;
 
 import com.threeping.syncday.proj.query.config.ProjectEntityListener;
+import com.threeping.syncday.vcs.command.aggreagate.entity.VCSInstallation;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -31,9 +32,9 @@ public class  Proj {
     @Column(name="progress_status")
     private Byte progressStatus;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="vcs_type")
-    private VcsType vcsType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vcs_installation_id")
+    private VCSInstallation vcsInstallation;
 
     @Column(name="vcs_proj_url")
     private String vcsProjUrl;

@@ -7,7 +7,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.kohsuke.github.GHTargetType;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -16,7 +15,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @Data
-public class VcsOrg {
+public class VCSInstallation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

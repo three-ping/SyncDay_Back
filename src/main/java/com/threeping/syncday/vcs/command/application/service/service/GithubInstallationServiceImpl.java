@@ -1,22 +1,17 @@
 package com.threeping.syncday.vcs.command.application.service.service;
 
-import com.threeping.syncday.config.GithubAppConfig;
 import com.threeping.syncday.user.security.GithubJwtUtils;
-import com.threeping.syncday.user.security.JwtUtil;
-import com.threeping.syncday.vcs.command.aggreagate.entity.VcsOrg;
+import com.threeping.syncday.vcs.command.aggreagate.entity.VCSInstallation;
 import com.threeping.syncday.vcs.command.aggreagate.entity.VcsType;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationCheckRequestVO;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationRequestVO;
 import com.threeping.syncday.vcs.command.domain.repository.VcsOrgRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.kohsuke.github.*;
-import org.kohsuke.github.connector.GitHubConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -34,7 +29,7 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
 
     @Override
     public Boolean checkGithubInstallation(VcsInstallationCheckRequestVO installationCheckVO) {
-        VcsOrg vcsOrg = vcsOrgRepository.findByVcsOrgIdAndVcsType(installationCheckVO.getVcsOrgId(), installationCheckVO.getVcsType());
+        VCSInstallation vcsOrg = vcsOrgRepository.findByVcsOrgIdAndVcsType(installationCheckVO.getVcsOrgId(), installationCheckVO.getVcsType());
         if (vcsOrg != null) {
             log.info("vcsOrg: {}", vcsOrg);
             return Boolean.TRUE;
@@ -69,7 +64,7 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
 
                 // Create installation token
                 GHAppInstallationToken token = installation.createToken().create();
-                VcsOrg vcsOrg = new VcsOrg();
+                VCSInstallation vcsOrg = new VCSInstallation();
                 vcsOrg.setUserId(requestVO.getUserId());
                 vcsOrg.setVcsOrgLogin(installation.getAccount().getLogin());
                 vcsOrg.setOrgUrl(installation.getAccount().getUrl().toString());
