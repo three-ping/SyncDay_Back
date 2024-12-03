@@ -11,6 +11,6 @@ public class GithubAppInstallationRequestVO {
     @JsonProperty("installation_id")
     Long installationId;
 
-    @JsonProperty("code")
-    String code;
+    @JsonProperty("user_id")
+    String userId;
 }

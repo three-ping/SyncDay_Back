@@ -50,7 +50,7 @@ public class GithubJwtUtils {
         return kf.generatePrivate(spec);
     }
 
-    public String createJWT() throws Exception {
+    public String createJwt() throws Exception {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.RS256;
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);

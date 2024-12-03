@@ -1,4 +1,4 @@
-package com.threeping.syncday.vcs.command.aggregate.entity;
+package com.threeping.syncday.user.aggregate.oauth.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -13,6 +13,9 @@ public class VcsOrg {
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name="user_id")
+    private Long userId;
 
     @Enumerated(EnumType.STRING)
     @Column(name="vcs_type", nullable=false)

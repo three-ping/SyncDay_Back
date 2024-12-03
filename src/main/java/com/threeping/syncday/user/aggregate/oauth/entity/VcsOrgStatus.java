@@ -1,4 +1,4 @@
-package com.threeping.syncday.vcs.command.aggregate.entity;
+package com.threeping.syncday.user.aggregate.oauth.entity;
 
 public enum VcsOrgStatus {
     ACTIVE,
