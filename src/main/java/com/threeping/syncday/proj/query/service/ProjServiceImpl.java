@@ -1,6 +1,5 @@
 package com.threeping.syncday.proj.query.service;
 
-import com.threeping.syncday.proj.query.aggregate.Proj;
 import com.threeping.syncday.proj.query.aggregate.dto.ProjAndWorkspaceDTO;
 import com.threeping.syncday.proj.query.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.query.repository.ProjMapper;
