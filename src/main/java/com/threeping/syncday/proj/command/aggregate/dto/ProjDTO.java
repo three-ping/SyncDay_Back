@@ -26,8 +26,8 @@ public class ProjDTO {
     @JsonProperty("progress_status")
     Byte progressStatus;
 
-    @JsonProperty("vcs_installation")
-    VCSInstallation vcsInstallation;
+    @JsonProperty("vcs_installation_id")
+    Long vcsInstallationId;
 
     @JsonProperty("vcs_proj_url")
     String vcsProjUrl;

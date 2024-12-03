@@ -7,6 +7,7 @@ import com.threeping.syncday.vcs.command.application.service.service.VcsInstalla
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/vcs")
@@ -20,16 +21,14 @@ public class AppVcsController {
     }
 
     @PostMapping("/install")
-    public ResponseDTO<?> handleAppInstallation(@RequestBody VcsInstallationRequestVO requestVO){
+    public ResponseDTO<?> handleAppInstallation(@RequestBody VcsInstallationRequestVO requestVO) {
         log.info("requestVO: {}", requestVO);
-        this.vcsInstallationService.handleVcsInstallation(requestVO);
-        log.info("requestVO: {}", requestVO);
-        return ResponseDTO.ok(null);
+        return ResponseDTO.ok(this.vcsInstallationService.handleVcsInstallation(requestVO));
 
     }
 
     @PostMapping("/install/check")
-    public ResponseDTO<?> checkAppInstallation(@RequestBody VcsInstallationCheckRequestVO vcsInstallationCheckRequestVO){
+    public ResponseDTO<?> checkAppInstallation(@RequestBody VcsInstallationCheckRequestVO vcsInstallationCheckRequestVO) {
         log.info("vcsInstallationCheckRequestVO: {}", vcsInstallationCheckRequestVO);
         return ResponseDTO.ok(vcsInstallationService.checkVcsInstallation(vcsInstallationCheckRequestVO));
     }
