@@ -32,9 +32,9 @@ public class  Proj {
     @Column(name="progress_status")
     private Byte progressStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vcs_installation_id")
-    private VCSInstallation vcsInstallation;
+
+    @Column(name = "vcs_installation_id")
+    private Long vcsInstallationId;
 
     @Column(name="vcs_proj_url")
     private String vcsProjUrl;

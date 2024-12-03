@@ -60,7 +60,7 @@ public class AppProjServiceImpl implements AppProjService {
         foundProj.setProjName(projVO.getProjName());
         foundProj.setStartTime(projVO.getStartTime());
         foundProj.setEndTime(projVO.getEndTime());
-        foundProj.setVcsInstallation(projVO.getVcsInstallation());
+        foundProj.setVcsInstallationId(projVO.getVcsInstallation().getId());
         foundProj.setVcsProjUrl(projVO.getVcsProjUrl());
 
         Proj modifiedProj = projRepository.save(foundProj);
@@ -87,9 +87,10 @@ public class AppProjServiceImpl implements AppProjService {
         }
         String userRole = infraProjService.requestParticipationStatus(userId, projId);
         if (userRole.equals("OWNER")) {
-            foundProj.setVcsInstallation(vcsInstallation);
+            foundProj.setVcsInstallationId(vcsInstallation.getId());
         }
         Proj savedProj = projRepository.save(foundProj);
+        log.info("savedProj: {}", savedProj);
         return modelMapper.map(savedProj, ProjDTO.class);
     }
 }
