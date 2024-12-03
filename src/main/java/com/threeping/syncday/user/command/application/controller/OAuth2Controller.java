@@ -3,6 +3,7 @@ package com.threeping.syncday.user.command.application.controller;
 import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
+import com.threeping.syncday.user.aggregate.oauth.vo.GithubTokenResponse;
 import com.threeping.syncday.user.command.application.service.OAuth2Service;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -33,9 +34,19 @@ public class OAuth2Controller {
         if (code == null || state == null) {
             throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        String accessToken = oAuth2Service.getGithubAccessToken(code);
-        log.info("accessToken: {}", accessToken);
-        return ResponseDTO.ok(accessToken);
+        return ResponseDTO.ok(oAuth2Service.getGithubAccessToken(code));
+    }
+
+    @PostMapping("/github/refresh_token")
+    public ResponseDTO<GithubTokenResponse> refreshToken(@RequestBody Map<String, String> request) {
+        String refreshToken = request.get("refresh_token");
+
+        if (refreshToken == null) {
+            throw new CommonException(ErrorCode.INVALID_TOKEN_ERROR);
+        }
+
+        GithubTokenResponse tokenResponse = oAuth2Service.refreshAccessToken(refreshToken);
+        return ResponseDTO.ok(tokenResponse);
     }
 
 
