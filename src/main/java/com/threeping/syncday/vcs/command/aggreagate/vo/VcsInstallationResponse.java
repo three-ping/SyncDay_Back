@@ -13,4 +13,7 @@ public class VcsInstallationResponse {
     @JsonProperty("proj")
     private final ProjDTO proj;
 
+    @JsonProperty("installation_token")
+    private final String installationToken;
+
 }

@@ -1,5 +1,7 @@
 package com.threeping.syncday.vcs.command.application.service.service;
 
+import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
+import com.threeping.syncday.proj.command.application.service.AppProjService;
 import com.threeping.syncday.user.security.GithubJwtUtils;
 import com.threeping.syncday.vcs.command.aggreagate.entity.VCSInstallation;
 import com.threeping.syncday.vcs.command.aggreagate.entity.VcsType;
@@ -20,12 +22,15 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
 
     private final VcsOrgRepository vcsOrgRepository;
     private final GithubJwtUtils githubJwtUtils;
+    private final AppProjService appProjService;
 
     @Autowired
     public GithubInstallationServiceImpl(VcsOrgRepository vcsOrgRepository
-            , GithubJwtUtils githubJwtUtils) {
+            , GithubJwtUtils githubJwtUtils
+    , AppProjService appProjService) {
         this.vcsOrgRepository = vcsOrgRepository;
         this.githubJwtUtils = githubJwtUtils;
+        this.appProjService = appProjService;
     }
 
     @Override
@@ -46,7 +51,7 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
     }
 
     @Override
-    public VCSInstallation handleGithubAppInstallation(VcsInstallationRequestVO requestVO) {
+    public VcsInstallationResponse handleGithubAppInstallation(VcsInstallationRequestVO requestVO) {
         try {
 
             String jwtToken = githubJwtUtils.generateJwtToken();
@@ -78,7 +83,11 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
                 vcsOrg.setVcsTargetType(installation.getTargetType());
                 log.info("Created token: {}", token);
                 log.info("vcsOrg: {}", vcsOrg);
-                return vcsOrgRepository.save(vcsOrg);
+                VCSInstallation savedInstallation = vcsOrgRepository.save(vcsOrg);
+                log.info("Saved installation: {}", savedInstallation);
+                ProjDTO proj = appProjService.updateVcsInstallation(requestVO.getProjId(), requestVO.getUserId(), savedInstallation.getId());
+
+                return new VcsInstallationResponse(savedInstallation, proj, token.getToken());
 
             } catch (IOException e) {
                 log.error("GitHub API error", e);

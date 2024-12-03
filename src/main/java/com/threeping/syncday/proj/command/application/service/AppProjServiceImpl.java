@@ -5,7 +5,6 @@ import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.proj.command.aggregate.vo.ProjVO;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.command.aggregate.entity.Proj;
-import com.threeping.syncday.proj.command.aggregate.vo.RequestUpdateVcsInfoVO;
 import com.threeping.syncday.proj.command.domain.repository.ProjRepository;
 import com.threeping.syncday.proj.command.infrastructure.service.InfraProjService;
 import com.threeping.syncday.vcs.command.aggreagate.entity.VCSInstallation;
@@ -60,7 +59,7 @@ public class AppProjServiceImpl implements AppProjService {
         foundProj.setProjName(projVO.getProjName());
         foundProj.setStartTime(projVO.getStartTime());
         foundProj.setEndTime(projVO.getEndTime());
-        foundProj.setVcsInstallationId(projVO.getVcsInstallation().getId());
+//        foundProj.setVcsInstallationId();
         foundProj.setVcsProjUrl(projVO.getVcsProjUrl());
 
         Proj modifiedProj = projRepository.save(foundProj);
@@ -79,7 +78,7 @@ public class AppProjServiceImpl implements AppProjService {
     }
 
     @Override
-    public ProjDTO updateVcsInstallation(Long projId, Long userId, VCSInstallation vcsInstallation) {
+    public ProjDTO updateVcsInstallation(Long projId, Long userId, Long vcsInstallationId) {
 
         Proj foundProj = projRepository.findByProjId(projId);
         if (foundProj == null) {
@@ -87,7 +86,7 @@ public class AppProjServiceImpl implements AppProjService {
         }
         String userRole = infraProjService.requestParticipationStatus(userId, projId);
         if (userRole.equals("OWNER")) {
-            foundProj.setVcsInstallationId(vcsInstallation.getId());
+            foundProj.setVcsInstallationId(vcsInstallationId);
         }
         Proj savedProj = projRepository.save(foundProj);
         log.info("savedProj: {}", savedProj);
