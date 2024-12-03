@@ -2,19 +2,18 @@ package com.threeping.syncday.vcs.command.aggreagate.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="TBL_VCS_ORG")
+@Table(name="TBL_VCS_INSTALLATION")
 @Getter
 @Setter
 @NoArgsConstructor
+@Data
 public class VcsOrg {
 
     @Id
@@ -28,11 +27,16 @@ public class VcsOrg {
     @Column(name = "vcs_type", nullable = false, length = 20)
     private VcsType vcsType;
 
-    @Column(name = "org_name", nullable = false)
-    private String orgName;
+    @Column(name = "vcs_org_login", nullable = false)
+    private String vcsOrgLogin;
 
-    @Column(name = "org_url", nullable = false, length = 1023)
+    @Column(name = "vcs_org_url", nullable = false, length = 1023)
     private String orgUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="vcs_org_type", nullable = false)
+    private VcsOrgType vcsOrgType;
+
 
     @Column(name = "avatar_url", length = 1023)
     private String avatarUrl;
@@ -42,9 +46,6 @@ public class VcsOrg {
 
     @Column(name = "installation_id", nullable = false, unique = true)
     private Long installationId;
-
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
@@ -58,13 +59,5 @@ public class VcsOrg {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    // Constructor with required fields
-    public VcsOrg(Long userId, VcsType vcsType, String orgName, String orgUrl, Long vcsOrgId, Long installationId) {
-        this.userId = userId;
-        this.vcsType = vcsType;
-        this.orgName = orgName;
-        this.orgUrl = orgUrl;
-        this.vcsOrgId = vcsOrgId;
-        this.installationId = installationId;
-    }
+
 }

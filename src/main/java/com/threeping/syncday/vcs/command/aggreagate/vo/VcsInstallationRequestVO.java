@@ -8,8 +8,8 @@ public class VcsInstallationRequestVO {
     @JsonProperty("installation_id")
     private String installationId;
 
-    @JsonProperty("org_name")
-    private String orgName;
+    @JsonProperty("org_login")
+    private String orgLogin;
 
     @JsonProperty("vcs_type")
     private String vcsType;
