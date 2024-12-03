@@ -42,8 +42,8 @@ public class ProjMemberInfoDTO {
     @JsonProperty("progress_status")
     private Byte progressStatus;
 
-    @JsonProperty("vcs_type")
-    private String vcsType;
+    @JsonProperty("vcs_installation_id")
+    private Long vcsInstallationId;
 
     @JsonProperty("vcs_proj_url")
     private String vcsProjUrl;

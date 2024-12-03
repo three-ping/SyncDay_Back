@@ -60,7 +60,7 @@
         <result property="endTime" column="end_time"/>
         <result property="createdAt" column="proj_created_at"/>
         <result property="progressStatus" column="proj_progress_status"/>
-        <result property="vcsType" column="proj_vcs_type"/>
+        <result property="vcsInstallationId" column="vcs_installation_id"/>
         <result property="vcsProjUrl" column="vcs_proj_url"/>
         <collection property="workspaces" resultMap="workspaceResultMap"/>
     </resultMap>
@@ -84,7 +84,7 @@
             p.end_time,
             p.created_at as proj_created_at,
             p.progress_status as proj_progress_status,
-            p.vcs_type as proj_vcs_type,
+            p.vcs_installation_id,
             p.vcs_proj_url,
             w.workspace_id,
             w.workspace_name,

@@ -11,9 +11,6 @@ import java.util.Date;
 
 @Entity
 @Table(name="TBL_VCS_INSTALLATION")
-@Getter
-@Setter
-@NoArgsConstructor
 @Data
 public class VCSInstallation {
 

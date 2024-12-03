@@ -23,7 +23,7 @@ public class ElasticsearchInitializer {
     @PostConstruct
     public void init() {
         log.info("프로젝트 ES 동기화 시작!");
-        synchronizeAll();
+//        synchronizeAll();
     }
 
     // 수동 동기화 메서드 추가

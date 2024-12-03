@@ -8,6 +8,7 @@ import com.threeping.syncday.proj.command.aggregate.entity.Proj;
 import com.threeping.syncday.proj.command.aggregate.vo.RequestUpdateVcsInfoVO;
 import com.threeping.syncday.proj.command.domain.repository.ProjRepository;
 import com.threeping.syncday.proj.command.infrastructure.service.InfraProjService;
+import com.threeping.syncday.vcs.command.aggreagate.entity.VCSInstallation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,16 +79,15 @@ public class AppProjServiceImpl implements AppProjService {
     }
 
     @Override
-    public ProjDTO updateVcsInfo(RequestUpdateVcsInfoVO requestUpdateVcsInfoVO) {
-        Long userId = requestUpdateVcsInfoVO.getUserId();
-        Long projId = requestUpdateVcsInfoVO.getProjId();
+    public ProjDTO updateVcsInstallation(Long projId, Long userId, VCSInstallation vcsInstallation) {
+
         Proj foundProj = projRepository.findByProjId(projId);
         if (foundProj == null) {
             throw new CommonException(ErrorCode.PROJ_NOT_FOUND);
         }
-        String userRole = infraProjService.requestParticipationStatus(requestUpdateVcsInfoVO.getUserId(), requestUpdateVcsInfoVO.getProjId());
+        String userRole = infraProjService.requestParticipationStatus(userId, projId);
         if (userRole.equals("OWNER")) {
-            foundProj.setVcsInstallation(requestUpdateVcsInfoVO.getVcsInstallation());
+            foundProj.setVcsInstallation(vcsInstallation);
         }
         Proj savedProj = projRepository.save(foundProj);
         return modelMapper.map(savedProj, ProjDTO.class);

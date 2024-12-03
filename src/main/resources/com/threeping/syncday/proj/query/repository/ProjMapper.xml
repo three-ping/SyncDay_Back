@@ -50,7 +50,7 @@
     </resultMap>
 
     <!-- Basic select for ProjDTO -->
-    <select id="selectAllProjects" resultMap="projResultMap">
+    <select id="selectAllProjs" resultMap="projResultMap">
         SELECT
             proj_id,
             proj_name,

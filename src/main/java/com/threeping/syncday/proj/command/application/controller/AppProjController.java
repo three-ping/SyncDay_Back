@@ -5,7 +5,6 @@ import com.threeping.syncday.proj.command.aggregate.vo.ProjVO;
 import com.threeping.syncday.proj.command.aggregate.vo.RequestUpdateVcsInfoVO;
 import com.threeping.syncday.proj.command.application.service.AppProjService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -158,10 +157,7 @@ public class AppProjController {
     )
 
 
-    @PutMapping("/vcs")
-    public ResponseDTO<?> updateProjVcsInfo(@RequestBody RequestUpdateVcsInfoVO requestUpdateVcsInfoVO){
-        return ResponseDTO.ok(appProjService.updateVcsInfo(requestUpdateVcsInfoVO));
-    }
+
 
 
     @DeleteMapping("/{projId}")

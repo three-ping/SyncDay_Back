@@ -5,6 +5,7 @@ import com.threeping.syncday.vcs.command.aggreagate.entity.VCSInstallation;
 import com.threeping.syncday.vcs.command.aggreagate.entity.VcsType;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationCheckRequestVO;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationRequestVO;
+import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationResponse;
 import com.threeping.syncday.vcs.command.domain.repository.VcsOrgRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.kohsuke.github.*;
@@ -45,7 +46,7 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
     }
 
     @Override
-    public void handleAppInstallation(VcsInstallationRequestVO requestVO) {
+    public VCSInstallation handleGithubAppInstallation(VcsInstallationRequestVO requestVO) {
         try {
 
             String jwtToken = githubJwtUtils.generateJwtToken();
@@ -77,7 +78,7 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
                 vcsOrg.setVcsTargetType(installation.getTargetType());
                 log.info("Created token: {}", token);
                 log.info("vcsOrg: {}", vcsOrg);
-                vcsOrgRepository.save(vcsOrg);
+                return vcsOrgRepository.save(vcsOrg);
 
             } catch (IOException e) {
                 log.error("GitHub API error", e);
@@ -87,8 +88,8 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
         } catch (Exception e) {
             log.error("Installation handling failed", e);
             e.printStackTrace();
-                }
+        }
 
-
+    return null;
     }
 }
