@@ -78,6 +78,7 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
                 log.info("Created token: {}", token);
                 log.info("vcsOrg: {}", vcsOrg);
                 vcsOrgRepository.save(vcsOrg);
+
             } catch (IOException e) {
                 log.error("GitHub API error", e);
                 log.error("Response body: {}", e.getMessage());

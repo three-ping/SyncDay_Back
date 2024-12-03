@@ -7,7 +7,7 @@ import lombok.Value;
 @Value
 public class VcsInstallationRequestVO {
     @JsonProperty("installation_id")
-    private long installationId;
+    private Long installationId;
 
     @JsonProperty("org_login")
     private String orgLogin;
@@ -17,4 +17,7 @@ public class VcsInstallationRequestVO {
 
     @JsonProperty("user_id")
     private Long userId;
+    
+    @JsonProperty("proj_id")
+    private Long projId;
 }
