@@ -52,9 +52,9 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
     public void handleAppInstallation(VcsInstallationRequestVO requestVO) {
         try {
 
-        String jwtToken = githubJwtUtils.generateJwtToken();
+            String jwtToken = githubJwtUtils.generateJwtToken();
             log.info("jwtToken: {}", jwtToken);
-        GitHub gitHub = new GitHubBuilder().withJwtToken(jwtToken).build();
+            GitHub gitHub = new GitHubBuilder().withJwtToken(jwtToken).build();
             log.info("gitHub: {}", gitHub.getInstallation());
 
             try {
@@ -68,6 +68,10 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
 
                 // Create installation token
                 GHAppInstallationToken token = installation.createToken().create();
+                VcsOrg vcsOrg = new VcsOrg();
+                vcsOrg.setVcsOrgId(installation.getAccount().getId());
+                vcsOrg.setInstallationId(installation.getId());
+                vcsOrg.setUserId(requestVO.getUserId());
 
                 log.info("Created token: {}", token);
             } catch (IOException e) {
