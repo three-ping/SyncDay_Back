@@ -4,6 +4,7 @@ import com.threeping.syncday.config.GithubAppConfig;
 import com.threeping.syncday.user.security.GithubJwtUtils;
 import com.threeping.syncday.user.security.JwtUtil;
 import com.threeping.syncday.vcs.command.aggreagate.entity.VcsOrg;
+import com.threeping.syncday.vcs.command.aggreagate.entity.VcsType;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationCheckRequestVO;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationRequestVO;
 import com.threeping.syncday.vcs.command.domain.repository.VcsOrgRepository;
@@ -69,11 +70,19 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
                 // Create installation token
                 GHAppInstallationToken token = installation.createToken().create();
                 VcsOrg vcsOrg = new VcsOrg();
+                vcsOrg.setUserId(requestVO.getUserId());
+                vcsOrg.setVcsOrgLogin(installation.getAccount().getLogin());
+                vcsOrg.setOrgUrl(installation.getAccount().getUrl().toString());
+                vcsOrg.setVcsType(VcsType.GITHUB);
+                vcsOrg.setAvatarUrl(installation.getAccount().getAvatarUrl());
                 vcsOrg.setVcsOrgId(installation.getAccount().getId());
                 vcsOrg.setInstallationId(installation.getId());
-                vcsOrg.setUserId(requestVO.getUserId());
-
+                vcsOrg.setCreatedAt(installation.getCreatedAt());
+                vcsOrg.setUpdatedAt(installation.getUpdatedAt());
+                vcsOrg.setVcsTargetType(installation.getTargetType());
                 log.info("Created token: {}", token);
+                log.info("vcsOrg: {}", vcsOrg);
+                vcsOrgRepository.save(vcsOrg);
             } catch (IOException e) {
                 log.error("GitHub API error", e);
                 log.error("Response body: {}", e.getMessage());

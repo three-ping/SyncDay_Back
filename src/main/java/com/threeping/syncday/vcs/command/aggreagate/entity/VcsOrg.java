@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.kohsuke.github.GHTargetType;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name="TBL_VCS_INSTALLATION")
@@ -35,7 +37,7 @@ public class VcsOrg {
 
     @Enumerated(EnumType.STRING)
     @Column(name="vcs_org_type", nullable = false)
-    private VcsOrgType vcsOrgType;
+    private GHTargetType vcsTargetType;
 
 
     @Column(name = "avatar_url", length = 1023)
@@ -53,11 +55,11 @@ public class VcsOrg {
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 
 
 }

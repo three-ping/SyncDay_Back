@@ -24,7 +24,7 @@ public class AppVcsController {
         log.info("requestVO: {}", requestVO);
         this.vcsInstallationService.handleVcsInstallation(requestVO);
         log.info("requestVO: {}", requestVO);
-        return null;
+        return ResponseDTO.ok(null);
 
     }
 
