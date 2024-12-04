@@ -67,8 +67,8 @@ public class MongoConfig {
             );
 
             ChatRoom room2 = createChatRoom(
-                    String.join(",", user2.getUserName(), user3.getUserName(), user10.getUserName()),
-                    Arrays.asList(user2.getUserId(), user3.getUserId(), user10.getUserId())
+                    String.join(",", user2.getUserName(), user3.getUserName(), user10.getUserName(), user11.getUserName()),
+                    Arrays.asList(user2.getUserId(), user3.getUserId(), user10.getUserId(), user11.getUserId())
             );
 
             ChatRoom room3 = createChatRoom(

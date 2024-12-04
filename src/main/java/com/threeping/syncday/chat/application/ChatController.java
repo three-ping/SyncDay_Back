@@ -1,9 +1,11 @@
 package com.threeping.syncday.chat.application;
 
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
+import com.threeping.syncday.chat.entity.ChatMessage;
 import com.threeping.syncday.chat.entity.ChatRoom;
 import com.threeping.syncday.chat.entity.ChatType;
 
+import com.threeping.syncday.chat.repository.ChatMessageRepository;
 import com.threeping.syncday.user.command.application.service.UserCommandServiceImpl;
 import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.command.domain.repository.UserRepository;
@@ -25,12 +27,14 @@ public class ChatController {
     private final ChatService chatService;
     private final UserRepository userRepository;
     private final UserCommandServiceImpl userCommandService;
+    private final ChatMessageRepository chatMessageRepository;
 
     @Autowired
-    public ChatController(ChatService chatService, UserRepository userRepository, UserCommandServiceImpl userCommandService) {
+    public ChatController(ChatService chatService, UserRepository userRepository, UserCommandServiceImpl userCommandService, ChatMessageRepository chatMessageRepository) {
         this.chatService = chatService;
         this.userRepository = userRepository;
         this.userCommandService = userCommandService;
+        this.chatMessageRepository = chatMessageRepository;
     }
 
     // 메세지 전송: "/app/message"로 보낸 메시지를 처리
