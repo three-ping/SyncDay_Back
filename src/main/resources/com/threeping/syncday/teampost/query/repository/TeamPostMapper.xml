@@ -10,30 +10,106 @@
         <result property="createdAt" column="created_at"></result>
         <result property="updatedAt" column="updated_at"></result>
         <result property="userId" column="user_id"></result>
+        <result property="userName" column="username"></result>
+        <result property="userPosition" column="position"></result>
+        <result property="userProfilePhoto" column="profile_photo"></result>
         <result property="teamBoardId" column="team_board_id"></result>
     </resultMap>
 
-    <select id="findTeamPostByTeamBoardId" resultMap="teamPostResultMap" parameterType="long">
-        SELECT TEAM_POST_ID
-             , TITLE
-             , CONTENT
-             , CREATED_AT
-             , UPDATED_AT
-             , USER_ID
-             , TEAM_BOARD_ID
-        FROM TBL_TEAM_POST
-        WHERE TEAM_BOARD_ID = #{teamBoardId}
+    <select id="findTeamPostByTeamBoardId" resultMap="teamPostResultMap">
+        SELECT A.TEAM_POST_ID
+             , A.TITLE
+             , A.CONTENT
+             , A.CREATED_AT
+             , A.UPDATED_AT
+             , A.USER_ID
+             , A.TEAM_BOARD_ID
+             , A.COMMENTS
+             , B.USERNAME
+             , B.POSITION
+             , B.PROFILE_PHOTO
+        FROM TBL_TEAM_POST A
+       INNER JOIN TBL_USER B
+          ON A.USER_ID = B.USER_ID
+        WHERE A.TEAM_BOARD_ID = #{teamBoardId}
+        ORDER BY A.TEAM_POST_ID DESC
+    </select>
+
+    <select id="findTeamPostByTeamBoardIdAndTitle" resultMap="teamPostResultMap">
+        SELECT A.TEAM_POST_ID
+             , A.TITLE
+             , A.CONTENT
+             , A.CREATED_AT
+             , A.UPDATED_AT
+             , A.USER_ID
+             , A.TEAM_BOARD_ID
+             , A.COMMENTS
+             , B.USERNAME
+             , B.POSITION
+             , B.PROFILE_PHOTO
+        FROM TBL_TEAM_POST A
+       INNER JOIN TBL_USER B
+          ON A.USER_ID = B.USER_ID
+        WHERE A.TEAM_BOARD_ID = #{teamBoardId}
+          AND A.TITLE LIKE CONCAT('%', #{searchQuery}, '%')
+        ORDER BY A.TEAM_POST_ID DESC
+    </select>
+
+    <select id="findTeamPostByTeamBoardIdAndContent" resultMap="teamPostResultMap" >
+        SELECT A.TEAM_POST_ID
+             , A.TITLE
+             , A.CONTENT
+             , A.CREATED_AT
+             , A.UPDATED_AT
+             , A.USER_ID
+             , A.TEAM_BOARD_ID
+             , A.COMMENTS
+             , B.USERNAME
+             , B.POSITION
+             , B.PROFILE_PHOTO
+        FROM TBL_TEAM_POST A
+       INNER JOIN TBL_USER B
+          ON A.USER_ID = B.USER_ID
+        WHERE A.TEAM_BOARD_ID = #{teamBoardId}
+          AND A.CONTENT LIKE CONCAT('%', #{searchQuery}, '%')
+        ORDER BY A.TEAM_POST_ID DESC
+    </select>
+
+    <select id="findTeamPostByTeamBoardIdAndUser" resultMap="teamPostResultMap" parameterType="map">
+        SELECT A.TEAM_POST_ID
+             , A.TITLE
+             , A.CONTENT
+             , A.CREATED_AT
+             , A.UPDATED_AT
+             , A.USER_ID
+             , A.TEAM_BOARD_ID
+             , A.COMMENTS
+             , B.USERNAME
+             , B.POSITION
+             , B.PROFILE_PHOTO
+        FROM TBL_TEAM_POST A
+       INNER JOIN TBL_USER B
+          ON A.USER_ID = B.USER_ID
+        WHERE A.TEAM_BOARD_ID = #{teamBoardId}
+          AND B.USERNAME LIKE CONCAT('%', #{searchQuery}, '%')
+        ORDER BY A.TEAM_POST_ID DESC
     </select>
 
     <select id="findTeamPostDetailById" resultMap="teamPostResultMap" parameterType="long">
-        SELECT TEAM_POST_ID
-             , TITLE
-             , CONTENT
-             , CREATED_AT
-             , UPDATED_AT
-             , USER_ID
-             , TEAM_BOARD_ID
-        FROM TBL_TEAM_POST
-        WHERE TEAM_POST_ID = #{teamPostId}
+        SELECT A.TEAM_POST_ID
+             , A.TITLE
+             , A.CONTENT
+             , A.CREATED_AT
+             , A.UPDATED_AT
+             , A.USER_ID
+             , A.TEAM_BOARD_ID
+             , A.COMMENTS
+             , B.USERNAME
+             , B.POSITION
+             , B.PROFILE_PHOTO
+        FROM TBL_TEAM_POST A
+       INNER JOIN TBL_USER B
+          ON A.USER_ID = B.USER_ID
+       WHERE TEAM_POST_ID = #{teamPostId}
     </select>
 </mapper>

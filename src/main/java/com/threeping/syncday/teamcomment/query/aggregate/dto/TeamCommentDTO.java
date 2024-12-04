@@ -16,4 +16,6 @@ public class TeamCommentDTO {
     private Timestamp updatedAt;
     private Long teamPostId;
     private Long userId;
+    private String userName;
+    private String userPosition;
 }

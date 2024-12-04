@@ -28,4 +28,10 @@ public class MeetingroomReservationDTO {
 
    @JsonProperty("schedule_id")
     Long schedule;
+
+    @JsonProperty("user_id")
+    Long user;
+
+    @JsonProperty("meetingroom_place")
+    String meetingroomPlace;
 }
