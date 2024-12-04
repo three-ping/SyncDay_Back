@@ -64,15 +64,14 @@ public class ChatService {
                 .findTopByRoomIdAndSenderIdAndChatTypeOrderBySentTimeDesc(
                         roomId, userId, ChatType.LEAVE);
 
+        List<ChatMessage> messages;
         if (lastLeave.isPresent()) {
             LocalDateTime leaveTime = lastLeave.get().getSentTime();
-            return chatMessageRepository.findByRoomIdAndSentTimeAfterOrderBySentTimeAsc(roomId, leaveTime)
-                    .stream()
-                    .map(this::convertToChatMessage)
-                    .collect(Collectors.toList());
+            messages = chatMessageRepository.findByRoomIdAndSentTimeAfterOrderBySentTimeAsc(roomId, leaveTime);
+        } else {
+            messages = chatMessageRepository.findByRoomIdOrderBySentTimeAsc(roomId);
         }
-        return chatMessageRepository.findByRoomIdOrderBySentTimeAsc(roomId)
-                .stream()
+        return messages.stream()
                 .map(this::convertToChatMessage)
                 .collect(Collectors.toList());
     }
@@ -85,11 +84,8 @@ public class ChatService {
             Map<Long,String> userNameMap = getUserNameMap(chatRoom);
             chatRoom.setChatRoomName(getChatRoomName(chatRoom, userNameMap));
         }
-
         return chatRoomRepository.save(chatRoom);
-
     }
-
 
     //  특정 채팅방 퇴장
     public ChatRoom leaveChatRoom(String roomId, Long userId) {

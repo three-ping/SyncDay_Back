@@ -3,7 +3,7 @@ package com.threeping.syncday.chat.application;
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import com.threeping.syncday.chat.entity.ChatRoom;
 import com.threeping.syncday.chat.entity.ChatType;
-import com.threeping.syncday.user.command.application.dto.UserDTO;
+
 import com.threeping.syncday.user.command.application.service.UserCommandServiceImpl;
 import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.command.domain.repository.UserRepository;
@@ -16,7 +16,6 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
