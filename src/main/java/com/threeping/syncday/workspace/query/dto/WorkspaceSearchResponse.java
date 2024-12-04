@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @ToString
@@ -24,5 +26,5 @@ public class WorkspaceSearchResponse {
     @Schema(description = "vcs 레포지토리 이름", example = "SyncDay_Refactoring")
     private String vcsRepoName;
     @Schema(description = "생성일자", example = "20241121")
-    private String createdAt;
+    private LocalDateTime createdAt;
 }

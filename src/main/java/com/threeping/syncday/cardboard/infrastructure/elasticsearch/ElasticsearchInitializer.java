@@ -23,7 +23,7 @@ public class ElasticsearchInitializer {
 
     @PostConstruct
     public void init() {
-        log.info("프로젝트 ES 동기화 시작!");
+        log.info("카드보드 ES 동기화 시작!");
         synchronizeAll();
     }
 
@@ -37,6 +37,7 @@ public class ElasticsearchInitializer {
                     CardBoardDocument document = CardBoardDocument.builder()
                             .cardboardId(dto.getCardboardId())
                             .cardboardName(dto.getCardboardName())
+                            .projectId(dto.getProjectId())
                             .workspaceId(dto.getWorkspaceId())
                             .workspaceName(dto.getWorkspaceName())
                             .vcsType(dto.getVcsType())

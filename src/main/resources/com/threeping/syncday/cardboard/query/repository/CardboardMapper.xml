@@ -19,6 +19,7 @@
     <resultMap id="searchResultMap" type="com.threeping.syncday.cardboard.query.dto.CardboardQueryDTO">
         <id property="cardboardId" column="cardboard_id"/>
         <result property="cardboardName" column="title"/>
+        <result property="projectId" column="proj_id"/>
         <result property="workspaceId" column="workspace_id"/>
         <result property="workspaceName" column="workspace_name"/>
         <result property="vcsType" column="vcs_type"/>
@@ -60,6 +61,7 @@
         SELECT
             c.cardboard_id,
             c.title,
+            w.proj_id,
             w.workspace_id,
             w.workspace_name,
             c.vcs_type,
@@ -76,6 +78,7 @@
         SELECT
             c.cardboard_id,
             c.title,
+            w.proj_id,
             w.workspace_id,
             w.workspace_name,
             c.vcs_type,
