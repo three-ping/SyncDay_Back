@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -100,5 +101,61 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
         }
 
     return null;
+    }
+
+    @Override
+    public List<GHProject> getOrganizationProjects(VCSInstallation vcsInstallation) {
+        try {
+            String jwtToken = githubJwtUtils.generateJwtToken();
+            log.info("jwtToken: {}", jwtToken);
+            GitHub gitHub = new GitHubBuilder().withJwtToken(jwtToken).build();
+            log.info("gitHub: {}", gitHub.getInstallation());
+            GHApp app = gitHub.getApp();
+            log.info("Successfully authenticated as GitHub App: {}", app.getSlug());
+
+            // Now try to get the installation
+            GHAppInstallation installation;
+            try {
+                // First log the current installation ID you're trying to use
+                log.info("Attempting to access installation ID: {}", vcsInstallation.getInstallationId());
+
+                // List all available installations
+                PagedIterable<GHAppInstallation> installations = app.listInstallations();
+
+                // Log all available installations
+                installations.forEach(inst -> {
+                    log.info("Available installation - ID: {}, Account: {}",
+                            inst.getId(),
+                            inst.getAccount().getLogin());
+                });
+
+                // Then try your original code
+                installation = app.getInstallationById(vcsInstallation.getInstallationId());
+                log.info("Found installation for org: {}", installation.getAccount().getLogin());
+
+                String token = installation.createToken().create().getToken();
+                log.info("token: {}", token);
+
+                GitHub installationGitHub = new GitHubBuilder().withJwtToken(token).build();
+                log.info("installationGitHub: {}", installationGitHub);
+                if (vcsInstallation.getVcsTargetType() == GHTargetType.USER) {
+                    GHUser user = installationGitHub.getUser(vcsInstallation.getVcsOrgLogin());
+                    return user.listProjects().toList();
+                } else {
+                    GHOrganization organization = installationGitHub.getOrganization(vcsInstallation.getVcsOrgLogin());
+                    return organization.listProjects().toList();
+
+                }
+            } catch (IOException e) {
+                log.error("Error accessing GitHub installations", e);
+                throw new RuntimeException(e);
+            }
+
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

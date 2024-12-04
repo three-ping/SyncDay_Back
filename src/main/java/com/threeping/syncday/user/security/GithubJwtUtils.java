@@ -12,9 +12,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.security.Key;
 import java.security.KeyFactory;
@@ -65,9 +69,19 @@ public class GithubJwtUtils {
         long expirationTimeSeconds = currentTimeSeconds + (TOKEN_EXPIRY_MINUTES * 60);
 
         long nowMillis = System.currentTimeMillis();
-        long expMillis = nowMillis + 10 * 60 * 1000;
+        long expMillis = nowMillis +  60 * 1000;
         Date now = new Date(nowMillis);
         Date exp = new Date(expMillis);
+
+        // Get GitHub's server time
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity("https://api.github.com/", String.class);
+        HttpHeaders headers = response.getHeaders();
+        long githubTime = headers.getDate();
+        long timeDiff = System.currentTimeMillis() - githubTime;
+        log.info("timeDiff: {}", timeDiff);
+        System.out.println("Time difference with GitHub (ms): " + timeDiff);
+
         // Use classpath or file system path as appropriate
         Key signingKey = getPrivateKey(privateKeyPath);
         log.info("signingKey: {}", signingKey);
@@ -142,14 +156,22 @@ public class GithubJwtUtils {
     public String generateJwtToken() {
         try {
             // Use Instant for accurate timestamps
-            Instant now = Instant.now();
-            Instant expiration = now.plusSeconds(TOKEN_EXPIRY_MINUTES * 60);
             Key privateKey = getPrivateKey(privateKeyPath);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.getForEntity("https://api.github.com/", String.class);
+            HttpHeaders headers = response.getHeaders();
+            long githubTime = headers.getDate();
+            long timeDiff = System.currentTimeMillis() - githubTime;
+
+            log.info("timeDiff: {}", timeDiff);
+            System.out.println("Time difference with GitHub (ms): " + timeDiff);
+            long nowMillis = System.currentTimeMillis() - timeDiff;
+            long expMillis = nowMillis + 60 * 1000;
             // Build JWT with numeric timestamps for iat and exp
             String token = Jwts.builder()
                     .setHeaderParam("alg", "RS256")
-                    .claim("iat", now.getEpochSecond())        // Unix timestamp in seconds
-                    .claim("exp", expiration.getEpochSecond()) // Unix timestamp in seconds
+                    .claim("iat", new Date(nowMillis))        // Unix timestamp in seconds
+                    .claim("exp", new Date(expMillis)) // Unix timestamp in seconds
                     .claim("iss", githubAppId)                       // GitHub App ID
                     .signWith(privateKey, SignatureAlgorithm.RS256)
                     .compact();

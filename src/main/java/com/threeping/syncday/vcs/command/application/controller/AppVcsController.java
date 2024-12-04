@@ -32,4 +32,14 @@ public class AppVcsController {
         log.info("vcsInstallationCheckRequestVO: {}", vcsInstallationCheckRequestVO);
         return ResponseDTO.ok(vcsInstallationService.checkVcsInstallation(vcsInstallationCheckRequestVO));
     }
+
+    @GetMapping("/installations/{installationId}")
+    public ResponseDTO<?> findVcsInstallationById(@PathVariable("installationId") Long installationId) {
+        return ResponseDTO.ok(vcsInstallationService.getVcsInstallation(installationId));
+    }
+
+    @GetMapping("/installations/{installationId}/projects")
+    public ResponseDTO<?> findProjectsByVcsInstallationId(@PathVariable("installationId") Long installationId){
+        return ResponseDTO.ok(vcsInstallationService.getOrganizationProjects(installationId));
+    }
 }
