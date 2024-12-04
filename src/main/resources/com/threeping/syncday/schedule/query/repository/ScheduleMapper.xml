@@ -5,13 +5,23 @@
 <mapper namespace="com.threeping.syncday.schedule.query.repository.ScheduleMapper">
 
     <resultMap id="scheduleResultMap" type="com.threeping.syncday.schedule.query.aggregate.ScheduleDTO">
+        <result property="userId" column="user_id"></result>
         <result property="scheduleId" column="schedule_id"></result>
         <result property="title" column="title"></result>
+        <result property="content" column="content"></result>
         <result property="startTime" column="start_time"></result>
         <result property="endTime" column="end_time"></result>
+        <result property="publicStatus" column="public_status"></result>
         <result property="meetingStatus" column="meeting_status"></result>
-        <result property="userId" column="user_id"></result>
+        <result property="meetingroomId" column="meetingroom_id"></result>
         <result property="status" column="status"></result>
+        <result property="notificationTime" column="notification_time"></result>
+
+        <collection property="attendeeIds" resultMap="attendeeResultMap"/>
+    </resultMap>
+
+    <resultMap id="attendeeResultMap" type="com.threeping.syncday.schedule.query.aggregate.AttendeeDTO">
+        <result property="userId" column="user_id_from_participant"/>
     </resultMap>
 
     <resultMap id="scheduleDetailResultMap" type="com.threeping.syncday.schedule.query.aggregate.ScheduleDetailDTO">
@@ -55,15 +65,30 @@
     </resultMap>
 
     <select id="selectMySchedulesByUserId" resultMap="scheduleResultMap" parameterType="long">
-        SELECT S.SCHEDULE_ID
-             , S.TITLE
-             , S.START_TIME
-             , S.END_TIME
-             , S.MEETING_STATUS
-             , US.STATUS
-          FROM TBL_SCHEDULE S
-          JOIN TBL_USER_SCHEDULE US ON S.SCHEDULE_ID = US.SCHEDULE_ID
-         WHERE US.USER_ID = #{userId}
+        SELECT s.user_id,
+               s.schedule_id,
+               s.title,
+               s.content,
+               s.start_time,
+               s.end_time,
+               s.public_status,
+               s.meeting_status,
+               s.meetingroom_id,
+               us.status,
+               us.notification_time,
+               p.user_id AS user_id_from_participant
+          FROM TBL_SCHEDULE s
+          LEFT JOIN TBL_USER_SCHEDULE us
+            ON s.schedule_id = us.schedule_id
+           AND us.user_id = #{userId}  <!-- userId에 해당하는 TBL_USER_SCHEDULE에서 상태를 조회 -->
+          LEFT JOIN TBL_USER_SCHEDULE p
+            ON s.schedule_id = p.schedule_id  <!-- 참석자는 모두 조회 (status 조건 제거) -->
+         WHERE s.schedule_id IN (
+               SELECT schedule_id
+                 FROM TBL_USER_SCHEDULE
+                WHERE user_id = #{userId}  <!-- 해당 userId에 대해 일정이 포함된 scheduleId 조회 -->
+               )
+           AND (us.status != 'ABSENT' OR us.user_id IS NULL)  <!-- 내 일정에서 'ABSENT' 상태 제외 -->
     </select>
 
     <select id="selectOthersSchedulesBySearchUserId" resultMap="scheduleResultMap" parameterType="long">
