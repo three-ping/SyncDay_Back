@@ -13,6 +13,7 @@ public class CardboardEventDTO {
 
     private Long cardboardId;
     private String cardboardName;
+    private Long projectId;
     private Long workspaceId;
     private String workspaceName;
     private String vcsType;
@@ -25,6 +26,7 @@ public class CardboardEventDTO {
                 .builder()
                 .cardboardId(cardboardInfo.getCardboardId())
                 .cardboardName(cardboardInfo.getCardboardName())
+                .projectId(cardboardInfo.getProjectId())
                 .workspaceId(cardboardInfo.getWorkspaceId())
                 .workspaceName(cardboardInfo.getWorkspaceName())
                 .vcsType(cardboardInfo.getVcsType())

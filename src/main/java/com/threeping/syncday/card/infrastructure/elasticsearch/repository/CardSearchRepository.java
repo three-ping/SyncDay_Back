@@ -1,6 +1,6 @@
-package com.threeping.syncday.workspace.infrastructure.elasticsearch.repository;
+package com.threeping.syncday.card.infrastructure.elasticsearch.repository;
 
-import com.threeping.syncday.workspace.infrastructure.elasticsearch.document.WorkSpaceDocument;
+import com.threeping.syncday.card.infrastructure.elasticsearch.document.CardDocument;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
@@ -8,38 +8,54 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface WorkSpaceSearchRepository extends ElasticsearchRepository<WorkSpaceDocument, Long> {
+public interface CardSearchRepository extends ElasticsearchRepository<CardDocument, Long> {
     @Query("{" +
             "  \"bool\": {" +
             "    \"should\": [" +
             "      {\"bool\": {" +
             "        \"should\": [" +
             "          {\"term\": {" +
-            "            \"workspaceName\": {" +
+            "            \"cardTitle\": {" +
+            "              \"value\": \"?0\"," +
+            "              \"boost\": 4.0" +
+            "            }" +
+            "          }}," +
+            "          {\"term\": {" +
+            "            \"cardTitle.ngram\": {" +
             "              \"value\": \"?0\"," +
             "              \"boost\": 3.5" +
             "            }" +
-            "          }}," +
+            "          }}" +
+            "        ]" +
+            "      }}," +
+            "      {\"bool\": {" +
+            "        \"should\": [" +
             "          {\"term\": {" +
-            "            \"workspaceName.ngram\": {" +
+            "            \"cardContent\": {" +
             "              \"value\": \"?0\"," +
             "              \"boost\": 3.0" +
             "            }" +
-            "          }}" +
-            "        ]" +
-            "      }}," +
-            "      {\"bool\": {" +
-            "        \"should\": [" +
+            "          }}," +
             "          {\"term\": {" +
-            "            \"vcsRepoName\": {" +
+            "            \"cardContent.ngram\": {" +
             "              \"value\": \"?0\"," +
             "              \"boost\": 2.5" +
             "            }" +
-            "          }}," +
+            "          }}" +
+            "        ]" +
+            "      }}," +
+            "      {\"bool\": {" +
+            "        \"should\": [" +
             "          {\"term\": {" +
-            "            \"vcsRepoName.ngram\": {" +
+            "            \"tags\": {" +
             "              \"value\": \"?0\"," +
             "              \"boost\": 2.0" +
+            "            }" +
+            "          }}," +
+            "          {\"term\": {" +
+            "            \"tags.ngram\": {" +
+            "              \"value\": \"?0\"," +
+            "              \"boost\": 1.5" +
             "            }" +
             "          }}" +
             "        ]" +
@@ -47,15 +63,15 @@ public interface WorkSpaceSearchRepository extends ElasticsearchRepository<WorkS
             "      {\"bool\": {" +
             "        \"should\": [" +
             "          {\"term\": {" +
-            "            \"vcsType\": {" +
+            "            \"vcsObject\": {" +
             "              \"value\": \"?0\"," +
-            "              \"boost\": 1.5" +
+            "              \"boost\": 1.0" +
             "            }" +
             "          }}," +
             "          {\"term\": {" +
-            "            \"vcsType.ngram\": {" +
+            "            \"vcsObject.ngram\": {" +
             "              \"value\": \"?0\"," +
-            "              \"boost\": 1.0" +
+            "              \"boost\": 0.5" +
             "            }" +
             "          }}" +
             "        ]" +
@@ -64,5 +80,5 @@ public interface WorkSpaceSearchRepository extends ElasticsearchRepository<WorkS
             "    \"minimum_should_match\": 1" +
             "  }" +
             "}")
-    List<WorkSpaceDocument> searchByKeyword(String keyword);
+    List<CardDocument> findByKeyword(String keyword);
 }

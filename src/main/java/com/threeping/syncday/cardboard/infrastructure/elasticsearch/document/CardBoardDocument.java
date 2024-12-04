@@ -3,10 +3,7 @@ package com.threeping.syncday.cardboard.infrastructure.elasticsearch.document;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.DateFormat;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import java.time.LocalDateTime;
 
@@ -16,13 +13,25 @@ import java.time.LocalDateTime;
 public class CardBoardDocument {
     @Id
     private Long cardboardId;
-    @Field(type = FieldType.Text, analyzer = "nori_mixed")
+    @MultiField(
+            mainField = @Field(type = FieldType.Text),
+            otherFields = {
+                    @InnerField(suffix = "ngram", type = FieldType.Text, analyzer = "ngram_analyzer")
+            }
+    )
     private String cardboardName;
+    @Field(type = FieldType.Keyword)
+    private Long projectId;
     @Field(type = FieldType.Keyword)
     private Long workspaceId;
     @Field(type = FieldType.Keyword)
     private String workspaceName;
-    @Field(type = FieldType.Text, analyzer = "nori_mixed")
+    @MultiField(
+            mainField = @Field(type = FieldType.Text),
+            otherFields = {
+                    @InnerField(suffix = "ngram", type = FieldType.Text, analyzer = "ngram_analyzer")
+            }
+    )
     private String vcsType;
     @Field(type = FieldType.Keyword)
     private String vcsMilestoneUrl;
