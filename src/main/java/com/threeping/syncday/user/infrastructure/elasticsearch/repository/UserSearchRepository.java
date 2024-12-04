@@ -1,5 +1,6 @@
 package com.threeping.syncday.user.infrastructure.elasticsearch.repository;
 
+import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.infrastructure.elasticsearch.document.UserSearchDocument;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
@@ -21,4 +22,5 @@ public interface UserSearchRepository extends ElasticsearchRepository<UserSearch
             + "  ]"
             + "}}")
     List<UserSearchDocument> searchByKeyword(String keyword);
+
 }
