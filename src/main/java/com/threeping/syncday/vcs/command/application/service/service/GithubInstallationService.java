@@ -17,6 +17,6 @@ public interface GithubInstallationService {
 
     List<GHProject> getOrganizationProjects(VCSInstallation vcsInstallation);
 
-    GHAppInstallationToken getGithubAppInstallationToken(Long installationId) throws IOException;
+    String getGithubAppInstallationToken(Long vcsInstallationId) throws IOException;
 
 }

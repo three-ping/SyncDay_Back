@@ -49,7 +49,7 @@ public class AppVcsController {
     }
 
     @GetMapping("/installations/{installationId}/installation-token")
-    public ResponseDTO<?> findInstallationToken(@PathVariable("installationId") Long installationId) throws IOException {
+    public ResponseDTO<?> githubInstallationToken(@PathVariable("installationId") Long installationId) throws IOException {
         return ResponseDTO.ok(githubInstallationService.getGithubAppInstallationToken(installationId));
     }
 }

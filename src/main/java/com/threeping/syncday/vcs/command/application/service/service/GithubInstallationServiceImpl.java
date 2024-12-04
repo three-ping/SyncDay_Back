@@ -146,7 +146,9 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
     }
 
     @Override
-    public GHAppInstallationToken getGithubAppInstallationToken(Long installationId) throws IOException {
+    public String getGithubAppInstallationToken(Long vcsInstallationId) throws IOException {
+        VCSInstallation vcsInst= vcsOrgRepository.findById(vcsInstallationId).orElse(null);
+
         String jwtToken = githubJwtUtils.generateJwtToken();
         log.info("jwtToken: {}", jwtToken);
         GitHub gitHub = new GitHubBuilder().withJwtToken(jwtToken).build();
@@ -155,9 +157,10 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
         log.info("Successfully authenticated as GitHub App: {}", app.getSlug());
 
         // Now try to get the installation
-        GHAppInstallationToken token= app.getInstallationById(installationId).createToken().create();
+        assert vcsInst != null;
+        GHAppInstallationToken token= app.getInstallationById(vcsInst.getInstallationId()).createToken().create();
         log.info("token: {}", token);
-        return token;
+        return token.getToken();
     }
 
     public List<ProjectV2> fetchOrganizationProjectsV2(GHAppInstallationToken token, String login ) throws IOException{
