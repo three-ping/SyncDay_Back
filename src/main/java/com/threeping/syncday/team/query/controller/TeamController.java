@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/team/")
+@RequestMapping("/api/team")
 public class TeamController {
 
-    private TeamService teamService;
+    private final TeamService teamService;
 
     @Autowired
     public TeamController(TeamService teamService) {
         this.teamService = teamService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseDTO<?> findAllTeams() {
         return ResponseDTO.ok(teamService.getAllTeams());
     }

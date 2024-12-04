@@ -21,8 +21,11 @@ public class TeamPostQueryController {
     @GetMapping("/{teamBoardId}")
     public ResponseDTO<?> findTeamBoardPostPage(@PathVariable long teamBoardId,
                                                 @RequestParam(defaultValue = "1") int page,
-                                                @RequestParam(defaultValue = "10") int pageSize){
-        PageInfo<TeamPostDTO> teamPostPageInfo = teamPostQueryService.findTeamBoardPostPage(teamBoardId,page,pageSize);
+                                                @RequestParam(defaultValue = "10") int pageSize,
+                                                @RequestParam(required = false) String searchType,
+                                                @RequestParam(required = false) String searchQuery){
+        PageInfo<TeamPostDTO> teamPostPageInfo
+                = teamPostQueryService.findTeamBoardPostPage(teamBoardId,page,pageSize,searchType,searchQuery);
         return ResponseDTO.ok(teamPostPageInfo);
     }
 
@@ -32,4 +35,5 @@ public class TeamPostQueryController {
         TeamPostDTO teamPostDTO = teamPostQueryService.findTeamPostDetail(teamBoardId,teamPostId);
         return ResponseDTO.ok(teamPostDTO);
     }
+
 }
