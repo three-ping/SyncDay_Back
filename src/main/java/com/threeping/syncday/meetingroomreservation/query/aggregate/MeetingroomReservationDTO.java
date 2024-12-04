@@ -31,4 +31,7 @@ public class MeetingroomReservationDTO {
 
     @JsonProperty("user_id")
     Long user;
+
+    @JsonProperty("meetingroom_place")
+    String meetingroomPlace;
 }
