@@ -58,6 +58,7 @@
         <result property="userId" column="user_id"></result>
         <result property="username" column="username"></result>
         <result property="status" column="status"></result>
+        <result property="notificationTime" column="notification_time"></result>
     </resultMap>
 
     <select id="selectMySchedulesByUserId" resultMap="scheduleResultMap" parameterType="long">
@@ -178,6 +179,7 @@
           LEFT JOIN TBL_USER PARTICIPANT -- 참여자와 조인
             ON US.USER_ID = PARTICIPANT.USER_ID
          WHERE US.USER_ID = #{userId}
-           AND DATE(S.START_TIME) = CURDATE();
+           AND DATE(S.START_TIME) = CURDATE()
+         ORDER BY S.START_TIME
     </select>
 </mapper>

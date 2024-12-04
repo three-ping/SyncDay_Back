@@ -9,4 +9,6 @@ public interface AppScheduleService {
     ScheduleDTO modifySchedule(ScheduleDTO newSchedule, Long scheduleId);
 
     ScheduleDTO deleteSchedule(Long scheduleId);
+
+    void sendMailToParticipants(ScheduleDTO createdScheduleDTO);
 }
