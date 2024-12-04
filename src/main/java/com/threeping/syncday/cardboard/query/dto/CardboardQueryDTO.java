@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 public class CardboardQueryDTO {
     private Long cardboardId;
     private String cardboardName;
+    private Long projectId;
     private Long workspaceId;
     private String workspaceName;
     private String vcsType;
