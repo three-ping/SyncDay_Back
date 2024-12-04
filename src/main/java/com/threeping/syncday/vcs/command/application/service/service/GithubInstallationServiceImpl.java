@@ -145,6 +145,21 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
 
     }
 
+    @Override
+    public GHAppInstallationToken getGithubAppInstallationToken(Long installationId) throws IOException {
+        String jwtToken = githubJwtUtils.generateJwtToken();
+        log.info("jwtToken: {}", jwtToken);
+        GitHub gitHub = new GitHubBuilder().withJwtToken(jwtToken).build();
+        log.info("gitHub: {}", gitHub.getInstallation());
+        GHApp app = gitHub.getApp();
+        log.info("Successfully authenticated as GitHub App: {}", app.getSlug());
+
+        // Now try to get the installation
+        GHAppInstallationToken token= app.getInstallationById(installationId).createToken().create();
+        log.info("token: {}", token);
+        return token;
+    }
+
     public List<ProjectV2> fetchOrganizationProjectsV2(GHAppInstallationToken token, String login ) throws IOException{
         return null;
     }

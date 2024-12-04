@@ -3,10 +3,13 @@ package com.threeping.syncday.vcs.command.application.controller;
 import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationCheckRequestVO;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationRequestVO;
+import com.threeping.syncday.vcs.command.application.service.service.GithubInstallationService;
 import com.threeping.syncday.vcs.command.application.service.service.VcsInstallationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -14,10 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class AppVcsController {
 
     private final VcsInstallationService vcsInstallationService;
-
+    private final GithubInstallationService githubInstallationService;
     @Autowired
-    public AppVcsController(VcsInstallationService vcsInstallationService) {
+    public AppVcsController(VcsInstallationService vcsInstallationService
+    , GithubInstallationService githubInstallationService) {
         this.vcsInstallationService = vcsInstallationService;
+        this.githubInstallationService = githubInstallationService;
     }
 
     @PostMapping("/install")
@@ -41,5 +46,10 @@ public class AppVcsController {
     @GetMapping("/installations/{installationId}/projects")
     public ResponseDTO<?> findProjectsByVcsInstallationId(@PathVariable("installationId") Long installationId){
         return ResponseDTO.ok(vcsInstallationService.getOrganizationProjects(installationId));
+    }
+
+    @GetMapping("/installations/{installationId}/installation-token")
+    public ResponseDTO<?> findInstallationToken(@PathVariable("installationId") Long installationId) throws IOException {
+        return ResponseDTO.ok(githubInstallationService.getGithubAppInstallationToken(installationId));
     }
 }

@@ -4,8 +4,10 @@ import com.threeping.syncday.vcs.command.aggreagate.entity.VCSInstallation;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationCheckRequestVO;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationRequestVO;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationResponse;
+import org.kohsuke.github.GHAppInstallationToken;
 import org.kohsuke.github.GHProject;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface GithubInstallationService {
@@ -14,4 +16,7 @@ public interface GithubInstallationService {
     VcsInstallationResponse handleGithubAppInstallation(VcsInstallationRequestVO requestVO);
 
     List<GHProject> getOrganizationProjects(VCSInstallation vcsInstallation);
+
+    GHAppInstallationToken getGithubAppInstallationToken(Long installationId) throws IOException;
+
 }
