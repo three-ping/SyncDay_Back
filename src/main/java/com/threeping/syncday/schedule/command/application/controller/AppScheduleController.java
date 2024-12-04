@@ -20,7 +20,7 @@ public class  AppScheduleController {
     private final AppScheduleService appScheduleService;
 
     @Autowired
-    public AppScheduleController(AppScheduleService appScheduleService, InfraScheduleServiceImpl infraScheduleServiceImpl) {
+    public AppScheduleController(AppScheduleService appScheduleService) {
         this.appScheduleService = appScheduleService;
     }
 
