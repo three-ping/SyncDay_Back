@@ -8,6 +8,7 @@ import com.threeping.syncday.vcs.command.aggreagate.entity.VcsType;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationCheckRequestVO;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationRequestVO;
 import com.threeping.syncday.vcs.command.aggreagate.vo.VcsInstallationResponse;
+import com.threeping.syncday.vcs.command.aggreagate.vo.github.ProjectV2;
 import com.threeping.syncday.vcs.command.domain.repository.VcsOrgRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.kohsuke.github.*;
@@ -144,6 +145,8 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
 
     }
 
-
+    public List<ProjectV2> fetchOrganizationProjectsV2(GHAppInstallationToken token, String login ) throws IOException{
+        return null;
+    }
 
 }
