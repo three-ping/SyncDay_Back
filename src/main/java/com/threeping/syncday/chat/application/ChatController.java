@@ -3,6 +3,7 @@ package com.threeping.syncday.chat.application;
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import com.threeping.syncday.chat.entity.ChatRoom;
 import com.threeping.syncday.chat.entity.ChatType;
+
 import com.threeping.syncday.user.command.application.service.UserCommandServiceImpl;
 import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.command.domain.repository.UserRepository;
@@ -75,14 +76,16 @@ public class ChatController {
     @PostMapping("/room/create")
     public ChatRoom createChatRoom(@RequestBody ChatRoom chatRoom) {
         log.info("새 채팅방 생성 요청: {}", chatRoom);
+//
+//        String chatRoomName = chatRoom.getChatRoomName();
+//        List<Long> memberIds = chatRoom.getMemberIds();
+//
+//        ChatRoom room = new ChatRoom();
+//        room.setChatRoomName(chatRoomName);
+//        room.setMemberIds(memberIds);
+
         return chatService.createChatRoom(chatRoom);
     }
-
-//    // 채팅방 입장
-//    @GetMapping("/room/{roomId}/join")
-//    public void joinChatRoom(@PathVariable String roomId, @RequestParam Long userId) {
-//        log.info("{}user: {} 채팅방 입장.", userId, roomId);
-//    }
 
     // 채팅방 나가기
     @PostMapping("/room/{roomId}/leave")
@@ -100,12 +103,14 @@ public class ChatController {
 //        log.info("채팅방 {} 이름 수정 요청: {}", roomId, newRoomName);
 //        return chatService.updateRoomName(roomId, newRoomName);
 //    }
-//    // 기존 채팅방에 멤버 초대(추가)
-//    @PostMapping("/room/{roomId}/invite")
-//    public ChatRoom inviteMember(@PathVariable String roomId, @RequestBody Map<String, List<String>> request) {
-//        List<String> userIds = request.get("userIds");
-//        return chatService.inviteUser(roomId, userIds);
-//    }
+
+    // 기존 채팅방에 멤버 초대(추가)
+    @PostMapping("/room/{roomId}/invite")
+    public ChatRoom inviteMember(@PathVariable String roomId, @RequestBody List<Long> userIds) {
+        log.info("채팅방에 새로운 멤버 추가: ", userIds);
+
+        return chatService.inviteUser(roomId, userIds);
+    }
 
 }
 

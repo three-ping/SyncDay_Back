@@ -9,16 +9,44 @@ import java.util.List;
 
 @Repository
 public interface CardboardSearchRepository extends ElasticsearchRepository<CardBoardDocument, Long> {
-    @Query("{"
-            + "\"bool\": {"
-            + "  \"should\": ["
-            + "    {\"wildcard\": {"
-            + "      \"cardboardName\": \"*?0*\""
-            + "    }},"
-            + "    {\"wildcard\": {"
-            + "      \"vcsType\": \"*?0*\""
-            + "    }}"
-            + "  ]"
-            + "}}")
+    @Query("{" +
+            "  \"bool\": {" +
+            "    \"should\": [" +
+            "      {\"bool\": {" +
+            "        \"should\": [" +
+            "          {\"term\": {" +
+            "            \"cardboardName\": {" +
+            "              \"value\": \"?0\"," +
+            "              \"boost\": 3.0" +
+            "            }" +
+            "          }}," +
+            "          {\"term\": {" +
+            "            \"cardboardName.ngram\": {" +
+            "              \"value\": \"?0\"," +
+            "              \"boost\": 2.0" +
+            "            }" +
+            "          }}" +
+            "        ]" +
+            "      }}," +
+            "      {\"bool\": {" +
+            "        \"should\": [" +
+            "          {\"term\": {" +
+            "            \"vcsType\": {" +
+            "              \"value\": \"?0\"," +
+            "              \"boost\": 1.5" +
+            "            }" +
+            "          }}," +
+            "          {\"term\": {" +
+            "            \"vcsType.ngram\": {" +
+            "              \"value\": \"?0\"," +
+            "              \"boost\": 1.0" +
+            "            }" +
+            "          }}" +
+            "        ]" +
+            "      }}" +
+            "    ]," +
+            "    \"minimum_should_match\": 1" +
+            "  }" +
+            "}")
     List<CardBoardDocument> searchByKeyword(String keyword);
 }

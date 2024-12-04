@@ -40,15 +40,12 @@ public class CardboardSearchServiceImpl implements CardboardSearchService {
                 .builder()
                 .cardboardId(doc.getCardboardId())
                 .cardboardName(doc.getCardboardName())
+                .projectId(doc.getProjectId())
                 .workspaceId(doc.getWorkspaceId())
                 .workspaceName(doc.getWorkspaceName())
                 .vcsType(doc.getVcsType())
                 .vcsMilestoneUrl(doc.getVcsMilestoneUrl())
-                .createdAt(convertToString(doc.getCreatedAt()))
+                .createdAt((doc.getCreatedAt()))
                 .build();
-    }
-
-    private String convertToString(LocalDateTime createdAt) {
-        return createdAt.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
     }
 }
