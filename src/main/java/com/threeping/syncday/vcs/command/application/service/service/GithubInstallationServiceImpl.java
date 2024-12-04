@@ -129,7 +129,10 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
                 org.getRepositories().forEach((name, repo) ->
                         log.info("Repository: {}", name));
 
-                return null;
+
+                List<GHProject> projs = org.listProjects().toList();
+                log.info("projs: {}", projs);
+                return projs;
             }
             else{
                 List<GHProject> projs = user.listProjects().toList();
