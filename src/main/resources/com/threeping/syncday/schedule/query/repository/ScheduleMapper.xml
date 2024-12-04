@@ -46,6 +46,20 @@
         <result property="participationStatus" column="status"/>
     </resultMap>
 
+    <resultMap id="MyTodayScheduleResultMap" type="com.threeping.syncday.schedule.query.aggregate.MyTodayScheduleDTO">
+        <id property="scheduleId" column="schedule_id"></id>
+        <result property="title" column="title"></result>
+        <result property="content" column="content"></result>
+        <result property="startTime" column="start_time"></result>
+        <result property="endTime" column="end_time"></result>
+        <result property="updateTime" column="update_time"></result>
+        <result property="meetingStatus" column="meeting_status"></result>
+        <result property="meetingroomId" column="meetingroom_id"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="username" column="username"></result>
+        <result property="status" column="status"></result>
+    </resultMap>
+
     <select id="selectMySchedulesByUserId" resultMap="scheduleResultMap" parameterType="long">
         SELECT S.SCHEDULE_ID
              , S.TITLE
@@ -67,7 +81,6 @@
                SELECT US.SCHEDULE_ID
                  FROM TBL_USER_SCHEDULE US
                 WHERE US.USER_ID = #{userId}
-                  AND US.STATUS = 'ATTEND'
          )
     </select>
 
@@ -140,5 +153,31 @@
              , S.USER_ID
         FROM TBL_SCHEDULE S
         WHERE S.SCHEDULE_ID = #{scheduleId}
+    </select>
+
+    <select id="selectMyTodaySchedule" resultMap="MyTodayScheduleResultMap" parameterType="long">
+        SELECT S.SCHEDULE_ID
+             , S.TITLE
+             , S.CONTENT
+             , S.START_TIME
+             , S.END_TIME
+             , S.UPDATE_TIME
+             , S.MEETING_STATUS
+             , S.MEETINGROOM_ID
+             , S.USER_ID
+             , OWNER.USERNAME AS username -- 일정 소유자의 이름
+             , US.USER_ID AS user_id_from_participant
+             , PARTICIPANT.USERNAME AS username_from_user -- 참여자의 이름
+             , US.STATUS AS status
+             , US.NOTIFICATION_TIME AS notification_time -- 알림 시간
+          FROM TBL_SCHEDULE S
+          LEFT JOIN TBL_USER OWNER -- 일정 소유자와 조인
+            ON S.USER_ID = OWNER.USER_ID
+          LEFT JOIN TBL_USER_SCHEDULE US
+            ON S.SCHEDULE_ID = US.SCHEDULE_ID
+          LEFT JOIN TBL_USER PARTICIPANT -- 참여자와 조인
+            ON US.USER_ID = PARTICIPANT.USER_ID
+         WHERE US.USER_ID = #{userId}
+           AND DATE(S.START_TIME) = CURDATE();
     </select>
 </mapper>
