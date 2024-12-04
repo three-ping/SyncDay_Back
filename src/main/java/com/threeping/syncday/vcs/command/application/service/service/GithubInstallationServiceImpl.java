@@ -45,11 +45,7 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
         return Boolean.FALSE;
     }
 
-    private GitHub createInstallationGitHub(String installationToken) throws IOException {
-        return new GitHubBuilder()
-                .withOAuthToken(installationToken)
-                .build();
-    }
+
 
     @Override
     public VcsInstallationResponse handleGithubAppInstallation(VcsInstallationRequestVO requestVO) {
@@ -114,48 +110,37 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
             log.info("Successfully authenticated as GitHub App: {}", app.getSlug());
 
             // Now try to get the installation
-            GHAppInstallation installation;
-            try {
-                // First log the current installation ID you're trying to use
-                log.info("Attempting to access installation ID: {}", vcsInstallation.getInstallationId());
+            GHAppInstallationToken token= app.getInstallationById(vcsInstallation.getInstallationId()).createToken().create();
 
-                // List all available installations
-                PagedIterable<GHAppInstallation> installations = app.listInstallations();
+            log.info("token: {}", token);
+            log.debug("exp: {}",token.getExpiresAt());
+            log.info("token.getPermissions(): {}", token.getPermissions());
+            GHAppInstallation installation =app.getInstallationById(vcsInstallation.getInstallationId());
+            log.info("installation: {}", installation);
+            GHUser user = installation.getAccount();
+            log.info("user: {}", user);
+            if (installation.getTargetType().equals(GHTargetType.ORGANIZATION)){
+                log.info("installation targte type: Organization");
+                GitHub newGithubClient = new GitHubBuilder().withAppInstallationToken(token.getToken()).build();
+                GHOrganization org = newGithubClient.getOrganization(user.getLogin());
+                log.info("org: {}", org);
+                log.info("Installation token permissions: {}", token.getPermissions());
+                log.info("Listing repositories:");
+                org.getRepositories().forEach((name, repo) ->
+                        log.info("Repository: {}", name));
 
-                // Log all available installations
-                installations.forEach(inst -> {
-                    log.info("Available installation - ID: {}, Account: {}",
-                            inst.getId(),
-                            inst.getAccount().getLogin());
-                });
-
-                // Then try your original code
-                installation = app.getInstallationById(vcsInstallation.getInstallationId());
-                log.info("Found installation for org: {}", installation.getAccount().getLogin());
-
-                String token = installation.createToken().create().getToken();
-                log.info("token: {}", token);
-
-                GitHub installationGitHub = new GitHubBuilder().withJwtToken(token).build();
-                log.info("installationGitHub: {}", installationGitHub);
-                if (vcsInstallation.getVcsTargetType() == GHTargetType.USER) {
-                    GHUser user = installationGitHub.getUser(vcsInstallation.getVcsOrgLogin());
-                    return user.listProjects().toList();
-                } else {
-                    GHOrganization organization = installationGitHub.getOrganization(vcsInstallation.getVcsOrgLogin());
-                    return organization.listProjects().toList();
-
-                }
-            } catch (IOException e) {
-                log.error("Error accessing GitHub installations", e);
-                throw new RuntimeException(e);
+                return null;
             }
-
-
-
+            else{
+                List<GHProject> projs = user.listProjects().toList();
+            }
+            return null;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
+
+
+
 }

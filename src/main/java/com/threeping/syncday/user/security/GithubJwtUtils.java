@@ -63,44 +63,6 @@ public class GithubJwtUtils {
         return kf.generatePrivate(spec);
     }
 
-    public String createJwt() throws Exception {
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.RS256;
-        long currentTimeSeconds = System.currentTimeMillis() / 1000;
-        long expirationTimeSeconds = currentTimeSeconds + (TOKEN_EXPIRY_MINUTES * 60);
-
-        long nowMillis = System.currentTimeMillis();
-        long expMillis = nowMillis +  60 * 1000;
-        Date now = new Date(nowMillis);
-        Date exp = new Date(expMillis);
-
-        // Get GitHub's server time
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("https://api.github.com/", String.class);
-        HttpHeaders headers = response.getHeaders();
-        long githubTime = headers.getDate();
-        long timeDiff = System.currentTimeMillis() - githubTime;
-        log.info("timeDiff: {}", timeDiff);
-        System.out.println("Time difference with GitHub (ms): " + timeDiff);
-
-        // Use classpath or file system path as appropriate
-        Key signingKey = getPrivateKey(privateKeyPath);
-        log.info("signingKey: {}", signingKey);
-        validatePrivateKey(signingKey);
-        JwtBuilder builder = Jwts.builder()
-                .setIssuedAt(now)
-                .setIssuer(githubAppId)
-                .setExpiration(exp)
-//                .setIssuer(githubAppId)
-                .signWith(signingKey, SignatureAlgorithm.RS256);
-
-        String token = builder.compact();
-        log.debug("Generated JWT token for GitHub App {}", githubAppId);
-        log.info("JWT Token structure: {}", token.split("\\.").length); // Should be 3
-        validateToken(token);
-        log.info("token: {}", token);
-        debugToken(token);
-        return token;
-    }
 
     private void validateToken(String token) {
         String[] parts = token.split("\\.");
@@ -166,7 +128,7 @@ public class GithubJwtUtils {
             log.info("timeDiff: {}", timeDiff);
             System.out.println("Time difference with GitHub (ms): " + timeDiff);
             long nowMillis = System.currentTimeMillis() - timeDiff;
-            long expMillis = nowMillis + 60 * 1000;
+            long expMillis = nowMillis + 10 * 60 * 1000;
             // Build JWT with numeric timestamps for iat and exp
             String token = Jwts.builder()
                     .setHeaderParam("alg", "RS256")
