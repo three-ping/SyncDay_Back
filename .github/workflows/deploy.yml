@@ -275,7 +275,7 @@ jobs:
       # Generate a deployment package
       - name: Create Procfile
         run: |
-          echo "web: java -jar app.jar" > Procfile
+          echo "web: appstart" > Procfile
 
       - name: Generate deployment package
         run: |
