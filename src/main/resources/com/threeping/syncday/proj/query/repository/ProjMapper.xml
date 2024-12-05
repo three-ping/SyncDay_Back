@@ -32,20 +32,6 @@
         <result property="createdAt" column="created_at"/>
         <result property="progressStatus" column="progress_status"/>
         <result property="vcsProjUrl" column="vcs_proj_url"/>
-        <association property="vcsInstallation" javaType="com.threeping.syncday.vcs.command.aggreagate.entity.VCSInstallation">
-            <id property="id" column="installation_id"/>
-            <result property="userId" column="user_id"/>
-            <result property="vcsType" column="vcs_type"/>
-            <result property="vcsOrgLogin" column="vcs_org_login"/>
-            <result property="vcsOrgUrl" column="vcs_org_url"/>
-            <result property="avatarUrl" column="avatar_url"/>
-            <result property="vcsOrgId" column="vcs_org_id"/>
-            <result property="vcsOrgType" column="vcs_org_type"/>
-            <result property="installationId" column="installation_id"/>
-            <result property="status" column="status"/>
-            <result property="createdAt" column="installation_created_at"/>
-            <result property="updatedAt" column="installation_updated_at"/>
-        </association>
         <collection property="workspaces" ofType="com.threeping.syncday.workspace.query.aggregate.WorkspaceDTO">
             <id property="workspaceId" column="workspace_id"/>
             <result property="workspaceName" column="workspace_name"/>
