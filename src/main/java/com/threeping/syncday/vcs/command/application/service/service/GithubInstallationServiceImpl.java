@@ -83,9 +83,9 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
                 log.info("vcsOrg: {}", vcsOrg);
                 VCSInstallation savedInstallation = vcsOrgRepository.save(vcsOrg);
                 log.info("Saved installation: {}", savedInstallation);
-                ProjDTO proj = appProjService.updateVcsInstallation(requestVO.getProjId(), requestVO.getUserId(), savedInstallation.getId());
+//                ProjDTO proj = appProjService.updateVcsInstallation(requestVO.getProjId(), requestVO.getUserId(), savedInstallation.getId());
 
-                return new VcsInstallationResponse(savedInstallation, proj, token.getToken());
+//                return new VcsInstallationResponse(savedInstallation, proj, token.getToken());
 
             } catch (IOException e) {
                 log.error("GitHub API error", e);

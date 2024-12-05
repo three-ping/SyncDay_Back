@@ -11,5 +11,4 @@ public interface AppProjService {
 
     ProjDTO deleteProj(java.lang.Long projId);
 
-    ProjDTO updateVcsInstallation(Long projId,Long userId, Long vcsInstallationId);
 }

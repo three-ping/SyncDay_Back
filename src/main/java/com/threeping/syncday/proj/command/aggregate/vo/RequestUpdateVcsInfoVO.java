@@ -15,8 +15,6 @@ public class RequestUpdateVcsInfoVO {
     @JsonProperty("proj_id")
     private Long projId;
 
-    @JsonProperty("vcs_installation")
-    private VCSInstallation vcsInstallation;
 
     @JsonProperty("vcs_proj_url")
     private String vcsProjUrl;

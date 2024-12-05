@@ -25,8 +25,6 @@ public class ProjVO {
     @JsonProperty("end_time")
     Timestamp endTime;
 
-    @JsonProperty("vcs_installation")
-    VCSInstallation vcsInstallation;
 
     @JsonProperty("vcs_proj_url")
     String vcsProjUrl;

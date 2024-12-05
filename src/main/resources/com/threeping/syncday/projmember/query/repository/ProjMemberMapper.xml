@@ -65,7 +65,8 @@
         <result property="endTime" column="end_time"/>
         <result property="createdAt" column="proj_created_at"/>
         <result property="progressStatus" column="proj_progress_status"/>
-        <result property="vcsInstallationId" column="vcs_installation_id"/>
+<!--        <result property="vcsInstallationId" column="vcs_installation_id"/>-->
+
         <result property="vcsProjUrl" column="vcs_proj_url"/>
         <collection property="workspaces" resultMap="workspaceResultMap"/>
     </resultMap>

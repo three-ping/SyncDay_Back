@@ -33,9 +33,6 @@ public class  Proj {
     private Byte progressStatus;
 
 
-    @Column(name = "vcs_installation_id")
-    private Long vcsInstallationId;
-
     @Column(name="vcs_proj_url")
     private String vcsProjUrl;
 

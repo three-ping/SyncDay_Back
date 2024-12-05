@@ -77,19 +77,5 @@ public class AppProjServiceImpl implements AppProjService {
         return modelMapper.map(existingProj, ProjDTO.class);
     }
 
-    @Override
-    public ProjDTO updateVcsInstallation(Long projId, Long userId, Long vcsInstallationId) {
 
-        Proj foundProj = projRepository.findByProjId(projId);
-        if (foundProj == null) {
-            throw new CommonException(ErrorCode.PROJ_NOT_FOUND);
-        }
-        String userRole = infraProjService.requestParticipationStatus(userId, projId);
-        if (userRole.equals("OWNER")) {
-            foundProj.setVcsInstallationId(vcsInstallationId);
-        }
-        Proj savedProj = projRepository.save(foundProj);
-        log.info("savedProj: {}", savedProj);
-        return modelMapper.map(savedProj, ProjDTO.class);
-    }
 }
