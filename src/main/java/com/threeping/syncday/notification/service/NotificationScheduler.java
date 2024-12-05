@@ -21,7 +21,7 @@ public class NotificationScheduler {
         this.infraNotificationService = infraNotificationService;
     }
 
-//    @Scheduled(cron = "0 5/10 * * * ?")
+    @Scheduled(cron = "0 5/10 * * * ?")
     public void scheduleNotificationJob(){
         log.info("일정 알림 scheduling job 실행 시작");
 

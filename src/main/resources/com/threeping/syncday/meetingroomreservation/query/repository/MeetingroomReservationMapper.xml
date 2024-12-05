@@ -6,8 +6,13 @@
     <resultMap id="meetingroomReservationResultMap" type="com.threeping.syncday.meetingroomreservation.query.aggregate.MeetingroomReservation">
         <id property="meetingroomReservationId" column="meetingroom_reservation_id"/>
         <result property="meetingTime" column="meeting_time"/>
+        <result property="title" column="title"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
         <result property="meetingRoom" column="meetingroom_id"/>
         <result property="schedule" column="schedule_id"/>
+        <result property="user" column="user_id"/>
+        <result property="meetingroomPlace" column="meetingroom_place"/>
     </resultMap>
 
     <select id="selectAllMeetingroomReservations" resultMap="meetingroomReservationResultMap">
@@ -41,5 +46,35 @@
         JOIN TBL_MEETINGROOM m ON r.MEETINGROOM_ID = m.MEETINGROOM_ID
         WHERE m.MEETINGROOM_PLACE = #{meetingRoomPlace}
     </select>
+
+<!--    <select id="selectMeetingroomReservationById" resultMap="meetingroomReservationResultMap">-->
+<!--        SELECT-->
+<!--        r.MEETINGROOM_RESERVATION_ID,-->
+<!--        r.MEETING_TIME,-->
+<!--        r.MEETINGROOM_ID,-->
+<!--        r.SCHEDULE_ID-->
+<!--        FROM TBL_MEETINGROOM_RESERVATION r-->
+<!--        WHERE r.SCHEDULE_ID = #{scheduleId}-->
+<!--    </select>-->
+
+    <select id="selectMeetingroomReservationById" resultMap="meetingroomReservationResultMap">
+        SELECT
+        r.MEETINGROOM_RESERVATION_ID AS meetingroom_reservation_id,
+        r.MEETING_TIME AS meeting_time,
+        s.TITLE AS title,
+        s.START_TIME AS start_time,
+        s.END_TIME AS end_time,
+        r.MEETINGROOM_ID AS meetingroom_id,
+        r.SCHEDULE_ID AS schedule_id,
+        s.USER_ID AS user_id,
+        m.MEETINGROOM_PLACE AS meetingroom_place
+        FROM TBL_MEETINGROOM_RESERVATION r
+        JOIN TBL_SCHEDULE s ON r.SCHEDULE_ID = s.SCHEDULE_ID
+        JOIN TBL_MEETINGROOM m on r.MEETINGROOM_ID = m.MEETINGROOM_ID
+        WHERE r.SCHEDULE_ID = #{scheduleId}
+    </select>
+
+
+
 
 </mapper>

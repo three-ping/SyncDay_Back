@@ -16,5 +16,9 @@ public class TeamPostDTO {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private Long userId;
+    private Long comments;
+    private String userName;
+    private String userPosition;
+    private String userProfilePhoto;
     private Long teamBoardId;
 }

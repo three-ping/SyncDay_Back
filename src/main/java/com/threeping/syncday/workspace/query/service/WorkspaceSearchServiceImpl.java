@@ -45,11 +45,7 @@ public class WorkspaceSearchServiceImpl implements WorkspaceSearchService {
                 .vcsType(doc.getVcsType())
                 .vcsRepoName(doc.getVcsRepoName())
                 .vcsRepoUrl(doc.getVcsRepoUrl())
-                .createdAt(convertToString(doc.getCreatedAt()))
+                .createdAt((doc.getCreatedAt()))
                 .build();
-    }
-
-    private String convertToString(LocalDateTime createdAt) {
-        return createdAt.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
     }
 }

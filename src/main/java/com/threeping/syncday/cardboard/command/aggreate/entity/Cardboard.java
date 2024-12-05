@@ -1,5 +1,6 @@
 package com.threeping.syncday.cardboard.command.aggreate.entity;
 
+import com.threeping.syncday.cardboard.query.config.CardboardEntityListener;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
+@EntityListeners(CardboardEntityListener.class)
 @Table(name = "tbl_cardboard")
 public class Cardboard {
     @Id
