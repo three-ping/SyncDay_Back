@@ -1,7 +1,6 @@
 package com.threeping.syncday.proj.query.aggregate.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.threeping.syncday.vcs.command.aggreagate.entity.VCSInstallation;
 import com.threeping.syncday.workspace.query.aggregate.WorkspaceDTO;
 import lombok.Data;
 

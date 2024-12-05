@@ -1,7 +1,6 @@
 package com.threeping.syncday.proj.command.aggregate.entity;
 
 import com.threeping.syncday.proj.query.config.ProjectEntityListener;
-import com.threeping.syncday.vcs.command.aggreagate.entity.VCSInstallation;
 import jakarta.persistence.*;
 import lombok.Data;
 

@@ -7,7 +7,6 @@ import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
 import com.threeping.syncday.proj.command.aggregate.entity.Proj;
 import com.threeping.syncday.proj.command.domain.repository.ProjRepository;
 import com.threeping.syncday.proj.command.infrastructure.service.InfraProjService;
-import com.threeping.syncday.vcs.command.aggreagate.entity.VCSInstallation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,6 @@ public class AppProjServiceImpl implements AppProjService {
         foundProj.setProjName(projVO.getProjName());
         foundProj.setStartTime(projVO.getStartTime());
         foundProj.setEndTime(projVO.getEndTime());
-//        foundProj.setVcsInstallationId();
         foundProj.setVcsProjUrl(projVO.getVcsProjUrl());
 
         Proj modifiedProj = projRepository.save(foundProj);
