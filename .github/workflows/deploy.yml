@@ -2,7 +2,7 @@ name: Deploy to AWS Elastic Beanstalk
 
 on:
   push:
-    branches: [ deploytest ]
+    branches: [ feature/deploy ]
 
 jobs:
   deploy:
@@ -261,6 +261,9 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew clean build -x test
+        
+      - name: Build with Gradle with debug
+        run: ./gradlew test --debug
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
