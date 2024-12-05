@@ -29,7 +29,6 @@ public class ProjDTO {
     @JsonProperty("vcs_type")
     String vcsType;
 
-
     @JsonProperty("vcs_proj_url")
     String vcsProjUrl;
 }
