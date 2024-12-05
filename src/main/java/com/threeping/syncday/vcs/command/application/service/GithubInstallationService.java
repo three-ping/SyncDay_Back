@@ -1,4 +1,5 @@
 package com.threeping.syncday.vcs.command.application.service;
 
-public interface AppVcsOrgService {
+
+public interface GithubInstallationService {
 }
