@@ -8,17 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/vcs/user")
-public class VcsUserController {
+@RequestMapping("/api/vcs")
+public class VcsInstallController {
 
     private final VcsUserService vcsUserService;
 
     @Autowired
-    public VcsUserController(VcsUserService vcsUserService) {
+    public VcsInstallController(VcsUserService vcsUserService) {
         this.vcsUserService = vcsUserService;
     }
 
-    @GetMapping("/check")
+    @GetMapping("/user/check")
     public ResponseDTO<?> checkUserGithubInstallation(@RequestParam("userId") Long userId, @RequestParam("vcsType") VcsType vcsType) {
         return ResponseDTO.ok(vcsUserService.checkUserInstallation(new ReqUserInstallationCheck(userId, vcsType)));
     }
