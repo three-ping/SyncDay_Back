@@ -174,7 +174,8 @@ jobs:
 
       - name: Create docker-compose.yml
         run: |
-          cat > docker-compose.yml <<EOL
+          cat > docker-compose.yml << 'EOF'
+          version: '3.8'
           services:
             app:
               build: .
@@ -231,7 +232,7 @@ jobs:
                 - /var/app/current/config/elasticsearch/indices:/usr/share/elasticsearch/config/indices
               ports:
                 - "9200:9200"
-          EOL
+          EOF
         env:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
@@ -249,6 +250,9 @@ jobs:
           APP_ID: ${{ secrets.APP_ID }}
           APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 
+      - name: Validate docker-compose.yml
+        run: docker compose config
+
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
@@ -261,6 +265,7 @@ jobs:
           cp -r .ebextensions deploy/
           cp docker-compose.yml deploy/
           cp Dockerfile deploy/
+          cp springboot/build/libs/*.jar deploy/app.jar
           cd deploy && zip -r deploy.zip .
 
       - name: Deploy to EB
