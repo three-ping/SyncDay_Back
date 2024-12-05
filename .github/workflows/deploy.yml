@@ -276,7 +276,13 @@ jobs:
       - name: Generate deployment package
         run: |
           mkdir -p deploy
-          cp ./build/libs/*.jar deploy/app.jar
+          JAR_FILE=$(ls ./build/libs/*SNAPSHOT.jar | grep -v plain)
+          if [ -n "$JAR_FILE" ]; then
+            cp "$JAR_FILE" deploy/app.jar
+          else
+            echo "No executable JAR file found!"
+            exit 1
+          fi
           cp Procfile deploy/Procfile
           cp -r .ebextensions deploy/.ebextensions
           cp docker-compose.yml deploy/
