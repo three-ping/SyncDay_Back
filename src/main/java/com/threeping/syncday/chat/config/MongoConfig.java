@@ -62,8 +62,8 @@ public class MongoConfig {
 
             // 채팅방 더미 데이터 생성
             ChatRoom room1 = createChatRoom(
-                    String.join(",", user2.getUserName(), user11.getUserName()),
-                    Arrays.asList(user2.getUserId(), user11.getUserId())
+                    String.join(",", user1.getUserName(), user11.getUserName()),
+                    Arrays.asList(user1.getUserId(), user11.getUserId())
             );
 
             ChatRoom room2 = createChatRoom(
@@ -72,8 +72,43 @@ public class MongoConfig {
             );
 
             ChatRoom room3 = createChatRoom(
-                    String.join(",", user4.getUserName(), user6.getUserName(), user9.getUserName(), user11.getUserName()),
-                    Arrays.asList(user4.getUserId(), user6.getUserId(), user9.getUserId(),user9.getUserId()));
+                    String.join(",", user1.getUserName(), user6.getUserName(), user9.getUserName(), user11.getUserName()),
+                    Arrays.asList(user1.getUserId(), user6.getUserId(), user9.getUserId(),user9.getUserId()));
+
+            ChatRoom room4 = createChatRoom(
+                    String.join(",", user8.getUserName(), user9.getUserName(), user10.getUserName()),
+                    Arrays.asList(user8.getUserId(), user9.getUserId(), user10.getUserId())
+            );
+
+            ChatRoom room5 = createChatRoom(
+                    String.join(",", user1.getUserName(), user11.getUserName(), user7.getUserName()),
+                    Arrays.asList(user1.getUserId(), user11.getUserId(), user7.getUserId())
+            );
+
+            ChatRoom room6 = createChatRoom(
+                    String.join(",", user2.getUserName(), user4.getUserName(), user6.getUserName()),
+                    Arrays.asList(user2.getUserId(), user4.getUserId(), user6.getUserId())
+            );
+
+            ChatRoom room7 = createChatRoom(
+                    String.join(",", user3.getUserName(), user5.getUserName(), user9.getUserName()),
+                    Arrays.asList(user3.getUserId(), user5.getUserId(), user9.getUserId())
+            );
+
+            ChatRoom room8 = createChatRoom(
+                    String.join(",", user10.getUserName(), user11.getUserName()),
+                    Arrays.asList(user10.getUserId(), user11.getUserId())
+            );
+
+            ChatRoom room9 = createChatRoom(
+                    String.join(",", user8.getUserName(), user2.getUserName(), user1.getUserName()),
+                    Arrays.asList(user8.getUserId(), user2.getUserId(), user1.getUserId())
+            );
+
+            ChatRoom room10 = createChatRoom(
+                    String.join(",", user6.getUserName(), user4.getUserName(), user3.getUserName(), user5.getUserName()),
+                    Arrays.asList(user6.getUserId(), user4.getUserId(), user3.getUserId(), user5.getUserId())
+            );
 
             chatRoomRepository.saveAll(Arrays.asList(room1, room2, room3));
 
