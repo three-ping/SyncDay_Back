@@ -20,6 +20,54 @@ jobs:
       - name: Install envsubst
         run: sudo apt-get install -y gettext
 
+      - name: Create .ebextensions
+        run: |
+          mkdir -p .ebextensions
+          cat > .ebextensions/01-docker-compose.config <<EOL
+          files:
+            "/etc/docker/config.json":
+              mode: "000644"
+              owner: root
+              group: root
+              content: |
+                {
+                  "mountpoints": {
+                    "/var/app/current": {
+                      "source": "/var/app/current",
+                      "destination": "/var/app/current",
+                      "type": "bind",
+                      "readonly": false
+                    }
+                  }
+                }
+          EOL
+          
+          cat > .ebextensions/02-nginx-proxy.config <<EOL
+          files:
+            "/etc/nginx/conf.d/proxy.conf":
+              mode: "000644"
+              owner: root
+              group: root
+              content: |
+                upstream docker {
+                  server 127.0.0.1:5000;
+                  keepalive 256;
+                }
+          
+                server {
+                  listen 80;
+          
+                  location / {
+                      proxy_pass  http://docker;
+                      proxy_set_header  Connection  "";
+                      proxy_http_version  1.1;
+                      proxy_set_header  Host  \$host;
+                      proxy_set_header  X-Real-IP \$remote_addr;
+                      proxy_set_header  X-Forwarded-For \$proxy_add_x_forwarded_for;
+                  }
+                }
+          EOL
+
       - name: Create application.yml
         run: |
           mkdir -p src/main/resources
@@ -95,7 +143,7 @@ jobs:
           github:
             app:
               id: ${APP_ID}
-              private-key: ${PRIVATE_KEY}
+              private-key: ${APP_PRIVATE_KEY}
             webhook:
               secret: ${WEBHOOK_SECRET}
             oauth2:
@@ -122,7 +170,7 @@ jobs:
           OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
           APP_ID: ${{ secrets.APP_ID }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Create docker-compose.yml
         run: |
