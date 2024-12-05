@@ -181,63 +181,73 @@ jobs:
               ports:
                 - "5000:5000"
               environment:
-                SPRING_PROFILES_ACTIVE: prod
-                SPRING_DATASOURCE_URL: jdbc:mariadb://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}
-                SPRING_DATASOURCE_USERNAME: ${RDS_USERNAME}
-                SPRING_DATASOURCE_PASSWORD: ${RDS_PASSWORD}
-                SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/chatdb
-                SPRING_DATA_REDIS_HOST: redis
-                SPRING_ELASTICSEARCH_URIS: http://elasticsearch:9200
-                APP_CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+                - SPRING_PROFILES_ACTIVE=prod
+                - SPRING_DATASOURCE_URL=jdbc:mariadb://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}
+                - SPRING_DATASOURCE_USERNAME=${RDS_USERNAME}
+                - SPRING_DATASOURCE_PASSWORD=${RDS_PASSWORD}
+                - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/chatdb
+                - SPRING_DATA_REDIS_HOST=redis
+                - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
+                - APP_CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
+                - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
+                - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
+                - APP_FRONTEND_URL=${FRONTEND_URL}
+                - TOKEN_SECRET=${JWT_SECRET}
+                - GITHUB_APP_ID=${APP_ID}
+                - GITHUB_APP_PRIVATE_KEY=${APP_PRIVATE_KEY}
+                - GITHUB_WEBHOOK_SECRET=${WEBHOOK_SECRET}
+                - GITHUB_OAUTH2_CLIENT_ID=${OAUTH_CLIENT_ID}
+                - GITHUB_OAUTH2_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
+              volumes:
+                - /var/app/current:/app
               depends_on:
                 - mongodb
                 - redis
                 - elasticsearch
-          
+
             mongodb:
               image: mongo:latest
               volumes:
-                - mongodb_data:/data/db
+                - /var/app/current/mongodb_data:/data/db
               ports:
                 - "27017:27017"
-          
+
             redis:
               image: redis:latest
               command: redis-server --notify-keyspace-events Ex
               volumes:
-                - redis_data:/data
+                - /var/app/current/redis_data:/data
               ports:
                 - "6379:6379"
-          
+
             elasticsearch:
               image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
-              command: >
-                bash -c '
-                  bin/elasticsearch-plugin install analysis-nori;
-                  /usr/local/bin/docker-entrypoint.sh elasticsearch
-                '
               environment:
-                discovery.type: single-node
-                ES_JAVA_OPTS: -Xms512m -Xmx512m
-                xpack.security.enabled: false
+                - discovery.type=single-node
+                - ES_JAVA_OPTS=-Xms512m -Xmx512m
+                - xpack.security.enabled=false
               volumes:
-                - es_data:/usr/share/elasticsearch/data
-                - ./config/elasticsearch/indices:/usr/share/elasticsearch/config/indices
+                - /var/app/current/es_data:/usr/share/elasticsearch/data
+                - /var/app/current/config/elasticsearch/indices:/usr/share/elasticsearch/config/indices
               ports:
                 - "9200:9200"
-          
-          volumes:
-            mongodb_data:
-            redis_data:
-            es_data:
           EOL
         env:
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
           RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
           RDS_PORT: ${{ secrets.RDS_PORT }}
           RDS_DB_NAME: ${{ secrets.RDS_DB_NAME }}
           RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
           RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
           CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
+          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          APP_ID: ${{ secrets.APP_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
