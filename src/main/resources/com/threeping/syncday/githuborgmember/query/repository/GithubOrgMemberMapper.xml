@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.threeping.syncday.githuborgmember.query.repository.GithubOrgMemberMapper">
+
+    <resultMap id="GithubOrgMemberResultMap" type="com.threeping.syncday.githuborgmember.query.aggreagate.dto.GithubOrgMemberDTO">
+        <id property="githubOrgMemberId" column="github_org_member_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="githubOrgId" column="github_org_id"/>
+        <result property="githubUsername" column="github_username"/>
+        <result property="membershipState" column="membership_state"/>
+        <result property="role" column="role"/>
+        <result property="lastSyncedAt" column="last_synced_at"/>
+        <result property="connectedAt" column="connected_at"/>
+    </resultMap>
+    <select id="findByUserId" resultMap="GithubOrgMemberResultMap">
+        SELECT
+            github_org_member_id,
+            user_id,
+            github_org_id,
+            github_username,
+            membership_state,
+            role,
+            last_synced_at,
+            connected_at
+        FROM github_org_member
+        WHERE user_id = #{userId}
+    </select>
+    <!-- Example select statement -->
+    <select id="findById" resultMap="GithubOrgMemberResultMap">
+        SELECT
+            github_org_member_id,
+            user_id,
+            github_org_id,
+            github_username,
+            membership_state,
+            role,
+            last_synced_at,
+            connected_at
+        FROM github_org_member
+        WHERE github_org_member_id = #{id}
+    </select>
+
+    <!-- Example select all statement -->
+    <select id="findAll" resultMap="GithubOrgMemberResultMap">
+        SELECT
+            github_org_member_id,
+            user_id,
+            github_org_id,
+            github_username,
+            membership_state,
+            role,
+            last_synced_at,
+            connected_at
+        FROM github_org_member
+    </select>
+
+</mapper>

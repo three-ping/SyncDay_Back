@@ -4,16 +4,17 @@ import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 
-@IdClass(GithubOrgMember.class)
 @Entity
 @Table(name="TBL_GITHUB_ORG_MEMBER")
 public class GithubOrgMember {
 
     @Id
+    @Column(name="github_org_member_id")
+    private Long githubOrgMemberId;
+
     @Column(name="user_id")
     private Long userId;
 
-    @Id
     @Column(name="github_org_id")
     private Long githubOrgId;
 
