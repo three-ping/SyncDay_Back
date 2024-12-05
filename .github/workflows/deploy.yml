@@ -267,11 +267,16 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
+      - name: Print working directory
+        run: pwd
+
+      - name: List build directory
+        run: ls -la ./build/libs
       # Generate a deployment package
       - name: Generate deployment package
         run: |
           mkdir -p deploy
-          cp build/libs/*.jar deploy/app.jar
+          cp ./build/libs/*.jar deploy/app.jar
           cp Procfile deploy/Procfile
           cp -r .ebextensions deploy/.ebextensions
           cp docker-compose.yml deploy/
