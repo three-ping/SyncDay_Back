@@ -291,6 +291,7 @@ jobs:
           echo 'WORKDIR /app' >> Dockerfile
           echo 'COPY app.jar /app/app.jar' >> Dockerfile
           echo 'CMD ["java", "-jar", "/app/app.jar"]' >> Dockerfile
+          cp Dockerfile deploy/
           cp Procfile deploy/Procfile
           cp -r .ebextensions deploy/.ebextensions
           cp docker-compose.yml deploy/
