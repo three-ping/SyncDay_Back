@@ -45,4 +45,9 @@ public class CardController {
     public ResponseDTO<?> SearchCardsByKeyword(@RequestParam String keyword) {
         return ResponseDTO.ok(cardSearchService.searchCardByKeyword(keyword));
     }
+
+    @GetMapping("/today/{userId}")
+    public ResponseDTO<?> findMyCardsInToday(@PathVariable Long userId){
+        return ResponseDTO.ok(cardService.getCardsInToday(userId));
+    }
 }
