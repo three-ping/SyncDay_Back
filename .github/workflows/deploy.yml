@@ -273,6 +273,10 @@ jobs:
       - name: List build directory
         run: ls -la ./build/libs
       # Generate a deployment package
+      - name: Create Procfile
+        run: |
+          echo "web: java -jar SyncDay-0.0.1-SNAPSHOT.jar" > Procfile
+
       - name: Generate deployment package
         run: |
           mkdir -p deploy
