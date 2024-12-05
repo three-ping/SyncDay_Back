@@ -4,18 +4,23 @@ import com.threeping.syncday.chat.dto.ChatMessageDTO;
 import com.threeping.syncday.chat.entity.ChatRoom;
 import com.threeping.syncday.chat.entity.ChatType;
 
+import com.threeping.syncday.chat.repository.ChatMessageRepository;
 import com.threeping.syncday.user.command.application.service.UserCommandServiceImpl;
 import com.threeping.syncday.user.command.domain.aggregate.UserEntity;
 import com.threeping.syncday.user.command.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -25,12 +30,14 @@ public class ChatController {
     private final ChatService chatService;
     private final UserRepository userRepository;
     private final UserCommandServiceImpl userCommandService;
+    private final ChatMessageRepository chatMessageRepository;
 
     @Autowired
-    public ChatController(ChatService chatService, UserRepository userRepository, UserCommandServiceImpl userCommandService) {
+    public ChatController(ChatService chatService, UserRepository userRepository, UserCommandServiceImpl userCommandService, ChatMessageRepository chatMessageRepository) {
         this.chatService = chatService;
         this.userRepository = userRepository;
         this.userCommandService = userCommandService;
+        this.chatMessageRepository = chatMessageRepository;
     }
 
     // 메세지 전송: "/app/message"로 보낸 메시지를 처리
@@ -74,17 +81,24 @@ public class ChatController {
 
     // 채팅방 생성
     @PostMapping("/room/create")
-    public ChatRoom createChatRoom(@RequestBody ChatRoom chatRoom) {
+    public ResponseEntity<Map<String, Object>> createChatRoom(@RequestBody ChatRoom chatRoom) {
         log.info("새 채팅방 생성 요청: {}", chatRoom);
-//
+
+        String roomId = UUID.randomUUID().toString();
+        chatRoom.setRoomId(roomId);
 //        String chatRoomName = chatRoom.getChatRoomName();
 //        List<Long> memberIds = chatRoom.getMemberIds();
-//
+
 //        ChatRoom room = new ChatRoom();
+//        room.setRoomId(roomId);
 //        room.setChatRoomName(chatRoomName);
 //        room.setMemberIds(memberIds);
+        ChatRoom createRoom = chatService.createChatRoom(chatRoom);
+        Map<String, Object> response = new HashMap<>();
+        response.put("data",createRoom);
 
-        return chatService.createChatRoom(chatRoom);
+        return ResponseEntity.ok(response);
+//        return chatService.createChatRoom(chatRoom);
     }
 
     // 채팅방 나가기

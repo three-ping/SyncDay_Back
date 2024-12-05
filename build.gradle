@@ -80,6 +80,18 @@ dependencies {
     // mybatis 페이징 처리
     implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.4.6'
 
+
+    // GithubApp dependencies
+    // https://mvnrepository.com/artifact/org.kohsuke/github-api
+    implementation group: 'org.kohsuke', name: 'github-api', version: '1.318'
+
+
+// https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk18on
+    implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.78.1'
+
+    // https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on
+    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.78.1'
+
 }
 
 tasks.named('test') {
