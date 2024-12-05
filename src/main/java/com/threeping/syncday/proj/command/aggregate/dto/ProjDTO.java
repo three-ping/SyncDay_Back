@@ -1,7 +1,6 @@
 package com.threeping.syncday.proj.command.aggregate.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.threeping.syncday.proj.command.aggregate.entity.VcsType;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -26,8 +25,6 @@ public class ProjDTO {
     @JsonProperty("progress_status")
     Byte progressStatus;
 
-    @JsonProperty("vcs_type")
-    VcsType vcsType;
 
     @JsonProperty("vcs_proj_url")
     String vcsProjUrl;
