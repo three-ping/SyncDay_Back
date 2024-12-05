@@ -22,4 +22,5 @@ public class VcsInstallController {
     public ResponseDTO<?> checkUserGithubInstallation(@RequestParam("userId") Long userId, @RequestParam("vcsType") VcsType vcsType) {
         return ResponseDTO.ok(vcsUserService.checkUserInstallation(new ReqUserInstallationCheck(userId, vcsType)));
     }
+    
 }
