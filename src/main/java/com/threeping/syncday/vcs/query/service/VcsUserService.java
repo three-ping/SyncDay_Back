@@ -1,4 +1,4 @@
 package com.threeping.syncday.vcs.query.service;
 
-public interface VcsUserInstallationService {
+public interface VcsUserService {
 }
