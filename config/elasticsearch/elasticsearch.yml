@@ -1,0 +1,10 @@
+# config/elasticsearch/elasticsearch.yml
+cluster.name: "syncday-cluster"
+node.name: "syncday-node"
+network.host: 0.0.0.0
+discovery.type: single-node
+
+path.data: /usr/share/elasticsearch/data
+path.logs: /usr/share/elasticsearch/logs
+
+xpack.security.enabled: false

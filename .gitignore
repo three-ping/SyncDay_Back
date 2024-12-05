@@ -38,4 +38,5 @@ out/
 
 
 ### YML ###
-*.yml
+docker-compose.yml
+application-syncday.yml
