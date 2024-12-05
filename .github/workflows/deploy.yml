@@ -279,7 +279,6 @@ jobs:
           mkdir -p deploy
           cp build/libs/*.jar deploy/app.jar
           cp -r .ebextensions deploy/.ebextensions
-          cp -r .platform deploy/.platform
           cp docker-compose.yml deploy/
           cp Dockerfile deploy/
           cd deploy && zip -r deploy.zip .
