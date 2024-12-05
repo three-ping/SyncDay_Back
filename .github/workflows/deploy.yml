@@ -276,11 +276,14 @@ jobs:
 
       - name: Generate deployment package
         run: |
+          ./gradlew clean build
           mkdir -p deploy
-          cp -r .ebextensions deploy/
+          cp build/libs/*.jar deploy/app.jar
+          cp Procfile deploy/Procfile
+          cp -r .ebextensions deploy/.ebextensions
+          cp -r .platform deploy/.platform
           cp docker-compose.yml deploy/
           cp Dockerfile deploy/
-          cp springboot/build/libs/*.jar deploy/app.jar
           cd deploy && zip -r deploy.zip .
 
       - name: Deploy to EB
