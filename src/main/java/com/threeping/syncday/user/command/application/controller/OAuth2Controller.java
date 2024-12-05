@@ -5,10 +5,7 @@ import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
 import com.threeping.syncday.user.aggregate.oauth.vo.GithubTokenResponse;
 import com.threeping.syncday.user.command.application.service.OAuth2Service;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.kohsuke.github.GHAppInstallationToken;
-import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
