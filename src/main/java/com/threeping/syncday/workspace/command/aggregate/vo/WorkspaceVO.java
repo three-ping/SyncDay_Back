@@ -32,6 +32,9 @@ public class WorkspaceVO {
     @JsonProperty("vcs_type")
     private VcsType vcsType;
 
+    @JsonProperty("vcs_repo_name")
+    private VcsType vcsRepoName;
+
     @JsonProperty("vcs_repo_url")
     private String vcsRepoUrl;
 }

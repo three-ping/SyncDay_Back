@@ -126,8 +126,9 @@ public class AppProjController {
                     )
             }
     )
-    @PutMapping("/")
-    public ResponseDTO<?> updateProj(@RequestBody ProjVO projVO){
+    @PutMapping("/{projId}")
+    public ResponseDTO<?> updateProj(@PathVariable Long projId, @RequestBody ProjVO projVO){
+        projVO.setProjId(projId);
         log.info("projVO: {}", projVO);
         return ResponseDTO.ok(appProjService.modifyProj(projVO));
     }

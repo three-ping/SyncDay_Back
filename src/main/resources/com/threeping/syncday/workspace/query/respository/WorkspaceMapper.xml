@@ -10,7 +10,20 @@
         <result property="progressStatus" column="progress_status"></result>
         <result property="vcsType" column="vcs_type"></result>
         <result property="vcsRepoUrl" column="vcs_repo_url"></result>
+        <result property="vcsRepoName" column="vcs_repo_name"></result>
         <result property="projId" column="proj_id"></result>
+    </resultMap>
+
+    <!-- 검색을 위한 resultMap 추가 -->
+    <resultMap id="searchResultMap" type="com.threeping.syncday.workspace.query.dto.WorkspaceQueryDTO">
+        <id property="workspaceId" column="workspace_id"></id>
+        <result property="workspaceName" column="workspace_name"></result>
+        <result property="projectId" column="proj_id"></result>
+        <result property="projectName" column="proj_name"></result>
+        <result property="vcsType" column="vcs_type"></result>
+        <result property="vcsRepoUrl" column="vcs_repo_url"></result>
+        <result property="vcsRepoName" column="vcs_repo_name"></result>
+        <result property="createdAt" column="created_at"></result>
     </resultMap>
 
     <select id="selectAllWorkSpaces" resultMap="workspaceResultMap">
@@ -20,6 +33,7 @@
                ,CREATED_AT
                ,PROGRESS_STATUS
                ,VCS_TYPE
+               ,VCS_REPO_NAME
                ,VCS_REPO_URL
                ,PROJ_ID
           FROM TBL_WORKSPACE
@@ -32,6 +46,7 @@
                ,CREATED_AT
                ,PROGRESS_STATUS
                ,VCS_TYPE
+               ,VCS_REPO_NAME
                ,VCS_REPO_URL
                ,PROJ_ID
         FROM    TBL_WORKSPACE
@@ -119,5 +134,37 @@
         FROM VW_CARD_INFO
         WHERE cardboard_id = #{cardboardId}
         ORDER BY created_at DESC
+    </select>
+
+    <select id="findWorkspaceById" resultMap="searchResultMap" parameterType="Long">
+        SELECT
+            w.workspace_id,
+            w.workspace_name,
+            w.proj_id,
+            p.proj_name,
+            w.vcs_type,
+            w.vcs_repo_name,
+            w.vcs_repo_url,
+            w.created_at
+        FROM
+            TBL_WORKSPACE w
+        LEFT JOIN TBL_PROJ p ON w.proj_id = p.proj_id
+        WHERE
+            w.workspace_id = #{workspaceId}
+    </select>
+
+    <select id="findAllWorkspaces" resultMap="searchResultMap">
+        SELECT
+            w.workspace_id,
+            w.workspace_name,
+            w.proj_id,
+            p.proj_name,
+            w.vcs_type,
+            w.vcs_repo_name,
+            w.vcs_repo_url,
+            w.created_at
+        FROM
+            TBL_WORKSPACE w
+        LEFT JOIN TBL_PROJ p ON w.proj_id = p.proj_id
     </select>
 </mapper>

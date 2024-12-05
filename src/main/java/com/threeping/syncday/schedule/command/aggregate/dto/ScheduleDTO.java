@@ -46,11 +46,11 @@ public class ScheduleDTO {
     PublicStatus publicStatus;
 
     @JsonProperty("schedule_repeat_id")
-    @Schema(description = "반복일정 고유번호", example = "1")
+    @Schema(description = "반복일정 고유번호", example = "null")
     Long scheduleRepeatId;
 
     @JsonProperty("repeat_order")
-    @Schema(description = "반복순서 번호", example = "1")
+    @Schema(description = "반복순서 번호", example = "null")
     Long repeatOrder;
 
     @JsonProperty("meeting_status")
