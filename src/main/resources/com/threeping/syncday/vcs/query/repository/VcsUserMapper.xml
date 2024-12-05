@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.threeping.syncday.vcs.query.repository.VcsUserMapper">
+    <!-- Check if user installation exists -->
+    <select id="checkUserInstallation" parameterType="com.threeping.syncday.vcs.query.aggregate.vo.ReqUserInstallationCheck" resultType="java.lang.Boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM tbl_vcs_user vu
+            WHERE vu.vcs_type = #{vcsType}
+              AND vu.user_id = #{userId}
+        ) as exists_flag
+    </select>
+</mapper>
