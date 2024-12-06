@@ -244,12 +244,12 @@ jobs:
                 - /var/app/current/config/elasticsearch/indices:/usr/share/elasticsearch/config/indices
               ports:
                 - "9200:9200"
-                command: >
-                  bash -c "
-                  /usr/local/bin/docker-entrypoint.sh elasticsearch &
-                  sleep 30 &&
-                  /usr/share/elasticsearch/config/elasticsearch/init-index.sh
-                  "
+              command: >
+                bash -c "
+                /usr/local/bin/docker-entrypoint.sh elasticsearch &
+                sleep 30 &&
+                /usr/share/elasticsearch/config/elasticsearch/init-index.sh
+                "
           EOF
         env:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
