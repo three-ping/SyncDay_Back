@@ -9,20 +9,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the code
       - uses: actions/checkout@v2
 
+      # Set up JDK 17 for Gradle
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Gradle Wrapper
-        run: gradle wrapper
-
+      # Install envsubst for environment variable substitution
       - name: Install envsubst
         run: sudo apt-get install -y gettext
 
+      # Create Elastic Beanstalk configuration files
       - name: Create .ebextensions
         run: |
           mkdir -p .ebextensions
@@ -78,8 +79,8 @@ jobs:
           cp -r config/elasticsearch/indices/* deploy/config/elasticsearch/indices/
           cp config/elasticsearch/init-index.sh deploy/config/elasticsearch/
           chmod +x deploy/config/elasticsearch/init-index.sh
-          sed -i 's|@config/elasticsearch/indices|@/usr/share/elasticsearch/config/indices|g' deploy/config/elasticsearch/init-index.sh
 
+      # Create application.yml for Spring Boot
       - name: Create application.yml
         run: |
           mkdir -p src/main/resources
@@ -186,7 +187,7 @@ jobs:
 
       - name: Create docker-compose.yml
         run: |
-          cat > docker-compose.yml << 'EOF'
+          cat > docker-compose.yml <<EOF
           version: '3.8'
           services:
             app:
@@ -194,37 +195,37 @@ jobs:
               ports:
                 - "5000:5000"
               environment:
-                - SPRING_PROFILES_ACTIVE=prod
-                - SPRING_DATASOURCE_URL=jdbc:mariadb://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}
-                - SPRING_DATASOURCE_USERNAME=${RDS_USERNAME}
-                - SPRING_DATASOURCE_PASSWORD=${RDS_PASSWORD}
-                - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/chatdb
-                - SPRING_DATA_REDIS_HOST=redis
-                - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
-                - APP_CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
-                - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
-                - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
-                - APP_FRONTEND_URL=${FRONTEND_URL}
-                - TOKEN_SECRET=${JWT_SECRET}
-                - GITHUB_APP_ID=${APP_ID}
-                - GITHUB_APP_PRIVATE_KEY=${APP_PRIVATE_KEY}
-                - GITHUB_WEBHOOK_SECRET=${WEBHOOK_SECRET}
-                - GITHUB_OAUTH2_CLIENT_ID=${OAUTH_CLIENT_ID}
-                - GITHUB_OAUTH2_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
+                SPRING_PROFILES_ACTIVE: "prod"
+                SPRING_DATASOURCE_URL: "jdbc:mariadb://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}"
+                SPRING_DATASOURCE_USERNAME: "${RDS_USERNAME}"
+                SPRING_DATASOURCE_PASSWORD: "${RDS_PASSWORD}"
+                SPRING_DATA_MONGODB_URI: "mongodb://mongodb:27017/chatdb"
+                SPRING_DATA_REDIS_HOST: "redis"
+                SPRING_ELASTICSEARCH_URIS: "http://elasticsearch:9200"
+                APP_CORS_ALLOWED_ORIGINS: "${CORS_ALLOWED_ORIGINS}"
+                SPRING_MAIL_USERNAME: "${MAIL_USERNAME}"
+                SPRING_MAIL_PASSWORD: "${MAIL_PASSWORD}"
+                APP_FRONTEND_URL: "${FRONTEND_URL}"
+                TOKEN_SECRET: "${JWT_SECRET}"
+                GITHUB_APP_ID: "${APP_ID}"
+                GITHUB_APP_PRIVATE_KEY: "${APP_PRIVATE_KEY}"
+                GITHUB_WEBHOOK_SECRET: "${WEBHOOK_SECRET}"
+                GITHUB_OAUTH2_CLIENT_ID: "${OAUTH_CLIENT_ID}"
+                GITHUB_OAUTH2_CLIENT_SECRET: "${OAUTH_CLIENT_SECRET}"
               volumes:
                 - /var/app/current:/app
               depends_on:
                 - mongodb
                 - redis
                 - elasticsearch
-
+          
             mongodb:
               image: mongo:latest
               volumes:
                 - /var/app/current/mongodb_data:/data/db
               ports:
                 - "27017:27017"
-
+          
             redis:
               image: redis:latest
               command: redis-server --notify-keyspace-events Ex
@@ -232,80 +233,101 @@ jobs:
                 - /var/app/current/redis_data:/data
               ports:
                 - "6379:6379"
-
+          
             elasticsearch:
               image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+              container_name: syncday-elasticsearch
+              command: >
+                bash -c "
+                bin/elasticsearch-plugin install analysis-nori;
+                /usr/local/bin/docker-entrypoint.sh elasticsearch
+                chmod -R 777 /usr/share/elasticsearch/data &&
+                /usr/local/bin/docker-entrypoint.sh elasticsearch &&
+                sleep 30 &&
+                /usr/share/elasticsearch/config/init-index.sh"
               environment:
-                - discovery.type=single-node
-                - ES_JAVA_OPTS=-Xms128m -Xmx128m
-                - xpack.security.enabled=false
+                discovery.type: "single-node"
+                ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+                xpack.security.enabled: "false"
               volumes:
                 - /var/app/current/es_data:/usr/share/elasticsearch/data
                 - /var/app/current/config/elasticsearch/indices:/usr/share/elasticsearch/config/indices
               ports:
                 - "9200:9200"
-              command: >
-                bash -c "
-                /usr/local/bin/docker-entrypoint.sh elasticsearch &
-                sleep 30 &&
-                /usr/share/elasticsearch/config/elasticsearch/init-index.sh
-                "
+              networks:
+                - es-network
+          networks:
+            es-network:
+              driver: bridge
           EOF
         env:
-          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
           RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
           RDS_PORT: ${{ secrets.RDS_PORT }}
           RDS_DB_NAME: ${{ secrets.RDS_DB_NAME }}
           RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
           RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
-          CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
           FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
-          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
-          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
           APP_ID: ${{ secrets.APP_ID }}
           APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
 
+
+      # Validate Docker Compose file
       - name: Validate docker-compose.yml
         run: docker compose config
 
+      # Build Spring Boot application with Gradle
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean bootJar -x test
+        run: ./gradlew clean build -x test
 
-      - name: Get current time
-        uses: 1466587594/get-current-time@v2
-        id: current-time
-        with:
-          format: YYYY-MM-DDTHH-mm-ss
-          utcOffset: "+09:00"
+      - name: Print working directory
+        run: pwd
 
-      - name: Show Current Time
-        run: echo "CurrentTime=${{steps.current-time.outputs.formattedTime}}"
-        shell: bash
+      - name: List build directory
+        run: ls -la ./build/libs
+      # Generate a deployment package
+      - name: Create Procfile
+        run: |
+          echo "web: appstart" > Procfile
 
       - name: Generate deployment package
         run: |
-          ./gradlew clean bootJar -x test
           mkdir -p deploy
-          cp build/libs/*.jar deploy/app.jar
+          JAR_FILE=$(ls ./build/libs/*SNAPSHOT.jar | grep -v plain)
+          if [ -n "$JAR_FILE" ]; then
+            cp "$JAR_FILE" deploy/app.jar
+          else
+            echo "No executable JAR file found!"
+            exit 1
+          fi
+          echo 'FROM openjdk:17-jdk-slim' > Dockerfile
+          echo 'WORKDIR /app' >> Dockerfile
+          echo 'COPY app.jar /app/app.jar' >> Dockerfile
+          echo 'CMD ["java", "-jar", "/app/app.jar"]' >> Dockerfile
+          cp Dockerfile deploy/
+          cp Procfile deploy/Procfile
           cp -r .ebextensions deploy/.ebextensions
           cp -r config deploy/
           cp docker-compose.yml deploy/
-          cp Dockerfile deploy/
           cd deploy && zip -r deploy.zip .
 
-      - name: Deploy to EB
+      # Deploy to Elastic Beanstalk
+      - name: Deploy to AWS Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: Syncday
           environment_name: Syncday-env
-          version_label: github-action-${{steps.current-time.outputs.formattedTime}}
+          version_label: syncday-wj1
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
