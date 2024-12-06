@@ -71,6 +71,19 @@ jobs:
                   }
                 }
           EOL
+          cat > .ebextensions/03-docker-permissions.config <<EOL
+          commands:
+            01_docker_permissions:
+              command: |
+                usermod -a -G docker ec2-user
+                chmod 666 /var/run/docker.sock
+            02_docker_compose_restart:
+              command: |
+                cd /var/app/current
+                docker-compose down
+                docker-compose up -d
+              ignoreErrors: true
+          EOL
 
       - name: Create Elasticsearch configuration
         run: |
