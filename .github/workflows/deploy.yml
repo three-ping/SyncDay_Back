@@ -247,11 +247,11 @@ jobs:
               ports:
                 - "9200:9200"
               command: >
-                bash -c "
-                /usr/local/bin/docker-entrypoint.sh elasticsearch &
-                sleep 30 &&
-                /usr/share/elasticsearch/config/elasticsearch/init-index.sh
-                "
+              bash -c "
+              chmod -R 777 /usr/share/elasticsearch/data &&
+              /usr/local/bin/docker-entrypoint.sh elasticsearch &&
+              sleep 30 &&
+              /usr/share/elasticsearch/config/init-index.sh"
 
           EOF
         env:
