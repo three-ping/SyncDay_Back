@@ -21,7 +21,7 @@ import java.io.IOException;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class GithubInstallationServiceImpl implements GithubInstallationService {
+public class AppGithubInstallationServiceImpl implements AppGithubInstallationService {
 
     private final GithubInstallationRepository installationRepository;
     private final GithubAppClient githubClient;
