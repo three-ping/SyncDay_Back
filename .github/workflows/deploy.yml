@@ -252,11 +252,9 @@ jobs:
                 - es-network
               command: >
                 bash -c "
-                chmod -R 777 /usr/share/elasticsearch/data &&
-                sudo chmod -R 777 /var/app/current/es_data &&
                 bin/elasticsearch-plugin install analysis-nori &&
-                /usr/local/bin/docker-entrypoint.sh elasticsearch &&
-                /usr/local/bin/docker-entrypoint.sh elasticsearch &&
+                chmod -R 777 /usr/share/elasticsearch/data &&
+                /usr/local/bin/docker-entrypoint.sh elasticsearch &
                 sleep 30 &&
                 /usr/share/elasticsearch/config/init-index.sh"
           networks:
@@ -331,6 +329,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: Syncday
           environment_name: Syncday-env
-          version_label: github-action-ela-c111
+          version_label: github-action-ela-cjjjjhhhhhhh
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
