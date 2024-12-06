@@ -84,6 +84,13 @@ jobs:
                 docker-compose up -d
               ignoreErrors: true
           EOL
+          cat > .ebextensions/04-sysctl-settings.config <<EOL
+          commands:
+            01_sysctl_config:
+              command: |
+                echo "vm.max_map_count=262144" >> /etc/sysctl.conf
+                sysctl -w vm.max_map_count=262144
+            EOL
 
       - name: Create Elasticsearch configuration
         run: |
@@ -265,10 +272,10 @@ jobs:
               container_name: syncday-elasticsearch
               command: >
                 bash -c "
-                bin/elasticsearch-plugin install analysis-nori &&
                 chmod -R 777 /usr/share/elasticsearch/data &&
                 /usr/local/bin/docker-entrypoint.sh elasticsearch &
                 sleep 30 &&
+                bin/elasticsearch-plugin install analysis-nori &&
                 /usr/share/elasticsearch/config/elasticsearch/init-index.sh"
               environment:
                 discovery.type: "single-node"
