@@ -1,5 +1,6 @@
 package com.threeping.syncday.github.command.application.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.github.command.aggregate.vo.InstallationAuthRequest;
 import com.threeping.syncday.github.command.application.service.GithubInstallationService;
@@ -23,7 +24,7 @@ public class GithubInstallationController {
     }
 
     @PostMapping("/auth")
-    public ResponseDTO<?> handleGithubInstallationAuth(@RequestBody InstallationAuthRequest githubInstallationRequest) {
+    public ResponseDTO<?> handleGithubInstallationAuth(@RequestBody InstallationAuthRequest githubInstallationRequest) throws JsonProcessingException {
         return ResponseDTO.ok(githubInstallationService.processInstallationAuth(githubInstallationRequest));
     }
 }
