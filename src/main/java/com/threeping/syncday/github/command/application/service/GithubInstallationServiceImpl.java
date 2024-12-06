@@ -63,7 +63,7 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
         installationEntity.setAvatarUrl(installation.getAccount().getAvatarUrl());
         installationEntity.setHtmlUrl(installation.getAccount().getHtmlUrl().toString());
         installationEntity.setStatus(InstallationStatus.ACTIVE);
-
+        installationEntity.setUserId(request.getUserId());
         GithubInstallationEntity savedEntity = installationRepository.save(installationEntity);
 
         return convertToResponse(savedEntity);
