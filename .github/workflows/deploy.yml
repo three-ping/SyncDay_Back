@@ -245,6 +245,7 @@ jobs:
               volumes:
                 - /var/app/current/es_data:/usr/share/elasticsearch/data
                 - /var/app/current/config/elasticsearch/indices:/usr/share/elasticsearch/config/indices
+                - /var/app/current/config/elasticsearch/init-index.sh:/usr/share/elasticsearch/config/init-index.sh
               ports:
                 - "9200:9200"
               networks:
@@ -329,6 +330,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: Syncday
           environment_name: Syncday-env
-          version_label: github-action-ela-seting
+          version_label: github-action-ela-Jinhojong
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
