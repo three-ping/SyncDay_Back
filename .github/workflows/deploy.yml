@@ -328,6 +328,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: Syncday
           environment_name: Syncday-env
-          version_label: syncday-wj1
+          version_label: syncday-final
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
