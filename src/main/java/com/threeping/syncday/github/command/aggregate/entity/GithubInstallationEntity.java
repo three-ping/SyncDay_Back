@@ -1,5 +1,6 @@
 package com.threeping.syncday.github.command.aggregate.entity;
 
+import com.threeping.syncday.github.command.aggregate.enums.InstallationStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.DynamicUpdate;
+import org.kohsuke.github.GHTargetType;
 
 @Entity
 @Table(name = "tbl_github_installation")
@@ -15,7 +17,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@DynamicUpdate
 public class GithubInstallationEntity {
 
     @Id
@@ -33,16 +34,13 @@ public class GithubInstallationEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "account_type", nullable = false)
-    private AccountType accountType;
+    private GHTargetType accountType;
 
     @Column(name = "avatar_url")
     private String avatarUrl;
 
     @Column(name = "html_url")
     private String htmlUrl;
-
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -66,11 +64,4 @@ public class GithubInstallationEntity {
         updatedAt = LocalDateTime.now();
     }
 
-    public enum AccountType {
-        USER, ORGANIZATION
-    }
-
-    public enum InstallationStatus {
-        ACTIVE, SUSPENDED, DELETED
-    }
 }

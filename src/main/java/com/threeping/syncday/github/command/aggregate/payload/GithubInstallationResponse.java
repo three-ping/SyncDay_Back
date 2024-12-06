@@ -6,7 +6,6 @@ import lombok.Value;
 @Value
 @Builder
 public class GithubInstallationResponse {
-
     Boolean success;
     String message;
     GithubInstallationDetails installationDetails;

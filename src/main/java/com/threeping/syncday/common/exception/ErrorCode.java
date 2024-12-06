@@ -74,10 +74,10 @@ public enum ErrorCode {
     CARD_COMMENT_UNAUTHORIZED_REQUEST(4040901, HttpStatus.UNAUTHORIZED, "권한이 없는 요청입니다."),
     // 10: 첨부파일
 
-    // 11: AWS Secrets Manager 관련
-    AWS_SECRET_OPERATION_EXCEPTION(5001100, HttpStatus.NOT_FOUND,"AwsSecretOperation 실패"),
-    AWS_SECRET_NOT_FOUND_EXCEPTION(4041101,HttpStatus.NOT_FOUND,"AwsSecret이 존재하지 않습니다"),
-
+    // 11: GithubApp Installation 관련
+    UNKNOWN_SETUP_ACTION(4061100, HttpStatus.NOT_ACCEPTABLE,"알 수 없는 SETUP ACTION입니다."),
+    GITHUB_APP_INSTALLATION_FAILURE(5001101,HttpStatus.INTERNAL_SERVER_ERROR,"Github App 설치에 실패했습니다."),
+    GITHUB_APP_INSTALLATION_CLIENT_ERROR(5001102, HttpStatus.INTERNAL_SERVER_ERROR,"GithubApp 설치 정보 조회 실패"),
 
     // 12: 카드 북마크
     CARD_BOOKMARK_ALREADY_EXISTS(4001200,HttpStatus.BAD_REQUEST, "카드북마크가 존재합니다"),

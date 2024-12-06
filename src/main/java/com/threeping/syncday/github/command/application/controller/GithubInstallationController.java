@@ -1,8 +1,7 @@
 package com.threeping.syncday.github.command.application.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.threeping.syncday.common.ResponseDTO;
-import com.threeping.syncday.github.command.aggregate.vo.InstallationAuthRequest;
+import com.threeping.syncday.github.command.aggregate.payload.GithubInstallationRequest;
 import com.threeping.syncday.github.command.application.service.GithubInstallationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/github/installation")
+@RequestMapping("/api/github/install")
 @Slf4j
 public class GithubInstallationController {
 
@@ -23,8 +22,8 @@ public class GithubInstallationController {
         this.githubInstallationService = githubInstallationService;
     }
 
-    @PostMapping("/auth")
-    public ResponseDTO<?> handleGithubInstallationAuth(@RequestBody InstallationAuthRequest githubInstallationRequest) throws JsonProcessingException {
+    @PostMapping("/")
+    public ResponseDTO<?> handleGithubInstallationAuth(@RequestBody GithubInstallationRequest githubInstallationRequest){
         return ResponseDTO.ok(githubInstallationService.processInstallationAuth(githubInstallationRequest));
     }
 }
