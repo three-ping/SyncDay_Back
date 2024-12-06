@@ -252,6 +252,7 @@ jobs:
               container_name: syncday-elasticsearch
               command: >
                 bash -c "
+                bin/elasticsearch-plugin install analysis-nori &&
                 chmod -R 777 /usr/share/elasticsearch/data &&
                 /usr/local/bin/docker-entrypoint.sh elasticsearch &
                 sleep 30 &&
