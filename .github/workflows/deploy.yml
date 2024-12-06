@@ -247,11 +247,11 @@ jobs:
               ports:
                 - "9200:9200"
               command: >
-              bash -c "
-              chmod -R 777 /usr/share/elasticsearch/data &&
-              /usr/local/bin/docker-entrypoint.sh elasticsearch &&
-              sleep 30 &&
-              /usr/share/elasticsearch/config/init-index.sh"
+                bash -c "
+                chmod -R 777 /usr/share/elasticsearch/data &&
+                /usr/local/bin/docker-entrypoint.sh elasticsearch &&
+                sleep 30 &&
+                /usr/share/elasticsearch/config/init-index.sh"
 
           EOF
         env:
@@ -322,6 +322,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: Syncday
           environment_name: Syncday-env
-          version_label: github-action-ela-last
+          version_label: github-action-ela-lastss
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
