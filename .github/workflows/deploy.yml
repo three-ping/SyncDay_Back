@@ -72,6 +72,15 @@ jobs:
                 }
           EOL
 
+      - name: Create Elasticsearch configuration
+        run: |
+          mkdir -p deploy/config/elasticsearch/indices
+          
+          cp -r config/elasticsearch/indices/* deploy/config/elasticsearch/indices/
+          cp config/elasticsearch/init-index.sh deploy/config/elasticsearch/
+          chmod +x deploy/config/elasticsearch/init-index.sh
+          sed -i 's|@config/elasticsearch/indices|@/usr/share/elasticsearch/config/indices|g' deploy/config/elasticsearch/init-index.sh
+
       # Create application.yml for Spring Boot
       - name: Create application.yml
         run: |
@@ -237,6 +246,12 @@ jobs:
                 - /var/app/current/config/elasticsearch/indices:/usr/share/elasticsearch/config/indices
               ports:
                 - "9200:9200"
+              command: >
+                bash -c "
+                /usr/local/bin/docker-entrypoint.sh elasticsearch &
+                sleep 30 &&
+                /usr/share/elasticsearch/config/elasticsearch/init-index.sh
+                "
           EOF
         env:
           RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
@@ -294,6 +309,7 @@ jobs:
           cp Dockerfile deploy/
           cp Procfile deploy/Procfile
           cp -r .ebextensions deploy/.ebextensions
+          cp -r config deploy/
           cp docker-compose.yml deploy/
           cd deploy && zip -r deploy.zip .
 
@@ -305,6 +321,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: Syncday
           environment_name: Syncday-env
-          version_label: github-action-rds-port-edit
+          version_label: github-action-ela-
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
