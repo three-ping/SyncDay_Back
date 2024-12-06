@@ -305,6 +305,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: Syncday
           environment_name: Syncday-env
-          version_label: github-action-elastic-128
+          version_label: github-action-rds-port-edit
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
