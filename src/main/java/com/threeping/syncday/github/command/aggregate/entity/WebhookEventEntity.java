@@ -1,4 +1,4 @@
 package com.threeping.syncday.github.command.aggregate.entity;
 
-public class GithubRepository {
+public class WebhookEventEntity {
 }

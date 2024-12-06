@@ -74,7 +74,10 @@ public enum ErrorCode {
     CARD_COMMENT_UNAUTHORIZED_REQUEST(4040901, HttpStatus.UNAUTHORIZED, "권한이 없는 요청입니다."),
     // 10: 첨부파일
 
-    // 11: 워스 북마크
+    // 11: AWS Secrets Manager 관련
+    AWS_SECRET_OPERATION_EXCEPTION(5001100, HttpStatus.NOT_FOUND,"AwsSecretOperation 실패"),
+    AWS_SECRET_NOT_FOUND_EXCEPTION(4041101,HttpStatus.NOT_FOUND,"AwsSecret이 존재하지 않습니다"),
+
 
     // 12: 카드 북마크
     CARD_BOOKMARK_ALREADY_EXISTS(4001200,HttpStatus.BAD_REQUEST, "카드북마크가 존재합니다"),
