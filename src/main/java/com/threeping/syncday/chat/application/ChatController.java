@@ -75,13 +75,8 @@ public class ChatController {
 
     // 특정 채팅방 조회
     @GetMapping("/room/{roomId}/message")
-    public List<ChatMessageDTO> getChatRoom(@PathVariable String roomId) {
-        log.info("{} 채팅방 메세지 조회 요청", roomId);
-
-        List<ChatMessageDTO> result = chatService.findChatRoomByRoomId(roomId);
-        log.info("결과: {}", result);
-//        return chatService.findChatRoomByRoomId(roomId, userId);
-        return result;
+    public List<ChatMessageDTO> getChatRoom(@PathVariable String roomId, @RequestParam Long userId) {
+        return chatService.findChatRoomByRoomId(roomId, userId);
     }
 
     // 채팅방 생성

@@ -36,6 +36,7 @@ public class ChatService {
         this.chatMessageRepository = chatMessageRepository;
         this.userRepository = userRepository;
         this.messagingTemplate = messagingTemplate;
+
     }
 
     //  채팅방 목록 조회
@@ -57,12 +58,19 @@ public class ChatService {
     }
 
     //  특정 채팅방 조회
-    public List<ChatMessageDTO> findChatRoomByRoomId(String roomId) {
-        log.info("특정 {} 채팅방 메세지 조회 ", roomId);
-        log.debug("findByRoomIdOrderBySentTimeAsc 호출: roomId={}", roomId);
+    public List<ChatMessageDTO> findChatRoomByRoomId(String roomId, Long userId) {
+        log.info("유저{}: {} 채팅방 메세지 조회 ", userId, roomId);
+        Optional<ChatMessage> lastLeave = chatMessageRepository
+                .findTopByRoomIdAndSenderIdAndChatTypeOrderBySentTimeDesc(
+                        roomId, userId, ChatType.LEAVE);
 
-        List<ChatMessage> messages = chatMessageRepository.findByRoomIdOrderBySentTimeAsc(roomId);
-
+        List<ChatMessage> messages;
+        if (lastLeave.isPresent()) {
+            LocalDateTime leaveTime = lastLeave.get().getSentTime();
+            messages = chatMessageRepository.findByRoomIdAndSentTimeAfterOrderBySentTimeAsc(roomId, leaveTime);
+        } else {
+            messages = chatMessageRepository.findByRoomIdOrderBySentTimeAsc(roomId);
+        }
         return messages.stream()
                 .map(this::convertToChatMessage)
                 .collect(Collectors.toList());
@@ -103,6 +111,7 @@ public class ChatService {
         messagingTemplate.convertAndSend("/topic/room/" + roomId + "/leave", updatedRoom);
 
         return updatedRoom;
+
     }
 
     private Map<Long, String> getUserNameMap(ChatRoom chatRoom) {
