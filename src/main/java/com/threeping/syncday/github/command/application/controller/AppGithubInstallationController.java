@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/github/install")
 @Slf4j
-public class GithubInstallationController {
+public class AppGithubInstallationController {
 
     private final GithubInstallationService githubInstallationService;
 
     @Autowired
-    public GithubInstallationController(GithubInstallationService githubInstallationService) {
+    public AppGithubInstallationController(GithubInstallationService githubInstallationService) {
         this.githubInstallationService = githubInstallationService;
     }
 
