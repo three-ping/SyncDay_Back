@@ -1,0 +1,37 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "analyzer": {
+        "nori_mixed": {
+          "type": "custom",
+          "tokenizer": "nori_tokenizer",
+          "filter": [
+            "nori_readingform",
+            "lowercase",
+            "trim"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "commentId": { "type": "keyword" },
+      "content": { "type": "text", "analyzer": "nori_mixed" },
+      "authorId": { "type": "keyword" },
+      "authorName": { "type": "text", "analyzer": "nori_mixed" },
+      "cardId": { "type": "keyword" },
+      "cardTitle": { "type": "keyword" },
+      "cardboardId": { "type": "keyword" },
+      "cardboardName": { "type": "keyword" },
+      "workspaceId": { "type": "keyword" },
+      "workspaceName": { "type": "keyword" },
+      "projectId": { "type": "keyword" },
+      "projectName": { "type": "keyword" },
+      "createdAt": { "type": "date" },
+      "updatedAt": { "type": "date" }
+    }
+  }
+}
