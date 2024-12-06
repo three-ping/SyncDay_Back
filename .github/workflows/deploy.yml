@@ -228,9 +228,12 @@ jobs:
               volumes:
                 - /var/app/current:/app
               depends_on:
-                - mongodb
-                - redis
-                - elasticsearch
+                elasticsearch:
+                  condition: service_healthy
+                mongodb:
+                  condition: service_healthy
+                redis: 
+                  condition: service_healthy
           
             mongodb:
               image: mongo:latest
@@ -269,6 +272,11 @@ jobs:
                 - "9200:9200"
               networks:
                 - es-network
+              healthcheck:
+                test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"'"]
+                interval: 10s
+                timeout: 10s
+                retries: 5
           networks:
             es-network:
               driver: bridge
