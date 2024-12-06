@@ -56,6 +56,7 @@ public enum ErrorCode {
     // 04: 프로젝트
     PROJ_NOT_FOUND(4040400,HttpStatus.NOT_FOUND,"해당ID의 프로젝트가 존재하지 않습니다"),
     PROJ_INVALID_REQUEST(4010401, HttpStatus.UNAUTHORIZED,"수정 권한이 없습니다"),
+    GITHUB_AUTH_ERROR(4000402,HttpStatus.BAD_REQUEST,"깃허브 인증 오류입니다."),
 
     // 05: 프로젝트 멤버
     PROJ_MEMBER_NOT_FOUND(4040500, HttpStatus.NOT_FOUND,"존재하지 않는 멤버입니다."),

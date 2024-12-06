@@ -57,8 +57,8 @@ public class MongoConfig {
                     .orElseThrow(() -> new RuntimeException("User 9 not found"));
             UserEntity user10 = userRepository.findByUserId(10L)
                     .orElseThrow(() -> new RuntimeException("User 10 not found"));
-            UserEntity user11 = userRepository.findByUserId(11L)
-                    .orElseThrow(() -> new RuntimeException("User 11 not found"));
+//            UserEntity user11 = userRepository.findByUserId(11L)
+//                    .orElseThrow(() -> new RuntimeException("User 11 not found"));
 
             // 채팅방 더미 데이터 생성
             ChatRoom room1 = createChatRoom(
@@ -109,6 +109,7 @@ public class MongoConfig {
                     String.join(",", user6.getUserName(), user4.getUserName(), user3.getUserName(), user5.getUserName()),
                     Arrays.asList(user6.getUserId(), user4.getUserId(), user3.getUserId(), user5.getUserId())
             );
+
 
             chatRoomRepository.saveAll(Arrays.asList(room1, room2, room3));
 

@@ -17,7 +17,6 @@ public class RequestUpdateVcsInfoVO {
 
     @JsonProperty("vcs_type")
     private VcsType vcsType;
-
     @JsonProperty("vcs_proj_url")
     private String vcsProjUrl;
 }
