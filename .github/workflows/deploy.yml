@@ -230,7 +230,7 @@ jobs:
               image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
               environment:
                 discovery.type: "single-node"
-                ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+                ES_JAVA_OPTS: "-Xms128m -Xmx128m"
                 xpack.security.enabled: "false"
               volumes:
                 - /var/app/current/es_data:/usr/share/elasticsearch/data
@@ -305,6 +305,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: Syncday
           environment_name: Syncday-env
-          version_label: github-action-last1
+          version_label: github-action-elastic-128
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
