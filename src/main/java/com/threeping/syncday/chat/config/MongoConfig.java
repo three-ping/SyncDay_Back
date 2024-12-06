@@ -73,7 +73,7 @@ public class MongoConfig {
 
             ChatRoom room3 = createChatRoom(
                     String.join(",", user1.getUserName(), user6.getUserName(), user9.getUserName(), user11.getUserName()),
-                    Arrays.asList(user1.getUserId(), user6.getUserId(), user9.getUserId(),user9.getUserId()));
+                    Arrays.asList(user1.getUserId(), user6.getUserId(), user9.getUserId(),user11.getUserId()));
 
             ChatRoom room4 = createChatRoom(
                     String.join(",", user8.getUserName(), user9.getUserName(), user10.getUserName()),
@@ -101,8 +101,8 @@ public class MongoConfig {
             );
 
             ChatRoom room9 = createChatRoom(
-                    String.join(",", user8.getUserName(), user2.getUserName(), user1.getUserName()),
-                    Arrays.asList(user8.getUserId(), user2.getUserId(), user1.getUserId())
+                    String.join(",", user8.getUserName(), user2.getUserName(), user11.getUserName()),
+                    Arrays.asList(user8.getUserId(), user2.getUserId(), user11.getUserId())
             );
 
             ChatRoom room10 = createChatRoom(
@@ -117,7 +117,7 @@ public class MongoConfig {
             List<ChatMessage> messages = Arrays.asList(
                     createChatMessage(room1.getRoomId(), user1.getUserId(), user1.getUserName(), "안녕하세요!",
                             LocalDateTime.now().minusHours(2), ChatType.TALK),
-                    createChatMessage(room1.getRoomId(), user2.getUserId(), user2.getUserName(), "네, 안녕하세요!",
+                    createChatMessage(room1.getRoomId(), user11.getUserId(), user11.getUserName(), "네, 안녕하세요!",
                             LocalDateTime.now().minusHours(1), ChatType.TALK),
                     createChatMessage(room1.getRoomId(), user1.getUserId(), user1.getUserName(), "오늘 날씨가 좋네요.",
                             LocalDateTime.now().minusMinutes(30), ChatType.TALK),
