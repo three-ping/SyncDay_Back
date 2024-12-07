@@ -6,6 +6,6 @@ import org.kohsuke.github.GHRepository;
 import java.util.List;
 
 public interface AppGithubRepositoryService {
-    Boolean saveInstallationRepositories(Long installationId, GHAppInstallation appInstallation);
+    Boolean saveInstallationRepositories(Long userId, Long installationId, GHAppInstallation appInstallation);
 
 }

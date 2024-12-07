@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
+import com.threeping.syncday.github.command.aggregate.entity.GithubRepositoryEntity;
 import com.threeping.syncday.github.command.domain.GithubRepoRepository;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -31,29 +32,29 @@ public class AppGithubRepositoryServiceImpl implements AppGithubRepositoryServic
     private final GithubRepoRepository githubRepoRepository;
 
     @Override
-    public Boolean saveInstallationRepositories(Long installationId, GHAppInstallation installation){
+    public Boolean saveInstallationRepositories(Long userId, Long installationId, GHAppInstallation installation) {
         try {
 
-        List<GHRepository> repositories = getInstallationRepositoriesViaRest(installation);
+            List<GithubRepositoryEntity> repositories = getInstallationRepositoriesViaRest(userId, installation);
             log.info("repositories: {}", repositories);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.GITHUB_INSTLLATION_REPOSITORY_SAVE_FAILURE);
         }
 
         return Boolean.FALSE;
     }
 
-    private List<GHRepository> getInstallationRepositoriesViaRest(GHAppInstallation installation) throws IOException {
+    private List<GithubRepositoryEntity> getInstallationRepositoriesViaRest(Long userId, GHAppInstallation installation) throws IOException {
         try {
             GHAppInstallationToken token = installation.createToken().create();
-
+            Long installationId = installation.getId();
             WebClient webClient = WebClient.builder()
                     .baseUrl("https://api.github.com")
                     .defaultHeader(HttpHeaders.ACCEPT, "application/vnd.github.v3+json")
                     .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token.getToken())
                     .build();
 
-            List<GHRepository> allRepositories = new ArrayList<>();
+            List<GithubRepositoryEntity> allRepositories = new ArrayList<>();
             int page = 1;
             final int perPage = 100;  // GitHub's max items per page
 
@@ -67,7 +68,7 @@ public class AppGithubRepositoryServiceImpl implements AppGithubRepositoryServic
                                 .build())
                         .retrieve()
                         .bodyToMono(JsonNode.class)
-                        .block();  // blocking for simplicity, could be made reactive if needed
+                        .block();
 
                 JsonNode repositories = responseNode.get("repositories");
 
@@ -75,15 +76,21 @@ public class AppGithubRepositoryServiceImpl implements AppGithubRepositoryServic
                     break;  // No more repositories to fetch
                 }
 
-                // Connect with installation token to get repository objects
-                GitHub gitHub = new GitHubBuilder()
-                        .withAppInstallationToken(token.getToken())
-                        .build();
+                for (JsonNode repo : repositories) {
+                    GithubRepositoryEntity entity = GithubRepositoryEntity.builder()
+                            .installationId(installationId)
+                            .userId(userId)
+                            .repoId(repo.get("id").asLong())
+                            .repoName(repo.get("name").asText())
+                            .repoFullName(repo.get("full_name").asText())
+                            .repoUrl(repo.get("url").asText())
+                            .htmlUrl(repo.get("html_url").asText())
+                            .defaultBranch(repo.get("default_branch").asText())
+                            .isPrivate(repo.get("private").asBoolean())
+                            .isActive(true)
+                            .build();
 
-                for (JsonNode repoNode : repositories) {
-                    String fullName = repoNode.get("full_name").asText();
-                    GHRepository repository = gitHub.getRepository(fullName);
-                    allRepositories.add(repository);
+                    allRepositories.add(entity);
                 }
 
                 // Check if we've received less than perPage items
@@ -94,19 +101,23 @@ public class AppGithubRepositoryServiceImpl implements AppGithubRepositoryServic
                 page++;
             }
 
-            return allRepositories;
+            // Batch save all repositories
+            if (!allRepositories.isEmpty()) {
+                List<GithubRepositoryEntity> repos = githubRepoRepository.saveAll(allRepositories);
+                return repos;
+            }
 
         } catch (WebClientResponseException e) {
             log.error("GitHub API error for installation {}: {} - {}",
                     installation.getId(), e.getRawStatusCode(), e.getResponseBodyAsString());
             throw new IOException("Failed to fetch installation repositories", e);
-        } catch (IOException e) {
+        } catch (IOException | java.io.IOException e) {
             log.error("Failed to fetch repositories for installation {}: {}",
                     installation.getId(), e.getMessage());
             throw new IOException("Failed to fetch installation repositories", e);
-        } catch (java.io.IOException e) {
-            throw new RuntimeException(e);
         }
-    }
 
+
+        return null;
+    }
 }

@@ -70,7 +70,7 @@ public class AppGithubInstallationServiceImpl implements AppGithubInstallationSe
         installationEntity.setStatus(InstallationStatus.ACTIVE);
         installationEntity.setUserId(request.getUserId());
         GithubInstallationEntity savedEntity = installationRepository.save(installationEntity);
-        appGithubRepositoryService.saveInstallationRepositories(savedEntity.getInstallationId(), installation);
+        appGithubRepositoryService.saveInstallationRepositories(request.getUserId(), savedEntity.getInstallationId(), installation);
         return convertToResponse(savedEntity);
     }
 

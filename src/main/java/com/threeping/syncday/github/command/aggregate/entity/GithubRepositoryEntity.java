@@ -45,8 +45,6 @@ public class GithubRepositoryEntity {
     @Column(name = "html_url")
     private String htmlUrl;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
 
     @Column(name = "default_branch")
     private String defaultBranch;
