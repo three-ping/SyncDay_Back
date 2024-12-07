@@ -165,4 +165,9 @@ public class AppProjController {
     public ResponseDTO<?> deleteProj(@PathVariable Long projId){
         return ResponseDTO.ok(appProjService.deleteProj(projId));
     }
+
+    @PutMapping("/vcs")
+    public ResponseDTO<?> updateProjVCS(@RequestBody RequestUpdateVcsInfoVO vcsInfo){
+        return ResponseDTO.ok(appProjService.updateProjVCS(vcsInfo));
+    }
 }

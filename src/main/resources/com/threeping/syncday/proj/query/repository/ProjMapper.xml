@@ -12,7 +12,7 @@
         <result property="endTime" column="end_time"/>
         <result property="createdAt" column="created_at"/>
         <result property="progressStatus" column="progress_status"/>
-
+        <result property="vcsType" column="vcs_type"></result>
         <result property="vcsProjUrl" column="vcs_proj_url"/>
     </resultMap>
 
@@ -20,7 +20,7 @@
         <id property="projectId" column="proj_id"></id>
         <result property="projectName" column="proj_name"></result>
         <result property="createdAt" column="created_at"></result>
-        <result property="vcs_type" column="vcs_type"/>
+        <result property="vcsType" column="vcs_type"/>
     </resultMap>
 
     <!-- Complex result map for ProjAndWorkspaceDTO -->
@@ -31,6 +31,7 @@
         <result property="endTime" column="end_time"/>
         <result property="createdAt" column="created_at"/>
         <result property="progressStatus" column="progress_status"/>
+        <result property="vcsType" column="vcs_type"></result>
         <result property="vcsProjUrl" column="vcs_proj_url"/>
         <collection property="workspaces" ofType="com.threeping.syncday.workspace.query.aggregate.WorkspaceDTO">
             <id property="workspaceId" column="workspace_id"/>
