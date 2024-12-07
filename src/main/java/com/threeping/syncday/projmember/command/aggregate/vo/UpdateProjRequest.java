@@ -6,7 +6,7 @@ import com.threeping.syncday.proj.command.aggregate.entity.VcsType;
 import java.sql.Timestamp;
 
 public record UpdateProjRequest(
-        @JsonProperty("proj_member_id") Long proj_member_id,
+        @JsonProperty("proj_member_id") Long projMemberId,
         @JsonProperty("proj_id") Long projId,
         @JsonProperty("user_id") Long userId,
         @JsonProperty("proj_name") String projName,

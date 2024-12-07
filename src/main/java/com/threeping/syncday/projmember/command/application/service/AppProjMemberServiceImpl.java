@@ -70,7 +70,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
 
     @Override
     public UpdateProjResponse updateProj(UpdateProjRequest req) {
-        ProjMember member = projMemberRepository.findByUserIdAndProjId(req.userId(), req.projId());
+        ProjMember member = projMemberRepository.findById(req.projMemberId()).orElse(null);
         if (member == null) {
             throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
         } else if(!member.getParticipationStatus().equals(ParticipationStatus.OWNER)) {
