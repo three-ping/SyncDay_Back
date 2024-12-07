@@ -86,8 +86,10 @@ jobs:
 
       - name: Create Elasticsearch configuration
         run: |
+          # 필요한 디렉토리 구조 생성
           mkdir -p config/elasticsearch/indices
           
+          # elasticsearch.yml 파일 생성 - Elasticsearch의 핵심 설정
           cat > config/elasticsearch/elasticsearch.yml <<EOL
           node.name: "syncday-node-1"
           cluster.name: "syncday-cluster"
@@ -102,15 +104,57 @@ jobs:
           path.logs: /usr/share/elasticsearch/logs
           EOL
           
+          # healthcheck.sh 파일 생성 - Elasticsearch 상태 확인용 스크립트
           cat > config/elasticsearch/healthcheck.sh <<EOL
           #!/bin/bash
           curl -f "http://localhost:9200/_cat/health" || exit 1
           EOL
           chmod +x config/elasticsearch/healthcheck.sh
           
-          cp -r config/elasticsearch/indices/* deploy/config/elasticsearch/indices/
-          cp config/elasticsearch/init-index.sh deploy/config/elasticsearch/
-          chmod +x deploy/config/elasticsearch/init-index.sh
+          # init-index.sh 파일 생성 - 초기 인덱스 설정 스크립트
+          cat > config/elasticsearch/init-index.sh <<EOL
+          #!/bin/bash
+          set -e
+          
+          until curl -s http://localhost:9200 > /dev/null; do
+              echo 'Waiting for Elasticsearch...'
+              sleep 3
+          done
+          
+          until curl -s http://localhost:9200/_cluster/health | grep -q '"status":"green"'; do
+              echo 'Waiting for cluster to be ready...'
+              sleep 3
+          done
+          
+          echo "Cluster is ready. Starting index initialization..."
+          
+          echo "Deleting existing indices..."
+          curl -X DELETE "localhost:9200/user_search,project_search,workspace_search,cardboard_search,card_search,attachment_search,comment_search"
+          
+          create_index() {
+              local index_name=\$1
+              echo "Creating \${index_name} index..."
+              if curl -X PUT "localhost:9200/\${index_name}" -H 'Content-Type: application/json' -d "@/usr/share/elasticsearch/config/indices/\${index_name}.json"; then
+                  echo "\${index_name} created successfully"
+              else
+                  echo "Failed to create \${index_name}"
+                  exit 1
+              fi
+          }
+          
+          create_index "user_search"
+          create_index "project_search"
+          create_index "workspace_search"
+          create_index "cardboard_search"
+          create_index "card_search"
+          create_index "attachment_search"
+          create_index "comment_search"
+          
+          echo "All indices created successfully!"
+          echo "Created indices:"
+          curl 'http://localhost:9200/_cat/indices?v'
+          EOL
+          chmod +x config/elasticsearch/init-index.sh
 
       # Create application.yml for Spring Boot
       - name: Create application.yml
