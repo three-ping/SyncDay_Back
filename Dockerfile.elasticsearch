@@ -8,9 +8,9 @@ RUN apt-get update && apt-get install -y curl
 # nori 플러그인 설치
 RUN elasticsearch-plugin install analysis-nori
 
-# 설정 파일 복사
+# 설정 파일 복사 및 권한 설정
 COPY config/elasticsearch/elasticsearch.yml /usr/share/elasticsearch/config/
-COPY config/elasticsearch/indices /usr/share/elasticsearch/config/indices
+COPY config/elasticsearch/indices/ /usr/share/elasticsearch/config/indices/
 COPY config/elasticsearch/init-index.sh /usr/share/elasticsearch/config/
 COPY config/elasticsearch/healthcheck.sh /usr/share/elasticsearch/
 
@@ -27,26 +27,4 @@ ENV ES_JAVA_OPTS="-Xms1g -Xmx1g"
 ENV bootstrap.memory_lock=true
 ENV xpack.security.enabled=false
 
-COPY --chown=elasticsearch:elasticsearch <<EOF /usr/local/bin/docker-entrypoint-custom.sh
-#!/bin/bash
-set -e
-
-# Start Elasticsearch in the background
-/usr/local/bin/docker-entrypoint.sh elasticsearch -d
-
-# Wait for Elasticsearch to be ready
-until curl -s http://localhost:9200/_cluster/health | grep -q '"status":"green"'; do
-    echo 'Waiting for Elasticsearch to be ready...'
-    sleep 5
-done
-
-echo "Elasticsearch is ready. Running init-index.sh..."
-/usr/share/elasticsearch/config/init-index.sh
-
-# Keep Elasticsearch running in the foreground
-exec /usr/local/bin/docker-entrypoint.sh elasticsearch
-EOF
-
-RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
-
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint-custom.sh"]
+CMD ["elasticsearch"]

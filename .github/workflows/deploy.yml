@@ -89,7 +89,6 @@ jobs:
           # 필요한 디렉토리 구조 생성
           mkdir -p config/elasticsearch/indices
           
-          # elasticsearch.yml 파일 생성 - Elasticsearch의 핵심 설정
           cat > config/elasticsearch/elasticsearch.yml <<EOL
           node.name: "syncday-node-1"
           cluster.name: "syncday-cluster"
@@ -348,7 +347,7 @@ jobs:
                 interval: 30s
                 timeout: 30s
                 retries: 3
-                start_period: 120s
+                start_period: 60s
           networks:
             es-network:
               driver: bridge

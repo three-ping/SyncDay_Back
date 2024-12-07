@@ -1,31 +1,11 @@
-# 노드 설정
 node.name: "syncday-node-1"
 cluster.name: "syncday-cluster"
-
-# 네트워크 설정
-# 모든 인터페이스에서 접근 가능하도록 설정
 network.host: 0.0.0.0
 http.port: 9200
-
-# 클러스터 설정
-# 단일 노드 모드로 실행
 discovery.type: single-node
-
-# 메모리 설정
-# 메모리 잠금을 활성화하여 성능 향상
 bootstrap.memory_lock: true
-
-# 보안 설정
 xpack.security.enabled: false
-
-# 인덱스 설정
-# 샤드와 레플리카 기본값 설정
 index.number_of_shards: 1
 index.number_of_replicas: 0
-
-# 경로 설정
 path.data: /usr/share/elasticsearch/data
 path.logs: /usr/share/elasticsearch/logs
-
-# JVM 힙 설정을 위한 주석 가이드
-# ES_JAVA_OPTS="-Xms512m -Xmx512m" # 환경변수로 설정되어 있으므로 여기서는 주석처리
