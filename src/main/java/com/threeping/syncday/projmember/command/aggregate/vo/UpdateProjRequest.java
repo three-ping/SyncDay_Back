@@ -14,6 +14,7 @@ public record UpdateProjRequest(
         @JsonProperty("end_time") Timestamp endTime,
         @JsonProperty("created_at") Timestamp createdAt,
         @JsonProperty("vcs_type") VcsType vcsType,
-        @JsonProperty("vcs_proj_url") String vcsProjUrl) {
+        @JsonProperty("vcs_proj_url") String vcsProjUrl,
+        @JsonProperty("github_installation_id") Long githubInstallationId) {
 
 }

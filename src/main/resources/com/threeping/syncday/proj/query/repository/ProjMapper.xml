@@ -12,8 +12,9 @@
         <result property="endTime" column="end_time"/>
         <result property="createdAt" column="created_at"/>
         <result property="progressStatus" column="progress_status"/>
-        <result property="vcsType" column="vcs_type"></result>
+        <result property="vcsType" column="vcs_type"/>
         <result property="vcsProjUrl" column="vcs_proj_url"/>
+        <result property="githubInstallationId" column="github_installation_id"/>
     </resultMap>
 
     <resultMap id="projSearchMap" type="com.threeping.syncday.proj.query.aggregate.dto.ProjectQueryDTO">
@@ -31,7 +32,8 @@
         <result property="endTime" column="end_time"/>
         <result property="createdAt" column="created_at"/>
         <result property="progressStatus" column="progress_status"/>
-        <result property="vcsType" column="vcs_type"></result>
+        <result property="vcsType" column="vcs_type"/>
+        <result property="githubInstallationId" column="github_installation_id"/>
         <result property="vcsProjUrl" column="vcs_proj_url"/>
         <collection property="workspaces" ofType="com.threeping.syncday.workspace.query.aggregate.WorkspaceDTO">
             <id property="workspaceId" column="workspace_id"/>
@@ -53,7 +55,8 @@
             created_at,
             progress_status,
             vcs_type,
-            vcs_proj_url
+            vcs_proj_url,
+            github_installation_id
         FROM TBL_PROJ
         ORDER BY created_at DESC
     </select>
@@ -88,6 +91,7 @@
             p.progress_status,
             p.vcs_type,
             p.vcs_proj_url,
+            p.github_installation_id,
             w.workspace_id,
             w.workspace_name,
             w.created_at AS workspace_created_at,
@@ -110,9 +114,10 @@
             p.progress_status,
             p.vcs_type,
             p.vcs_proj_url,
+            p.github_installation_id,
             w.workspace_id,
             w.workspace_name,
-            w.progress_status AS workspace_progress_status,
+            w.progress_status AS workspace_progress_status
 
         FROM TBL_PROJ p
                  INNER JOIN TBL_PROJ_MEMBER pm ON p.proj_id = pm.proj_id
