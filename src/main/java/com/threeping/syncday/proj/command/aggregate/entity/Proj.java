@@ -31,9 +31,6 @@ public class  Proj {
     @Column(name="progress_status")
     private Byte progressStatus;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="vcs_type")
-    private VcsType vcsType;
 
     @Column(name="vcs_proj_url")
     private String vcsProjUrl;

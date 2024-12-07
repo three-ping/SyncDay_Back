@@ -37,6 +37,23 @@
         <result property="createdAt" column="created_at"/>
     </resultMap>
 
+    <resultMap id="todayCardResultMap" type="com.threeping.syncday.card.query.aggregate.TodayCardDTO">
+        <id property="cardId" column="card_id"></id>
+        <result property="title" column="title"></result>
+        <result property="content" column="content"></result>
+        <result property="createdAt" column="created_at"></result>
+        <result property="startTime" column="start_time"></result>
+        <result property="endTime" column="end_time"></result>
+        <result property="vcsObjectType" column="vcs_object_type"></result>
+        <result property="vcsObjectUrl" column="vcs_object_url"></result>
+        <result property="cardBoardId" column="cardboard_id"></result>
+        <result property="tagId" column="tag_id"></result>
+        <result property="tagName" column="tag_name"></result>
+        <result property="color" column="color"></result>
+        <result property="createdBy" column="created_by"></result>
+        <result property="assignee" column="assignee"></result>
+    </resultMap>
+
     <select id="selectAllCards" resultMap="cardResultMap">
         SELECT
                 CARD_ID
@@ -124,4 +141,30 @@
                  LEFT JOIN TBL_USER assignee ON c.assignee = assignee.user_id
                  LEFT JOIN TBL_CARD_TAG ct ON c.tag_id = ct.tag_id
     </select>
+
+    <select id="selectTodayCardsByUserId" resultMap="todayCardResultMap" parameterType="long">
+    <![CDATA[
+        SELECT
+            c.CARD_ID,
+            c.TITLE,
+            c.CONTENT,
+            c.CREATED_AT,
+            c.START_TIME,
+            c.END_TIME,
+            c.VCS_OBJECT_TYPE,
+            c.VCS_OBJECT_URL,
+            c.CARDBOARD_ID,
+            c.TAG_ID,
+            ct.tag_name,
+            ct.color,
+            c.CREATED_BY,
+            c.ASSIGNEE
+        FROM TBL_CARD c
+        LEFT JOIN TBL_CARD_TAG ct ON c.tag_id = ct.tag_id
+        WHERE assignee = #{userId}
+          AND (start_time <= NOW() AND end_time >= NOW())
+        ORDER BY c.start_time
+        ]]>
+</select>
+
 </mapper>

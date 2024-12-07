@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
+import com.threeping.syncday.teampost.query.aggregate.dto.MainTeamPostDTO;
 import com.threeping.syncday.teampost.query.aggregate.dto.TeamPostDTO;
 import com.threeping.syncday.teampost.query.repository.TeamPostMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -57,5 +58,11 @@ public class TeamPostQueryServiceImpl implements TeamPostQueryService{
             throw new CommonException(ErrorCode.INVALID_INPUT_VALUE);
         }
         return teamPostDTO;
+    }
+
+    @Override
+    public List<MainTeamPostDTO> findMyTeamPost(Long userId) {
+        List<MainTeamPostDTO> myTeamPostDTOs = teamPostMapper.findMyTeamPost(userId);
+        return myTeamPostDTOs;
     }
 }
