@@ -62,7 +62,7 @@ public class ChatService {
 
             Optional<ChatMessage> lastMessage = chatMessageRepository.findTopByRoomIdOrderBySentTimeDesc(
                     chatRoom.getRoomId());
-            roomDTO.setLastMessage(lastMessage.map(ChatMessage::getContent).orElse("마지막 메세지를 가져올 수 없습니다."));
+            roomDTO.setLastMessage(lastMessage.map(ChatMessage::getContent).orElse("메세지가 없습니다."));
             return roomDTO;
         }).collect(Collectors.toList());
         return chatRooms;
