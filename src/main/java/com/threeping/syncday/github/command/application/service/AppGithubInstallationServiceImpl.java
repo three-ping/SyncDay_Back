@@ -9,7 +9,7 @@ import com.threeping.syncday.github.command.aggregate.payload.GithubInstallation
 import com.threeping.syncday.github.command.aggregate.payload.GithubInstallationRequest;
 import com.threeping.syncday.github.command.aggregate.payload.GithubInstallationResponse;
 import com.threeping.syncday.github.command.domain.GithubInstallationRepository;
-import com.threeping.syncday.github.command.infrastructure.github.GithubAppClient;
+import com.threeping.syncday.github.infrastructure.github.GithubAppClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/github/install")
 @Slf4j
@@ -20,6 +22,11 @@ public class GithubInstallationController {
     @GetMapping("/{userId}")
     public ResponseDTO<?> findGithubInstallations(@PathVariable("userId") Long userId) {
         return ResponseDTO.ok(githubInstallationService.getInstallationsByUserId(userId));
+    }
+
+    @GetMapping("/{installationId}/projects")
+    public ResponseDTO<?> findGithubProjects(@PathVariable("installationId") Long installationId) throws IOException {
+        return ResponseDTO.ok(githubInstallationService.getProjectsByInstallationId(installationId));
     }
 
 }
