@@ -24,9 +24,6 @@ public class GithubInstallationController {
         return ResponseDTO.ok(githubInstallationService.getInstallationsByUserId(userId));
     }
 
-    @GetMapping("/{installationId}/projects")
-    public ResponseDTO<?> findGithubProjects(@PathVariable("installationId") Long installationId) throws IOException {
-        return ResponseDTO.ok(githubInstallationService.getProjectsByInstallationId(installationId));
-    }
+
 
 }

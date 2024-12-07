@@ -23,10 +23,5 @@ public class GithubInstallationServiceImpl implements GithubInstallationService 
         return githubInstallationMapper.selectByUserId(userId);
     }
 
-    @Override
-    public List<GHProject> getProjectsByInstallationId(Long installationId) throws IOException {
 
-        return githubAppClient.getGithubProjects(installationId);
-
-    }
 }

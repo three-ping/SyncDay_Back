@@ -38,19 +38,5 @@ public class GithubAppClient {
         }
     }
 
-    public List<GHProject> getGithubProjects(Long installationId) {
-        try {
-            GitHub github = gitHubFactory.createGitHubWithInstallationToken(getInstallationToken(installationId).getToken());
-            GHAppInstallation installation = getGithubInstallation(installationId);
-            GHOrganization org = github.getOrganization(installation.getAccount().getLogin());
-            List<GHProject> projs = org.listProjects().toList();
-            log.info("Github project list: {}", projs);
-            projs.forEach(
-                    x-> log.debug("x: {}", x)
-            );
-            return projs;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 }
