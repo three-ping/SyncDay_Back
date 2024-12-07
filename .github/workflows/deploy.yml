@@ -215,9 +215,15 @@ jobs:
               volumes:
                 - ./:/app
               depends_on:
-                - elasticsearch
-                - mongodb
-                - redis
+                elasticsearch:
+                  condition: service_healthy
+                mongodb:
+                  condition: service_healthy
+                redis:
+                  condition: service_healthy
+              networks:
+                - es-network 
+          
           
             mongodb:
               image: mongo:latest
@@ -225,6 +231,8 @@ jobs:
                 - /var/app/current/mongodb_data:/data/db
               ports:
                 - "27017:27017"
+              networks:
+                - es-network 
           
             redis:
               image: redis:latest
@@ -233,6 +241,8 @@ jobs:
                 - /var/app/current/redis_data:/data
               ports:
                 - "6379:6379"
+              networks:
+                - es-network 
           
             elasticsearch:
               build:
@@ -241,6 +251,15 @@ jobs:
               container_name: syncday-elasticsearch
               volumes:
                 - es_data:/usr/share/elasticsearch/data
+              environment:
+                - discovery.type=single-node
+                - xpack.security.enabled=false
+                - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+                - bootstrap.memory_lock=true
+              ulimits:
+                memlock:
+                  soft: -1
+                  hard: -1
               ports:
                 - "9200:9200"
               networks:
