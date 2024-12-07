@@ -250,12 +250,13 @@ jobs:
                 dockerfile: Dockerfile.elasticsearch
               container_name: syncday-elasticsearch
               volumes:
-                - es_data:/usr/share/elasticsearch/data
+                - /var/app/current/es_data:/usr/share/elasticsearch/data
               environment:
                 - discovery.type=single-node
                 - xpack.security.enabled=false
                 - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
                 - bootstrap.memory_lock=true
+                - cluster.routing.allocation.disk.threshold_enabled=false
               ulimits:
                 memlock:
                   soft: -1
@@ -265,10 +266,11 @@ jobs:
               networks:
                 - es-network
               healthcheck:
-                test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"'"]
+                test: ["CMD", "curl", "-f", "http://localhost:9200/_cat/health"]
                 interval: 10s
                 timeout: 10s
                 retries: 5
+                start_period: 40s
           networks:
             es-network:
               driver: bridge
