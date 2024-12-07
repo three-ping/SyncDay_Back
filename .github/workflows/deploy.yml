@@ -71,6 +71,13 @@ jobs:
                   }
                 }
           EOL
+          cat > .ebextensions/03-sysctl-settings.config <<EOL
+          commands:
+            01_increase_vm_max_map_count:
+              command: |
+                echo "vm.max_map_count=262144" >> /etc/sysctl.conf
+                sysctl -w vm.max_map_count=262144
+          EOL
 
       - name: Create Elasticsearch configuration
         run: |
@@ -256,21 +263,25 @@ jobs:
                 - xpack.security.enabled=false
                 - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
                 - bootstrap.memory_lock=true
-                - cluster.routing.allocation.disk.threshold_enabled=false
               ulimits:
                 memlock:
                   soft: -1
                   hard: -1
+                nofile:
+                  soft: 65536
+                  hard: 65536
+              sysctls:
+                - net.core.somaxconn=65535
               ports:
                 - "9200:9200"
               networks:
                 - es-network
               healthcheck:
                 test: ["CMD", "curl", "-f", "http://localhost:9200/_cat/health"]
-                interval: 10s
+                interval: 30s
                 timeout: 10s
                 retries: 5
-                start_period: 40s
+                start_period: 60s
           networks:
             es-network:
               driver: bridge
