@@ -25,7 +25,6 @@ public class OAuth2Controller {
     }
 
     @PostMapping("/github/access_token")
-
     public ResponseDTO<?> getAccessToken(@RequestBody GithubAuthRequestVO request){
         String code = request.getCode();
         String state = request.getState();
@@ -36,4 +35,16 @@ public class OAuth2Controller {
         }
         return ResponseDTO.ok(oAuth2Service.getGithubAccessToken(code));
     }
+
+//    @PostMapping("/github/refresh_token")
+//    public ResponseDTO<GithubTokenResponse> refreshToken(@RequestBody Map<String, String> request) {
+//        String refreshToken = request.get("refresh_token");
+//
+//        if (refreshToken == null) {
+//            throw new CommonException(ErrorCode.INVALID_TOKEN_ERROR);
+//        }
+//
+//        GithubTokenResponse tokenResponse = oAuth2Service.refreshAccessToken(refreshToken);
+//        return ResponseDTO.ok(tokenResponse);
+//    }
 }
