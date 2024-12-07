@@ -14,25 +14,30 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.kohsuke.github.GHAppInstallation;
+import org.kohsuke.github.GHRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class AppGithubInstallationServiceImpl implements AppGithubInstallationService {
 
     private final GithubInstallationRepository installationRepository;
     private final GithubAppClient githubClient;
+    private final AppGithubRepositoryService appGithubRepositoryService;
 
     @Override
     public GithubInstallationResponse processInstallationAuth(GithubInstallationRequest request) {
-       try {
-           switch (request.getSetupAction()){
-               case INSTALL -> {
-                   return handleNewInstallation(request);
-               }
+        try {
+            switch (request.getSetupAction()) {
+                case INSTALL -> {
+                    return handleNewInstallation(request);
+                }
 //               case UPDATE -> {
 //                   return handleInstallationUpdate(request);
 //               }
@@ -42,13 +47,13 @@ public class AppGithubInstallationServiceImpl implements AppGithubInstallationSe
 //               case UNINSTALL -> {
 //                   return handleInstallationUnsuspend(request);
 //               }
-               default -> {
-                   throw new CommonException(ErrorCode.UNKNOWN_SETUP_ACTION);
-               }
-           }
-       }catch (Exception e){
-           throw new CommonException(ErrorCode.GITHUB_APP_INSTALLATION_FAILURE);
-       }
+                default -> {
+                    throw new CommonException(ErrorCode.UNKNOWN_SETUP_ACTION);
+                }
+            }
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.GITHUB_APP_INSTALLATION_FAILURE);
+        }
     }
 
     private GithubInstallationResponse handleNewInstallation(GithubInstallationRequest request) throws IOException {
@@ -65,9 +70,9 @@ public class AppGithubInstallationServiceImpl implements AppGithubInstallationSe
         installationEntity.setStatus(InstallationStatus.ACTIVE);
         installationEntity.setUserId(request.getUserId());
         GithubInstallationEntity savedEntity = installationRepository.save(installationEntity);
-
         return convertToResponse(savedEntity);
     }
+
     private GithubInstallationResponse convertToResponse(GithubInstallationEntity entity) {
         GithubInstallationDetails details = GithubInstallationDetails.builder()
                 .id(entity.getId())
@@ -85,5 +90,8 @@ public class AppGithubInstallationServiceImpl implements AppGithubInstallationSe
                 .success(true)
                 .message("new installation")
                 .installationDetails(details)
-                .build();}
+                .build();
+    }
+
+
 }

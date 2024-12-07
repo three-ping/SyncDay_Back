@@ -79,6 +79,7 @@ public enum ErrorCode {
     GITHUB_APP_INSTALLATION_FAILURE(5001101,HttpStatus.INTERNAL_SERVER_ERROR,"Github App 설치에 실패했습니다."),
     GITHUB_APP_INSTALLATION_CLIENT_ERROR(5001102, HttpStatus.INTERNAL_SERVER_ERROR,"GithubApp 설치 정보 조회 실패"),
     GITHUB_AUTH_TOKEN_FAIL(5001104,HttpStatus.INTERNAL_SERVER_ERROR,"Github Auth 토큰 발급에 실패했습니다"),
+    GITHUB_INSTLLATION_REPOSITORY_SAVE_FAILURE(5001205, HttpStatus.INTERNAL_SERVER_ERROR, "레포지토리 정보 등록에 실패했습니다"),
     // 12: 카드 북마크
     CARD_BOOKMARK_ALREADY_EXISTS(4001200,HttpStatus.BAD_REQUEST, "카드북마크가 존재합니다"),
     CARD_BOOKMARK_NOT_FOUND(4041201,HttpStatus.NOT_FOUND, "존재하지 않는 카드 북마크입니다"),
