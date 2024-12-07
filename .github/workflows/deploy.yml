@@ -88,6 +88,26 @@ jobs:
         run: |
           mkdir -p deploy/config/elasticsearch/indices
           
+          cat > deploy/config/elasticsearch/elasticsearch.yml <<EOL
+          node.name: "syncday-node-1"
+          cluster.name: "syncday-cluster"
+          network.host: 0.0.0.0
+          http.port: 9200
+          discovery.type: single-node
+          bootstrap.memory_lock: true
+          xpack.security.enabled: false
+          index.number_of_shards: 1
+          index.number_of_replicas: 0
+          path.data: /usr/share/elasticsearch/data
+          path.logs: /usr/share/elasticsearch/logs
+          EOL
+          
+          cat > deploy/config/elasticsearch/healthcheck.sh <<EOL
+          #!/bin/bash
+          curl -f "http://localhost:9200/_cat/health" || exit 1
+          EOL
+          chmod +x deploy/config/elasticsearch/healthcheck.sh
+          
           cp -r config/elasticsearch/indices/* deploy/config/elasticsearch/indices/
           cp config/elasticsearch/init-index.sh deploy/config/elasticsearch/
           chmod +x deploy/config/elasticsearch/init-index.sh
@@ -262,11 +282,11 @@ jobs:
                 dockerfile: Dockerfile.elasticsearch
               container_name: syncday-elasticsearch
               volumes:
-                - /es_data:/usr/share/elasticsearch/data
+                - /var/app/current/es_data:/usr/share/elasticsearch/data
               environment:
                 - discovery.type=single-node
                 - xpack.security.enabled=false
-                - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+                - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
                 - bootstrap.memory_lock=true
               ulimits:
                 memlock:
@@ -279,6 +299,12 @@ jobs:
                 - "9200:9200"
               networks:
                 - es-network
+              healthcheck:
+                test: ["CMD-SHELL", "/usr/share/elasticsearch/healthcheck.sh"]
+                interval: 30s
+                timeout: 30s
+                retries: 3
+                start_period: 120s
           networks:
             es-network:
               driver: bridge
