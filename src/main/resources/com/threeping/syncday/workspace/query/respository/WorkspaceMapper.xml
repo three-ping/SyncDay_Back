@@ -56,7 +56,13 @@
 
     <resultMap id="workspaceInfoMap" type="com.threeping.syncday.workspace.query.aggregate.WorkspaceInfoDTO">
         <id property="workspaceId" column="workspace_id"/>
-        <result property="workspaceName" column="workspace_name"></result>
+        <result property="workspaceName" column="workspace_name"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="progressStauts" column="progress_status"/>
+        <result property="projId" column="proj_id"/>
+        <result property="vcsType" column="vcs_type"/>
+        <result property="vcsRepoName" column="vcs_repo_name"/>
+        <result property="vcsRepoUrl" column="vcs_repo_url"/>
         <collection property="cardboards" column="workspace_id"
                     select="selectCardboardsByWorkspaceId"/>
     </resultMap>
