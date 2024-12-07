@@ -11,10 +11,11 @@ import java.util.Optional;
 
 @Repository
 public interface ChatMessageRepository extends MongoRepository<ChatMessage, String> {
-    Optional<ChatMessage> findTopByRoomIdAndChatTypeOrderBySentTimeDesc
-            (String roomId, ChatType chatType);
+    Optional<ChatMessage> findTopByRoomIdOrderBySentTimeDesc
+            (String roomId);
 
     List<ChatMessage> findByRoomIdAndSentTimeAfterOrderBySentTimeAsc(String roomId, LocalDateTime sentTime);
 
     List<ChatMessage> findByRoomIdOrderBySentTimeAsc(String roomId);
+
 }

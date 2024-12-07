@@ -1,6 +1,7 @@
 package com.threeping.syncday.chat.application;
 
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
+import com.threeping.syncday.chat.dto.ChatRoomDTO;
 import com.threeping.syncday.chat.entity.ChatMessage;
 import com.threeping.syncday.chat.entity.ChatRoom;
 import com.threeping.syncday.chat.entity.ChatType;
@@ -40,8 +41,8 @@ public class ChatService {
     }
 
     //  채팅방 목록 조회
-    public List<ChatRoom> findUserChat(Long userId) {
-        log.info("유저 채팅 목록 찾는 서비스 메서드 시작");
+    public List<ChatRoomDTO> findUserChat(Long userId) {
+        log.info("유저{} 채팅 목록 찾는 서비스 메서드 시작", userId);
 
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> {
@@ -54,15 +55,25 @@ public class ChatService {
         List<ChatRoom> chatRoomList = chatRoomRepository.findChatRoomsByMemberIdsContaining(userId);
         log.info("채팅방 리스트 엔티티: {}", chatRoomList);
 
-        return chatRoomList;
+        List<ChatRoomDTO> chatRooms = chatRoomList.stream().map(chatRoom -> {
+            ChatRoomDTO roomDTO = new ChatRoomDTO();
+            roomDTO.setRoomId(chatRoom.getRoomId());
+            roomDTO.setChatRoomName(chatRoom.getChatRoomName());
+
+            Optional<ChatMessage> lastMessage = chatMessageRepository.findTopByRoomIdOrderBySentTimeDesc(
+                    chatRoom.getRoomId());
+            roomDTO.setLastMessage(lastMessage.map(ChatMessage::getContent).orElse("마지막 메세지를 가져올 수 없습니다."));
+            return roomDTO;
+        }).collect(Collectors.toList());
+        return chatRooms;
     }
 
     //  특정 채팅방 조회
     public List<ChatMessageDTO> findChatRoomByRoomId(String roomId) {
         log.info("특정 {} 채팅방 메세지 조회 ", roomId);
         Optional<ChatMessage> lastLeave = chatMessageRepository
-                .findTopByRoomIdAndChatTypeOrderBySentTimeDesc(
-                        roomId, ChatType.LEAVE);
+                .findTopByRoomIdOrderBySentTimeDesc(
+                        roomId);
 
         List<ChatMessage> messages;
         if (lastLeave.isPresent()) {
