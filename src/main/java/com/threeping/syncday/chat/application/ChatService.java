@@ -71,17 +71,9 @@ public class ChatService {
     //  특정 채팅방 조회
     public List<ChatMessageDTO> findChatRoomByRoomId(String roomId) {
         log.info("특정 {} 채팅방 메세지 조회 ", roomId);
-        Optional<ChatMessage> lastLeave = chatMessageRepository
-                .findTopByRoomIdOrderBySentTimeDesc(
-                        roomId);
 
-        List<ChatMessage> messages;
-        if (lastLeave.isPresent()) {
-            LocalDateTime leaveTime = lastLeave.get().getSentTime();
-            messages = chatMessageRepository.findByRoomIdAndSentTimeAfterOrderBySentTimeAsc(roomId, leaveTime);
-        } else {
-            messages = chatMessageRepository.findByRoomIdOrderBySentTimeAsc(roomId);
-        }
+        List<ChatMessage> messages = chatMessageRepository.findByRoomIdOrderBySentTimeAsc(roomId);
+
         return messages.stream()
                 .map(this::convertToChatMessage)
                 .collect(Collectors.toList());
@@ -116,6 +108,7 @@ public class ChatService {
         leaveRoom.setChatType(ChatType.LEAVE);
         leaveRoom.setSentTime(leaveTime);
         chatMessageRepository.save(leaveRoom);
+        log.info("사용자가 채팅방을 나감: roomId={}, userId={}", roomId, userId);
 
         ChatRoom updatedRoom = chatRoomRepository.save(chatRoom);
 
