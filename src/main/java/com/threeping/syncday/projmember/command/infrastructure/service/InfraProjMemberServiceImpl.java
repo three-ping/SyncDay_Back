@@ -18,4 +18,10 @@ public class InfraProjMemberServiceImpl implements InfraProjMemberService {
     public ProjDTO requestAddProj(UpdateProjRequest req) {
         return appProjService.addProj(req);
     }
+
+    @Override
+    public ProjDTO requestUpdateProj(UpdateProjRequest req) {
+
+        return appProjService.updateProj(req);
+    }
 }

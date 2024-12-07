@@ -6,4 +6,6 @@ import com.threeping.syncday.projmember.command.aggregate.vo.UpdateProjRequest;
 
 public interface InfraProjMemberService {
     ProjDTO requestAddProj(UpdateProjRequest req);
+
+    ProjDTO requestUpdateProj(UpdateProjRequest req);
 }

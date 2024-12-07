@@ -3,9 +3,10 @@ package com.threeping.syncday.projmember.command.application.controller;
 import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.projmember.command.aggregate.vo.UpdateProjRequest;
 import com.threeping.syncday.projmember.command.application.service.AppProjMemberService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+@Slf4j
 @RestController
 @RequestMapping("/api/proj-members")
 public class AppProjMemberController {
@@ -20,6 +21,12 @@ public class AppProjMemberController {
     @PostMapping("/")
     public ResponseDTO<?> createProj(@RequestBody UpdateProjRequest req){
         return ResponseDTO.ok(appProjMemberService.addProj(req));
+    }
+
+    @PutMapping("/")
+    public ResponseDTO<?> updateProj(@RequestBody UpdateProjRequest req){
+        log.info("req: {}", req);
+        return ResponseDTO.ok(appProjMemberService.updateProj(req));
     }
     @PutMapping("/bookmark")
     public ResponseDTO<?> updateProjBookmark(@RequestParam Long projMemberId) {

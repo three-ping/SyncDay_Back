@@ -3,10 +3,12 @@ package com.threeping.syncday.projmember.command.aggregate.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
 @Entity
 @Table(name="TBL_PROJ_MEMBER")
+@NoArgsConstructor
+@Data
 public class ProjMember {
 
     @Id

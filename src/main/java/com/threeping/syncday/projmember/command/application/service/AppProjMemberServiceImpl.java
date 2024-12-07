@@ -7,12 +7,12 @@ import com.threeping.syncday.projmember.command.aggregate.entity.BookmarkStatus;
 import com.threeping.syncday.projmember.command.aggregate.entity.ParticipationStatus;
 import com.threeping.syncday.projmember.command.aggregate.entity.ProjMember;
 import com.threeping.syncday.projmember.command.aggregate.vo.UpdateProjRequest;
+import com.threeping.syncday.projmember.command.aggregate.vo.UpdateProjResponse;
 import com.threeping.syncday.projmember.command.domain.repository.ProjMemberRepository;
 import com.threeping.syncday.projmember.command.infrastructure.service.InfraProjMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,8 +58,26 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
     }
 
     @Override
-    public ProjMember addProj(UpdateProjRequest req) {
+    public UpdateProjResponse addProj(UpdateProjRequest req) {
         ProjDTO proj = infraProjMemberService.requestAddProj(req);
-        return null;
+        ProjMember member = new ProjMember();
+        member.setUserId(req.userId());
+        member.setBookmarkStatus(BookmarkStatus.NONE);
+        member.setProjId(proj.getProjId());
+        member.setParticipationStatus(ParticipationStatus.OWNER);
+        return new UpdateProjResponse(proj.getProjId(), member.getProjMemberId(), proj.getProjName(), proj.getStartTime(), proj.getEndTime(),proj.getVcsType(), proj.getVcsProjUrl());
+    }
+
+    @Override
+    public UpdateProjResponse updateProj(UpdateProjRequest req) {
+        ProjMember member = projMemberRepository.findByUserIdAndProjId(req.userId(), req.projId());
+        if (member == null) {
+            throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
+        } else if(!member.getParticipationStatus().equals(ParticipationStatus.OWNER)) {
+            throw new CommonException(ErrorCode.PROJ_INVALID_REQUEST);
+        }
+        ProjDTO proj = infraProjMemberService.requestUpdateProj(req);
+
+        return new UpdateProjResponse(proj.getProjId(),member.getProjMemberId(), proj.getProjName(),proj.getStartTime(), proj.getEndTime(), proj.getVcsType(), proj.getVcsProjUrl() );
     }
 }
