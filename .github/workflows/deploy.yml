@@ -73,10 +73,15 @@ jobs:
           EOL
           cat > .ebextensions/03-sysctl-settings.config <<EOL
           commands:
-            01_increase_vm_max_map_count:
-              command: |
-                echo "vm.max_map_count=262144" >> /etc/sysctl.conf
-                sysctl -w vm.max_map_count=262144
+          01_set_elasticsearch_permissions:
+            command: |
+              mkdir -p /var/app/current/es_data
+              chown -R webapp:webapp /var/app/current/es_data
+              chmod 777 /var/app/current/es_data
+          02_increase_vm_max_map_count:
+            command: |
+              echo "vm.max_map_count=262144" >> /etc/sysctl.conf
+              sysctl -w vm.max_map_count=262144
           EOL
 
       - name: Create Elasticsearch configuration
@@ -257,7 +262,7 @@ jobs:
                 dockerfile: Dockerfile.elasticsearch
               container_name: syncday-elasticsearch
               volumes:
-                - /var/app/current/es_data:/usr/share/elasticsearch/data
+                - /es_data:/usr/share/elasticsearch/data
               environment:
                 - discovery.type=single-node
                 - xpack.security.enabled=false
@@ -270,23 +275,16 @@ jobs:
                 nofile:
                   soft: 65536
                   hard: 65536
-              sysctls:
-                - net.core.somaxconn=65535
               ports:
                 - "9200:9200"
               networks:
                 - es-network
-              healthcheck:
-                test: ["CMD", "curl", "-f", "http://localhost:9200/_cat/health"]
-                interval: 30s
-                timeout: 10s
-                retries: 5
-                start_period: 60s
           networks:
             es-network:
               driver: bridge
           volumes:
             es_data:
+              driver: local
           EOF
         env:
           RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}

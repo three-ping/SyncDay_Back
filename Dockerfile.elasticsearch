@@ -1,17 +1,25 @@
 FROM docker.elastic.co/elasticsearch/elasticsearch:7.17.9
 
-# 데이터 디렉토리 권한 설정
+USER root
+
+# 필요한 디렉토리 생성 및 권한 설정
 RUN mkdir -p /usr/share/elasticsearch/data && \
-    chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data && \
-    chmod 777 /usr/share/elasticsearch/data
+    mkdir -p /usr/share/elasticsearch/config/indices && \
+    chown -R elasticsearch:elasticsearch /usr/share/elasticsearch
 
 # nori 플러그인 설치
 RUN elasticsearch-plugin install analysis-nori
 
 USER elasticsearch
 
+# 환경 변수 설정
 ENV discovery.type=single-node
 ENV ES_JAVA_OPTS="-Xms512m -Xmx512m"
 ENV xpack.security.enabled=false
+ENV bootstrap.memory_lock=true
 
-CMD ["eswrapper"]
+# 헬스체크를 위한 스크립트 추가
+HEALTHCHECK --interval=30s --timeout=10s --retries=5 --start-period=60s \
+    CMD curl -f http://localhost:9200/_cat/health || exit 1
+
+CMD ["elasticsearch"]
