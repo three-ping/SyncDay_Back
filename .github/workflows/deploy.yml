@@ -71,26 +71,6 @@ jobs:
                   }
                 }
           EOL
-          cat > .ebextensions/03-docker-permissions.config <<EOL
-          commands:
-            01_docker_permissions:
-              command: |
-                usermod -a -G docker ec2-user
-                chmod 666 /var/run/docker.sock
-            02_docker_compose_restart:
-              command: |
-                cd /var/app/current
-                docker-compose down
-                docker-compose up -d
-              ignoreErrors: true
-          EOL
-          cat > .ebextensions/04-sysctl-settings.config <<EOL
-          commands:
-            01_sysctl_config:
-              command: |
-                echo "vm.max_map_count=262144" >> /etc/sysctl.conf
-                sysctl -w vm.max_map_count=262144
-            EOL
 
       - name: Create Elasticsearch configuration
         run: |
@@ -233,14 +213,11 @@ jobs:
                 GITHUB_OAUTH2_CLIENT_ID: "${OAUTH_CLIENT_ID}"
                 GITHUB_OAUTH2_CLIENT_SECRET: "${OAUTH_CLIENT_SECRET}"
               volumes:
-                - /var/app/current:/app
+                - ./:/app
               depends_on:
-                elasticsearch:
-                  condition: service_healthy
-                mongodb:
-                  condition: service_healthy
-                redis: 
-                  condition: service_healthy
+                - elasticsearch
+                - mongodb
+                - redis
           
             mongodb:
               image: mongo:latest
@@ -248,11 +225,6 @@ jobs:
                 - /var/app/current/mongodb_data:/data/db
               ports:
                 - "27017:27017"
-              healthcheck:
-                test: ["CMD", "mongosh", "--eval", "'db.runCommand(\"ping\").ok'"]
-                interval: 10s
-                timeout: 5s
-                retries: 5
           
             redis:
               image: redis:latest
@@ -261,30 +233,14 @@ jobs:
                 - /var/app/current/redis_data:/data
               ports:
                 - "6379:6379"
-              healthcheck:
-                test: ["CMD", "redis-cli", "ping"]
-                interval: 10s
-                timeout: 5s
-                retries: 5
           
             elasticsearch:
-              image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+              build:
+                context: .
+                dockerfile: Dockerfile.elasticsearch
               container_name: syncday-elasticsearch
-              command: >
-                bash -c "
-                chmod -R 777 /usr/share/elasticsearch/data &&
-                /usr/local/bin/docker-entrypoint.sh elasticsearch &
-                sleep 30 &&
-                bin/elasticsearch-plugin install analysis-nori &&
-                /usr/share/elasticsearch/config/elasticsearch/init-index.sh"
-              environment:
-                discovery.type: "single-node"
-                ES_JAVA_OPTS: "-Xms512m -Xmx512m"
-                xpack.security.enabled: "false"
               volumes:
-                - /var/app/current/es_data:/usr/share/elasticsearch/data
-                - /var/app/current/config/elasticsearch/indices:/usr/share/elasticsearch/config/indices
-                - /var/app/current/config/elasticsearch/init-index.sh:/usr/share/elasticsearch/config/elasticsearch/init-index.sh
+                - es_data:/usr/share/elasticsearch/data
               ports:
                 - "9200:9200"
               networks:
@@ -297,6 +253,8 @@ jobs:
           networks:
             es-network:
               driver: bridge
+          volumes:
+            es_data:
           EOF
         env:
           RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
@@ -351,11 +309,48 @@ jobs:
             echo "No executable JAR file found!"
             exit 1
           fi
-          echo 'FROM openjdk:17-jdk-slim' > Dockerfile
-          echo 'WORKDIR /app' >> Dockerfile
-          echo 'COPY app.jar /app/app.jar' >> Dockerfile
-          echo 'CMD ["java", "-jar", "/app/app.jar"]' >> Dockerfile
+          cat > Dockerfile <<EOL
+          FROM openjdk:17-jdk-slim
+          WORKDIR /app
+          COPY app.jar /app/app.jar
+          CMD ["java", "-jar", "/app/app.jar"]
+          EOL
+          
+          cat > Dockerfile.elasticsearch <<EOL
+          FROM docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+          
+          RUN elasticsearch-plugin install analysis-nori
+          COPY config/elasticsearch/indices /usr/share/elasticsearch/config/indices
+          COPY config/elasticsearch/init-index.sh /usr/share/elasticsearch/config/elasticsearch/
+          RUN chmod +x /usr/share/elasticsearch/config/elasticsearch/init-index.sh
+          
+          RUN chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data
+          
+          ENV discovery.type=single-node
+          ENV ES_JAVA_OPTS="-Xms512m -Xmx512m"
+          ENV xpack.security.enabled=false
+          
+          COPY <<EOF /usr/local/bin/docker-entrypoint-custom.sh
+          #!/bin/bash
+          /usr/local/bin/docker-entrypoint.sh elasticsearch -d
+    
+          until curl -s http://localhost:9200/_cluster/health | grep -q '"status":"green"'; do
+          echo "Waiting for ElasticSearch to start..."
+          sleep 5
+          done
+          
+          /usr/share/elasticsearch/config/elasticsearch/init-index.sh
+    
+          /usr/local/bin/docker-entrypoint.sh elasticsearch
+          EOF
+          
+          RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
+          
+          ENTRYPOINT ["/usr/local/bin/docker-entrypoint-custom.sh"]
+          EOL
+          
           cp Dockerfile deploy/
+          cp Dockerfile.elasticsearch deploy/
           cp Procfile deploy/Procfile
           cp -r .ebextensions deploy/.ebextensions
           cp -r config deploy/
