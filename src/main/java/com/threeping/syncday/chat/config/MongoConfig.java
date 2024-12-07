@@ -57,8 +57,8 @@ public class MongoConfig {
                     .orElseThrow(() -> new RuntimeException("User 9 not found"));
             UserEntity user10 = userRepository.findByUserId(10L)
                     .orElseThrow(() -> new RuntimeException("User 10 not found"));
-//            UserEntity user11 = userRepository.findByUserId(11L)
-//                    .orElseThrow(() -> new RuntimeException("User 11 not found"));
+            UserEntity user11 = userRepository.findByUserId(11L)
+                    .orElseThrow(() -> new RuntimeException("User 11 not found"));
 
             // 채팅방 더미 데이터 생성
             ChatRoom room1 = createChatRoom(
@@ -72,8 +72,8 @@ public class MongoConfig {
             );
 
             ChatRoom room3 = createChatRoom(
-                    String.join(",", user1.getUserName(), user6.getUserName(), user9.getUserName(), user11.getUserName()),
-                    Arrays.asList(user1.getUserId(), user6.getUserId(), user9.getUserId(),user9.getUserId()));
+                    String.join(",", user1.getUserName(), user6.getUserName(), user9.getUserName(), user10.getUserName()),
+                    Arrays.asList(user1.getUserId(), user6.getUserId(), user9.getUserId(),user10.getUserId()));
 
             ChatRoom room4 = createChatRoom(
                     String.join(",", user8.getUserName(), user9.getUserName(), user10.getUserName()),
@@ -106,12 +106,12 @@ public class MongoConfig {
             );
 
             ChatRoom room10 = createChatRoom(
-                    String.join(",", user6.getUserName(), user4.getUserName(), user3.getUserName(), user5.getUserName()),
-                    Arrays.asList(user6.getUserId(), user4.getUserId(), user3.getUserId(), user5.getUserId())
+                    String.join(",", user6.getUserName(), user4.getUserName(), user3.getUserName(), user11.getUserName()),
+                    Arrays.asList(user6.getUserId(), user4.getUserId(), user3.getUserId(), user11.getUserId())
             );
 
 
-            chatRoomRepository.saveAll(Arrays.asList(room1, room2, room3));
+            chatRoomRepository.saveAll(Arrays.asList(room1, room2, room3, room4,room5,room6,room7,room8,room9,room10));
 
             // MongoDB 채팅 메시지 더미 데이터 생성
 // MongoDB 채팅 메시지 더미 데이터 생성

@@ -58,11 +58,11 @@ public class ChatService {
     }
 
     //  특정 채팅방 조회
-    public List<ChatMessageDTO> findChatRoomByRoomId(String roomId, Long userId) {
-        log.info("유저{}: {} 채팅방 메세지 조회 ", userId, roomId);
+    public List<ChatMessageDTO> findChatRoomByRoomId(String roomId) {
+        log.info("특정 {} 채팅방 메세지 조회 ", roomId);
         Optional<ChatMessage> lastLeave = chatMessageRepository
-                .findTopByRoomIdAndSenderIdAndChatTypeOrderBySentTimeDesc(
-                        roomId, userId, ChatType.LEAVE);
+                .findTopByRoomIdAndChatTypeOrderBySentTimeDesc(
+                        roomId, ChatType.LEAVE);
 
         List<ChatMessage> messages;
         if (lastLeave.isPresent()) {
