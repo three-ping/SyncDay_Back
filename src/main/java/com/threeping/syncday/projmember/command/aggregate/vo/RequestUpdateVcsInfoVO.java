@@ -1,4 +1,4 @@
-package com.threeping.syncday.proj.command.aggregate.vo;
+package com.threeping.syncday.projmember.command.aggregate.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.threeping.syncday.proj.command.aggregate.entity.VcsType;

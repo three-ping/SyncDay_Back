@@ -1,14 +1,14 @@
 package com.threeping.syncday.proj.command.application.service;
 
 
-import com.threeping.syncday.proj.command.aggregate.vo.ProjVO;
+import com.threeping.syncday.projmember.command.aggregate.vo.UpdateProjRequest;
 import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
-import com.threeping.syncday.proj.command.aggregate.vo.RequestUpdateVcsInfoVO;
+import com.threeping.syncday.projmember.command.aggregate.vo.RequestUpdateVcsInfoVO;
 
 public interface AppProjService {
-    ProjDTO addProj(ProjVO projVO);
+    ProjDTO addProj(UpdateProjRequest req);
 
-    ProjDTO modifyProj(ProjVO projVO);
+    ProjDTO modifyProj(UpdateProjRequest req);
 
     ProjDTO deleteProj(java.lang.Long projId);
 

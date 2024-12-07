@@ -1,7 +1,7 @@
 package com.threeping.syncday.projmember.command.application.controller;
 
 import com.threeping.syncday.common.ResponseDTO;
-import com.threeping.syncday.projmember.command.aggregate.entity.vo.ProjBookmarkVO;
+import com.threeping.syncday.projmember.command.aggregate.vo.UpdateProjRequest;
 import com.threeping.syncday.projmember.command.application.service.AppProjMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +17,16 @@ public class AppProjMemberController {
         this.appProjMemberService = appProjMemberService;
     }
 
-    @PostMapping("/bookmark")
-    public ResponseDTO<?> addProjBookmark(@RequestParam Long userId, @RequestParam Long projId){
-        return ResponseDTO.ok(appProjMemberService.addProjBookmark(userId, projId));
+    @PostMapping("/")
+    public ResponseDTO<?> createProj(@RequestBody UpdateProjRequest req){
+        return ResponseDTO.ok(appProjMemberService.addProj(req));
+    }
+    @PutMapping("/bookmark")
+    public ResponseDTO<?> updateProjBookmark(@RequestParam Long projMemberId) {
+
+        return ResponseDTO.ok(appProjMemberService.updateProjBookmark(projMemberId));
+
     }
 
-    @DeleteMapping("/bookmark")
-    public ResponseDTO<?> deleteProjBookmark(@RequestParam Long userId, @RequestParam Long projId){
-        return ResponseDTO.ok(appProjMemberService.removeProjBookmark(userId, projId));
 
-    }
 }
