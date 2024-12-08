@@ -7,16 +7,11 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "tbl_vcs_installation", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_installation", columnNames = {"installation_id", "vcs_type"})
-})
-@SQLDelete(sql = "UPDATE tbl_vcs_installation SET deleted_at = NOW() WHERE id = ?")
+@Table(name="tbl_vcs_installation")
 @Where(clause = "deleted_at IS NULL")
 public class VcsInstallation {
     @Id

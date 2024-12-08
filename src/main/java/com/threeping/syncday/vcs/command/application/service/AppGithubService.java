@@ -4,5 +4,5 @@ import com.threeping.syncday.vcs.command.aggregate.request.GithubInstallationReq
 import com.threeping.syncday.vcs.command.aggregate.response.GithubInstallationResponse;
 
 public interface AppGithubService {
-    GithubInstallationResponse handleInstallation(GithubInstallationRequest req);
+    GithubInstallationResponse processInstallationAuth(GithubInstallationRequest req);
 }

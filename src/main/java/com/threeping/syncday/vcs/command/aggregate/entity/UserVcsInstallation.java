@@ -23,9 +23,8 @@ public class UserVcsInstallation {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "installation_id", nullable = false)
-    private VcsInstallation installation;
+    @Column(name = "installation_id", nullable = false)
+    private Long installationId;
 
     @Column(name = "scope", columnDefinition = "TEXT")
     private String scope;
