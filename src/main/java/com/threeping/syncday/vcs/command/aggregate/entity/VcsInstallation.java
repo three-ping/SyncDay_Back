@@ -3,11 +3,12 @@ package com.threeping.syncday.vcs.command.aggregate.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
-
+@ToString
 @Getter
 @Setter
 @Entity

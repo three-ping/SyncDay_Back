@@ -30,11 +30,13 @@ public class AppGithubServiceImpl implements AppGithubService {
     private final ModelMapper modelMapper;
 
     @Override
-    public GithubInstallationResponse processInstallationAuth(GithubInstallationRequest req) {
+    public VcsInstallationDTO processInstallationAuth(GithubInstallationRequest req) {
 
         try {
             switch (req.getSetupAction()){
-                case INSTALL -> handleNewInstallation(req);
+                case INSTALL -> {
+                    return handleNewInstallation(req);
+                }
                 default -> {
                     throw new CommonException(ErrorCode.UNKNOWN_SETUP_ACTION);
                 }
@@ -45,8 +47,24 @@ public class AppGithubServiceImpl implements AppGithubService {
         }
 
 
-        return null;
     }
+
+    @Override
+    public Boolean deleteInstallation(Long userId, Long installationId) throws java.io.IOException {
+        UserVcsInstallation userVcsInstallation = userVcsInstallationRepository.findByUserIdAndInstallationId(userId, installationId);
+        if (userVcsInstallation == null) {
+            log.error("user installation not found");
+            throw new CommonException(ErrorCode.GITHUB_APP_INSTALLATION_CLIENT_ERROR);
+        }
+        VcsInstallation vcsInstallation = vcsInstallationRepository.findById(userVcsInstallation.getInstallationId()).orElse(null);
+        assert vcsInstallation != null;
+        GHAppInstallation installation = githubAppClient.getGithubInstallation(Long.valueOf(vcsInstallation.getInstallationId()));
+        installation.deleteInstallation();
+        userVcsInstallationRepository.delete(userVcsInstallation);
+        vcsInstallationRepository.delete(vcsInstallation);
+        return Boolean.TRUE;
+    }
+
     private VcsInstallationDTO handleNewInstallation(GithubInstallationRequest request) throws IOException {
 
         GHAppInstallation installation = githubAppClient.getGithubInstallation(request.getInstallationId());
@@ -65,12 +83,15 @@ public class AppGithubServiceImpl implements AppGithubService {
         installationEntity.setApiUrl(installation.getAccount().getUrl().toString());
         installationEntity.setStatus(InstallationStatus.ACTIVE);
         installationEntity.setVcsType(VcsType.GITHUB);
-        Long savedInstallationId = vcsInstallationRepository.save(installationEntity).getId();
+        VcsInstallation savedInstallation = vcsInstallationRepository.save(installationEntity);
         userVcsInstallation.setUserId(request.getUserId());
-        userVcsInstallation.setInstallationId(savedInstallationId);
+        userVcsInstallation.setInstallationId(savedInstallation.getId());
         userVcsInstallation.setScope(installation.getPermissions().toString());
         userVcsInstallationRepository.save(userVcsInstallation);
-        return modelMapper.map(installationEntity, VcsInstallationDTO.class);
+        log.info("savedInstallation: {}", savedInstallation);
+        VcsInstallationDTO dto = modelMapper.map(savedInstallation, VcsInstallationDTO.class);
+        log.info("dto: {}", dto);
+        return dto;
     }
     private AccountType convertAccountType(GHTargetType targetType){
         switch (targetType){

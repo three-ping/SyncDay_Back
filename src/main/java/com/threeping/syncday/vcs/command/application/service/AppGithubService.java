@@ -1,8 +1,12 @@
 package com.threeping.syncday.vcs.command.application.service;
 
+import com.threeping.syncday.vcs.command.aggregate.dto.VcsInstallationDTO;
 import com.threeping.syncday.vcs.command.aggregate.request.GithubInstallationRequest;
-import com.threeping.syncday.vcs.command.aggregate.response.GithubInstallationResponse;
+
+import java.io.IOException;
 
 public interface AppGithubService {
-    GithubInstallationResponse processInstallationAuth(GithubInstallationRequest req);
+    VcsInstallationDTO processInstallationAuth(GithubInstallationRequest req);
+
+    Boolean deleteInstallation(Long userId, Long installationId) throws IOException;
 }
