@@ -226,8 +226,6 @@ jobs:
               mongodb:
                 uri: mongodb://mongodb:27017/chatdb
           
-            elasticsearch:
-              uris: http://syncday-elasticsearch:9200
           
           logging:
             level:
