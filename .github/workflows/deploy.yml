@@ -310,6 +310,7 @@ jobs:
                 - "9200:9200"
               networks:
                 - es-network
+              privileged: true
               healthcheck:
                 test: ["CMD-SHELL", "/usr/share/elasticsearch/healthcheck.sh"]
                 interval: 30s
@@ -422,10 +423,6 @@ jobs:
 
       - name: List build directory
         run: ls -la ./build/libs
-      # Generate a deployment package
-      - name: Create Procfile
-        run: |
-          echo "web: appstart" > Procfile
 
       - name: Show Current Time
         run: echo "CurrentTime=${{steps.current-time.outputs.formattedTime}}"
@@ -434,6 +431,7 @@ jobs:
       - name: Generate deployment package
         run: |
           mkdir -p deploy
+          
           JAR_FILE=$(ls ./build/libs/*SNAPSHOT.jar | grep -v plain)
           if [ -n "$JAR_FILE" ]; then
             cp "$JAR_FILE" deploy/app.jar
@@ -442,71 +440,22 @@ jobs:
             exit 1
           fi
           
-          
-          cat > Dockerfile <<EOL
-          FROM openjdk:17-jdk-slim
-          WORKDIR /app
-          COPY app.jar /app/app.jar
-          CMD ["java", "-jar", "/app/app.jar"]
-          EOL
-          
-          cat > Dockerfile.elasticsearch <<EOL
-          FROM docker.elastic.co/elasticsearch/elasticsearch:7.17.9
-          
-          USER root
-          
-          RUN apt-get update && apt-get install -y curl
-          RUN elasticsearch-plugin install analysis-nori
-          
-          COPY config/elasticsearch/elasticsearch.yml /usr/share/elasticsearch/config/
-          COPY config/elasticsearch/indices/ /usr/share/elasticsearch/config/indices/
-          COPY config/elasticsearch/init-index.sh /usr/share/elasticsearch/config/init-index.sh
-          COPY config/elasticsearch/healthcheck.sh /usr/share/elasticsearch/
-          
-          RUN echo '#!/bin/bash' > /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo 'set -e' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo 'mkdir -p /usr/share/elasticsearch/data' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo 'mkdir -p /usr/share/elasticsearch/logs' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo 'chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo 'chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/logs' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo '/usr/local/bin/docker-entrypoint.sh elasticsearch -d' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo 'until curl -s http://localhost:9200/_cluster/health | grep -q "\"status\":\"green\""; do' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo '    echo "Waiting for ElasticSearch to start..."' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo '    sleep 5' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo 'done' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo 'echo "Elasticsearch is ready. Running init-index.sh..."' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo '/usr/share/elasticsearch/config/init-index.sh' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              echo 'exec /usr/local/bin/docker-entrypoint.sh elasticsearch' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-              chmod +x /usr/local/bin/docker-entrypoint-custom.sh
-          
-          RUN mkdir -p /usr/share/elasticsearch/data && \
-              mkdir -p /usr/share/elasticsearch/logs && \
-              chown -R elasticsearch:elasticsearch /usr/share/elasticsearch && \
-              chmod 755 /usr/share/elasticsearch && \
-              chmod 755 /usr/share/elasticsearch/data && \
-              chmod 755 /usr/share/elasticsearch/logs && \
-              chmod -R 755 /usr/share/elasticsearch/config && \
-              chmod +x /usr/share/elasticsearch/config/init-index.sh && \
-              chmod +x /usr/share/elasticsearch/healthcheck.sh
-                    
-          ENV discovery.type=single-node
-          ENV ES_JAVA_OPTS="-Xms512m -Xmx512m -Xlog:gc*=info:stderr"
-          ENV bootstrap.memory_lock=true
-          ENV xpack.security.enabled=false
-          ENV node.max_local_storage_nodes=10
-          
-          USER elasticsearch
-          
-          ENTRYPOINT ["/usr/local/bin/docker-entrypoint-custom.sh"]
-          EOL
+          # 3. Procfile 생성
+          # Elastic Beanstalk에게 애플리케이션 실행 방법을 알려주는 설정 파일
+          echo "web: java -jar app.jar" > deploy/Procfile
           
           cp Dockerfile deploy/
           cp Dockerfile.elasticsearch deploy/
-          cp Procfile deploy/Procfile
           cp -r .ebextensions deploy/.ebextensions
           cp -r config deploy/
           cp docker-compose.yml deploy/
+          
+          # 5. 배포 패키지 생성
           cd deploy && zip -r deploy.zip .
+          
+          # 디버깅을 위한 배포 패키지 내용 확인
+          echo "Deployment package contents:"
+          unzip -l deploy.zip
 
       # Deploy to Elastic Beanstalk
       - name: Deploy to AWS Elastic Beanstalk

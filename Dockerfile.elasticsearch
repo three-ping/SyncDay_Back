@@ -15,10 +15,11 @@ COPY config/elasticsearch/healthcheck.sh /usr/share/elasticsearch/
 # entrypoint 스크립트 생성
 RUN echo '#!/bin/bash' > /usr/local/bin/docker-entrypoint-custom.sh && \
     echo 'set -e' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-    echo 'mkdir -p /usr/share/elasticsearch/data' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-    echo 'mkdir -p /usr/share/elasticsearch/logs' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-    echo 'chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data' >> /usr/local/bin/docker-entrypoint-custom.sh && \
-    echo 'chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/logs' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+    echo 'if [ "$(id -u)" = "0" ]; then' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+    echo '    mkdir -p /usr/share/elasticsearch/data /usr/share/elasticsearch/logs' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+    echo '    chown -R elasticsearch:elasticsearch /usr/share/elasticsearch' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+    echo '    exec gosu elasticsearch /usr/local/bin/docker-entrypoint-custom.sh "$@"' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+    echo 'fi' >> /usr/local/bin/docker-entrypoint-custom.sh && \
     echo '/usr/local/bin/docker-entrypoint.sh elasticsearch -d' >> /usr/local/bin/docker-entrypoint-custom.sh && \
     echo 'until curl -s http://localhost:9200/_cluster/health | grep -q "\"status\":\"green\""; do' >> /usr/local/bin/docker-entrypoint-custom.sh && \
     echo '    echo "Waiting for ElasticSearch to start..."' >> /usr/local/bin/docker-entrypoint-custom.sh && \
@@ -28,6 +29,9 @@ RUN echo '#!/bin/bash' > /usr/local/bin/docker-entrypoint-custom.sh && \
     echo '/usr/share/elasticsearch/config/init-index.sh' >> /usr/local/bin/docker-entrypoint-custom.sh && \
     echo 'exec /usr/local/bin/docker-entrypoint.sh elasticsearch' >> /usr/local/bin/docker-entrypoint-custom.sh && \
     chmod +x /usr/local/bin/docker-entrypoint-custom.sh
+
+# gosu 설치 (root에서 elasticsearch 사용자로 안전하게 전환하기 위해 필요)
+RUN apt-get update && apt-get install -y gosu
 
 # 디렉토리 생성 및 권한 설정 (더 세밀한 권한 관리)
 RUN mkdir -p /usr/share/elasticsearch/data && \
@@ -47,6 +51,5 @@ ENV bootstrap.memory_lock=true
 ENV xpack.security.enabled=false
 ENV node.max_local_storage_nodes=10
 
-USER elasticsearch
-
+# root 사용자로 시작하여 entrypoint 스크립트에서 elasticsearch 사용자로 전환
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint-custom.sh"]
