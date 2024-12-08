@@ -32,26 +32,24 @@ ENV ES_JAVA_OPTS="-Xms1g -Xmx1g"
 ENV bootstrap.memory_lock=true
 ENV xpack.security.enabled=false
 
-# Elasticsearch 실행
-CMD ["elasticsearch"]
+# Custom entrypoint 스크립트 생성
+RUN echo '#!/bin/bash\n\
+set -e\n\
+\n\
+/usr/local/bin/docker-entrypoint.sh elasticsearch -d\n\
+\n\
+until curl -s http://localhost:9200/_cluster/health | grep -q "\"status\":\"green\""; do\n\
+    echo "Waiting for ElasticSearch to start..."\n\
+    sleep 5\n\
+done\n\
+\n\
+echo "Elasticsearch is ready. Running init-index.sh..."\n\
+/usr/share/elasticsearch/config/init-index.sh\n\
+\n\
+exec /usr/local/bin/docker-entrypoint.sh elasticsearch' > /usr/local/bin/docker-entrypoint-custom.sh
 
-COPY --chown=elasticsearch:elasticsearch <<EOF /usr/local/bin/docker-entrypoint-custom.sh
-
-/usr/local/bin/docker-entrypoint.sh elasticsearch -d
-
-# Elasticsearch가 완전히 준비될 때까지 대기
-until curl -s http://localhost:9200/_cluster/health | grep -q '"status":"green"'; do
-    echo "Waiting for ElasticSearch to start..."
-    sleep 5
-done
-
-echo "Elasticsearch is ready. Running init-index.sh..."
-/usr/share/elasticsearch/config/init-index.sh
-
-# Elasticsearch를 포그라운드로 실행
-exec /usr/local/bin/docker-entrypoint.sh elasticsearch
-EOF
-
+# entrypoint 스크립트에 실행 권한 부여
 RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
 
+# Custom entrypoint 사용
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint-custom.sh"]
