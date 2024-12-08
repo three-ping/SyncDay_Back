@@ -353,6 +353,12 @@ jobs:
                 - "27017:27017"
               networks:
                 - es-network 
+              healthcheck:
+                test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 40s
           
             redis:
               image: redis:latest
@@ -362,7 +368,13 @@ jobs:
               ports:
                 - "6379:6379"
               networks:
-                - es-network 
+                - es-network
+              healthcheck:
+                test: ["CMD", "redis-cli", "ping"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 20s
           networks:
             es-network:
               driver: bridge
@@ -458,7 +470,9 @@ jobs:
               chmod +x /usr/local/bin/docker-entrypoint-custom.sh
           
           RUN mkdir -p /usr/share/elasticsearch/data && \
+              mkdir -p /usr/share/elasticsearch/logs && \
               chown -R elasticsearch:elasticsearch /usr/share/elasticsearch && \
+              chmod 775 /usr/share/elasticsearch/logs && \
               chmod +x /usr/share/elasticsearch/config/init-index.sh && \
               chmod +x /usr/share/elasticsearch/healthcheck.sh
                     

@@ -27,7 +27,9 @@ RUN echo '#!/bin/bash' > /usr/local/bin/docker-entrypoint-custom.sh && \
 
 # 디렉토리 생성 및 권한 설정
 RUN mkdir -p /usr/share/elasticsearch/data && \
+    mkdir -p /usr/share/elasticsearch/logs && \
     chown -R elasticsearch:elasticsearch /usr/share/elasticsearch && \
+    chmod 775 /usr/share/elasticsearch/logs && \
     chmod +x /usr/share/elasticsearch/config/init-index.sh && \
     chmod +x /usr/share/elasticsearch/healthcheck.sh
 
