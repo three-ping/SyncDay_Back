@@ -63,8 +63,8 @@ public class MongoConfig {
             // 채팅방 더미 데이터 생성
             ChatRoom room1 = new ChatRoom();
             room1.setRoomId("room1");
-            room1.setChatRoomName(String.join(",",user2.getUserName(), user11.getUserName()));
-            room1.setMemberIds(Arrays.asList(user2.getUserId(), user11.getUserId()));
+            room1.setChatRoomName(String.join(",",user1.getUserName(), user11.getUserName()));
+            room1.setMemberIds(Arrays.asList(user1.getUserId(), user11.getUserId()));
 
             ChatRoom room2 = new ChatRoom();
             room2.setRoomId("room2");
