@@ -1,6 +1,7 @@
 package com.threeping.syncday.chat.application;
 
 import com.threeping.syncday.chat.dto.ChatMessageDTO;
+import com.threeping.syncday.chat.dto.ChatRoomDTO;
 import com.threeping.syncday.chat.entity.ChatRoom;
 import com.threeping.syncday.chat.entity.ChatType;
 
@@ -61,13 +62,13 @@ public class ChatController {
 
     // 채팅방 목록 조회
     @GetMapping("/room")
-    public List<ChatRoom> findMyChat(@RequestParam Long userId) {
-        log.info("유저 채팅 목록 찾기 메서드 시작");
+    public List<ChatRoomDTO> findMyChat(@RequestParam Long userId) {
+        log.info("유저{} 채팅 목록 찾기 메서드 시작", userId);
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다: "+userId));
         log.info("유저 {}의 채팅방 목록 조회 요청.", userId);
 
-        List<ChatRoom> chatRoomList = chatService.findUserChat(userId);
+        List<ChatRoomDTO> chatRoomList = chatService.findUserChat(userId);
         log.info("채팅방 리스트 엔티티: {}", chatRoomList);
 
         return chatRoomList;
@@ -75,8 +76,8 @@ public class ChatController {
 
     // 특정 채팅방 조회
     @GetMapping("/room/{roomId}/message")
-    public List<ChatMessageDTO> getChatRoom(@PathVariable String roomId, @RequestParam Long userId) {
-        return chatService.findChatRoomByRoomId(roomId, userId);
+    public List<ChatMessageDTO> getChatRoom(@PathVariable String roomId) {
+        return chatService.findChatRoomByRoomId(roomId);
     }
 
     // 채팅방 생성

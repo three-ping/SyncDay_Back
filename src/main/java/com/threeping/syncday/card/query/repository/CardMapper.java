@@ -1,6 +1,7 @@
 package com.threeping.syncday.card.query.repository;
 
 import com.threeping.syncday.card.query.aggregate.Card;
+import com.threeping.syncday.card.query.aggregate.TodayCardDTO;
 import com.threeping.syncday.card.query.dto.CardQueryDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,4 +17,6 @@ public interface CardMapper {
     CardQueryDTO findByCardId(Long cardId);
 
     List<CardQueryDTO> findAllCards();
+
+    List<TodayCardDTO> selectTodayCardsByUserId(Long userId);
 }
