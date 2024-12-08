@@ -422,8 +422,8 @@ jobs:
           RUN elasticsearch-plugin install analysis-nori
           
           COPY config/elasticsearch/elasticsearch.yml /usr/share/elasticsearch/config/
-          COPY config/elasticsearch/indices /usr/share/elasticsearch/config/indices
-          COPY config/elasticsearch/init-index.sh /usr/share/elasticsearch/config/elasticsearch/
+          COPY config/elasticsearch/indices/ /usr/share/elasticsearch/config/indices/
+          COPY config/elasticsearch/init-index.sh /usr/share/elasticsearch/config/init-index.sh
           COPY config/elasticsearch/healthcheck.sh /usr/share/elasticsearch/
           
           RUN mkdir -p /usr/share/elasticsearch/data && \
@@ -450,7 +450,7 @@ jobs:
           done
           
           echo "Elasticsearch is ready. Running init-index.sh..."
-          /usr/share/elasticsearch/config/elasticsearch/init-index.sh
+          /usr/share/elasticsearch/config/init-index.sh
           
           exec /usr/local/bin/docker-entrypoint.sh elasticsearch
           EOF
