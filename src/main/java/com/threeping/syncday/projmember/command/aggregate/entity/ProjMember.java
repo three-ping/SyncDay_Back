@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 @Table(name="TBL_PROJ_MEMBER")
 @NoArgsConstructor
