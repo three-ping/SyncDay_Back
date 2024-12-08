@@ -280,7 +280,6 @@ jobs:
       - name: Create docker-compose.yml
         run: |
           cat > docker-compose.yml <<EOF
-          version: '3.8'
           services:
             elasticsearch:
               build:
