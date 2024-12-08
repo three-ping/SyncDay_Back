@@ -445,36 +445,29 @@ jobs:
           COPY config/elasticsearch/init-index.sh /usr/share/elasticsearch/config/init-index.sh
           COPY config/elasticsearch/healthcheck.sh /usr/share/elasticsearch/
           
+          RUN echo '#!/bin/bash' > /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo 'set -e' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo '/usr/local/bin/docker-entrypoint.sh elasticsearch -d' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo 'until curl -s http://localhost:9200/_cluster/health | grep -q "\"status\":\"green\""; do' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo '    echo "Waiting for ElasticSearch to start..."' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo '    sleep 5' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo 'done' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo 'echo "Elasticsearch is ready. Running init-index.sh..."' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo '/usr/share/elasticsearch/config/init-index.sh' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo 'exec /usr/local/bin/docker-entrypoint.sh elasticsearch' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              chmod +x /usr/local/bin/docker-entrypoint-custom.sh
+          
           RUN mkdir -p /usr/share/elasticsearch/data && \
               chown -R elasticsearch:elasticsearch /usr/share/elasticsearch && \
               chmod +x /usr/share/elasticsearch/config/init-index.sh && \
               chmod +x /usr/share/elasticsearch/healthcheck.sh
-          
-          USER elasticsearch
                     
           ENV discovery.type=single-node
           ENV ES_JAVA_OPTS="-Xms512m -Xmx512m"
           ENV bootstrap.memory_lock=true
           ENV xpack.security.enabled=false
           
-          RUN cat > /usr/local/bin/docker-entrypoint-custom.sh <<'EOF'
-          #!/bin/bash
-          set -e
-          
-          /usr/local/bin/docker-entrypoint.sh elasticsearch -d
-    
-          until curl -s http://localhost:9200/_cluster/health | grep -q '"status":"green"'; do
-              echo "Waiting for ElasticSearch to start..."
-              sleep 5
-          done
-          
-          echo "Elasticsearch is ready. Running init-index.sh..."
-          /usr/share/elasticsearch/config/init-index.sh
-          
-          exec /usr/local/bin/docker-entrypoint.sh elasticsearch
-          EOF
-          
-          RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
+          USER elasticsearch
           
           ENTRYPOINT ["/usr/local/bin/docker-entrypoint-custom.sh"]
           EOL
