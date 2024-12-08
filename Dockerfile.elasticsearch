@@ -29,7 +29,9 @@ RUN echo '#!/bin/bash' > /usr/local/bin/docker-entrypoint-custom.sh && \
 RUN mkdir -p /usr/share/elasticsearch/data && \
     mkdir -p /usr/share/elasticsearch/logs && \
     chown -R elasticsearch:elasticsearch /usr/share/elasticsearch && \
-    chmod 775 /usr/share/elasticsearch/logs && \
+    chmod 777 /usr/share/elasticsearch && \
+    chmod 777 /usr/share/elasticsearch/data && \
+    chmod 777 /usr/share/elasticsearch/logs && \
     chmod +x /usr/share/elasticsearch/config/init-index.sh && \
     chmod +x /usr/share/elasticsearch/healthcheck.sh
 
