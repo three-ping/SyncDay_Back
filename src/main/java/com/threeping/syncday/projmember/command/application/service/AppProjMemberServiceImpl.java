@@ -20,6 +20,8 @@ import com.threeping.syncday.workspace.command.application.service.AppWorkspaceS
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,42 +69,23 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
     }
 
     @Override
-    public UpdateProjResponse addProj(UpdateProjRequest req) {
-        ProjDTO proj = infraProjMemberService.requestAddProj(req);
-        ProjMember member = new ProjMember();
-        member.setUserId(req.userId());
-        member.setBookmarkStatus(BookmarkStatus.NONE);
-        member.setProjId(proj.getProjId());
-        member.setParticipationStatus(ParticipationStatus.OWNER);
-        return new UpdateProjResponse(proj.getProjId(), member.getProjMemberId(), proj.getProjName(), proj.getStartTime(), proj.getEndTime(),proj.getVcsType(), proj.getVcsProjUrl(), proj.getGithubInstallationId());
-    }
+    public Boolean removeProjBookmark(Long userId, Long projId) {
+        try {
+            // Find existing project member record
+            ProjMember member = projMemberRepository.findByUserIdAndProjId(userId, projId);
 
-    @Override
-    public UpdateProjResponse updateProj(UpdateProjRequest req) {
-        ProjMember member = projMemberRepository.findById(req.projMemberId()).orElse(null);
-        if (member == null) {
-            throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
-        } else if(!member.getParticipationStatus().equals(ParticipationStatus.OWNER)) {
-            throw new CommonException(ErrorCode.PROJ_INVALID_REQUEST);
+            // Update bookmark status
+            member.setBookmarkStatus(BookmarkStatus.NONE);
+            log.debug("Removing bookmark for member: {}", member);
+
+            // Save the updated member
+            ProjMember updatedMember = projMemberRepository.save(member);
+            return updatedMember.getBookmarkStatus().equals(BookmarkStatus.NONE);
+        } catch (CommonException ce) {
+            throw ce;
+        } catch (Exception e) {
+            log.error("Error removing project bookmark: ", e);
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        ProjDTO proj = infraProjMemberService.requestUpdateProj(req);
-
-        return new UpdateProjResponse(proj.getProjId(),member.getProjMemberId(), proj.getProjName(),proj.getStartTime(), proj.getEndTime(), proj.getVcsType(), proj.getVcsProjUrl() , proj.getGithubInstallationId());
-    }
-
-    @Override
-    public WorkspaceDTO updateWorkspace(UpdateWorkspaceRequest updateWorkspaceRequest) {
-        ProjMember member = projMemberRepository.findById(updateWorkspaceRequest.projMemberId()).orElse(null);
-        if (member == null) {
-            throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
-        }
-        else if (!member.getParticipationStatus().equals(ParticipationStatus.OWNER)) {
-            throw new CommonException(ErrorCode.PROJ_INVALID_REQUEST);
-        }
-
-        WorkspaceVO vo = new WorkspaceVO(updateWorkspaceRequest.workspaceId(), updateWorkspaceRequest.workspaceName(), VcsType.GITHUB, updateWorkspaceRequest.vcsRepoName(), updateWorkspaceRequest.vcsRepoUrl());
-        log.info("vo: {}", vo);
-        WorkspaceDTO updatedWorkspace = infraProjMemberService.requestUpdateWorkspace(vo);
-        return updatedWorkspace;
     }
 }
