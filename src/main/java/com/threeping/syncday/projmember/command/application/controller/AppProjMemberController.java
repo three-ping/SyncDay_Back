@@ -2,6 +2,7 @@ package com.threeping.syncday.projmember.command.application.controller;
 
 import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.projmember.command.aggregate.vo.UpdateProjRequest;
+import com.threeping.syncday.projmember.command.aggregate.vo.UpdateWorkspaceRequest;
 import com.threeping.syncday.projmember.command.application.service.AppProjMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,12 @@ public class AppProjMemberController {
 
         return ResponseDTO.ok(appProjMemberService.updateProjBookmark(projMemberId));
 
+    }
+
+    @PutMapping("/workspaces")
+    public ResponseDTO<?> updateWorkspace(@RequestBody UpdateWorkspaceRequest updateWorkspaceRequest){
+        log.info("updateWorkspaceRequest: {}", updateWorkspaceRequest);
+        return ResponseDTO.ok(appProjMemberService.updateWorkspace(updateWorkspaceRequest));
     }
 
 
