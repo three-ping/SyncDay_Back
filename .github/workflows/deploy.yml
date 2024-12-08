@@ -88,8 +88,8 @@ jobs:
               mkdir -p /var/app/current/config/elasticsearch/indices
               chown -R 1000:1000 /var/app/current/es_data
               chown -R 1000:1000 /var/app/current/es_logs
-              chmod 775 /var/app/current/es_data
-              chmod 775 /var/app/current/es_logs
+              chmod 777 /var/app/current/es_data
+              chmod 777 /var/app/current/es_logs
           02_increase_vm_max_map_count:
             command: |
               echo "vm.max_map_count=262144" >> /etc/sysctl.conf
