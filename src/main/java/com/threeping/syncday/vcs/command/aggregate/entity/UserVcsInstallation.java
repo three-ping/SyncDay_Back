@@ -4,7 +4,6 @@ package com.threeping.syncday.vcs.command.aggregate.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
@@ -15,7 +14,6 @@ import java.time.LocalDateTime;
 @Table(name = "tbl_user_vcs_installation", uniqueConstraints = {
         @UniqueConstraint(name = "uk_user_installation", columnNames = {"user_id", "installation_id"})
 })
-@SQLDelete(sql = "UPDATE tbl_user_vcs_installation SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class UserVcsInstallation {
     @Id
