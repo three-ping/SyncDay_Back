@@ -45,6 +45,8 @@ public class ProjMemberInfoDTO {
     @JsonProperty("vcs_proj_url")
     private String vcsProjUrl;
 
+    @JsonProperty("github_installation_id")
+    private Long githubInstallationId;
     @JsonProperty("workspaces")
     List<WorkspaceDTO> workspaces;
 
