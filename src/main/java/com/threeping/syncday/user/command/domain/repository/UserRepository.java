@@ -18,4 +18,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByUserId(Long userId);
 
     @Query("SELECT u.userName FROM UserEntity u WHERE u.userId = :senderId")
-    String findUserNameById(@Param("senderId") Long senderId);}
+    String findUserNameById(@Param("senderId") Long senderId);
+
+    @Override
+    List<UserEntity> findAll();
+}
