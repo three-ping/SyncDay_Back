@@ -480,9 +480,10 @@ jobs:
               chmod +x /usr/share/elasticsearch/healthcheck.sh
                     
           ENV discovery.type=single-node
-          ENV ES_JAVA_OPTS="-Xms512m -Xmx512m"
+          ENV ES_JAVA_OPTS="-Xms512m -Xmx512m -Xlog:gc*=info:stderr"
           ENV bootstrap.memory_lock=true
           ENV xpack.security.enabled=false
+          ENV node.max_local_storage_nodes=10
           
           USER elasticsearch
           
