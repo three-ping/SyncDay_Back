@@ -231,6 +231,12 @@ jobs:
                 port: 6379
               mongodb:
                 uri: mongodb://mongodb:27017/chatdb
+              elasticsearch:   # Elasticsearch 설정 추가
+                repositories:
+                  enabled: true
+                uris: http://syncday-elasticsearch:9200
+                connection-timeout: 5s
+                socket-timeout: 3s
           
           
           logging:
@@ -319,6 +325,7 @@ jobs:
                 start_period: 60s
             app:
               build: .
+              container_name: current-app-1
               ports:
                 - "5000:5000"
               environment:
@@ -350,6 +357,12 @@ jobs:
                   condition: service_healthy
               networks:
                 - es-network 
+              healthcheck:
+                test: ["CMD", "curl", "-f", "http://localhost:5000/actuator/health"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 40s
           
           
             mongodb:
