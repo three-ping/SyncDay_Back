@@ -11,13 +11,13 @@ RUN elasticsearch-plugin install analysis-nori
 # 설정 파일 복사 및 권한 설정
 COPY config/elasticsearch/elasticsearch.yml /usr/share/elasticsearch/config/
 COPY config/elasticsearch/indices/ /usr/share/elasticsearch/config/indices/
-COPY config/elasticsearch/init-index.sh /usr/share/elasticsearch/config/
+COPY config/elasticsearch/init-index.sh /usr/share/elasticsearch/config/elasticsearch/
 COPY config/elasticsearch/healthcheck.sh /usr/share/elasticsearch/
 
 # 권한 설정
 RUN mkdir -p /usr/share/elasticsearch/data && \
     chown -R elasticsearch:elasticsearch /usr/share/elasticsearch && \
-    chmod +x /usr/share/elasticsearch/config/init-index.sh && \
+    chmod +x /usr/share/elasticsearch/config/elasticsearch/init-index.sh && \
     chmod +x /usr/share/elasticsearch/healthcheck.sh
 
 USER elasticsearch

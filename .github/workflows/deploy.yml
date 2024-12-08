@@ -77,7 +77,7 @@ jobs:
             command: |
               mkdir -p /var/app/current/es_data
               chown -R webapp:webapp /var/app/current/es_data
-              chmod 777 /var/app/current/es_data
+              chmod 775 /var/app/current/es_data
           02_increase_vm_max_map_count:
             command: |
               echo "vm.max_map_count=262144" >> /etc/sysctl.conf
@@ -90,20 +90,17 @@ jobs:
           mkdir -p config/elasticsearch/indices
           
           cat > config/elasticsearch/elasticsearch.yml <<EOL
-          node.name: "syncday-node-1"
           cluster.name: "syncday-cluster"
+          node.name: "syncday-node"
           network.host: 0.0.0.0
-          http.port: 9200
           discovery.type: single-node
-          bootstrap.memory_lock: true
-          xpack.security.enabled: false
-          index.number_of_shards: 1
-          index.number_of_replicas: 0
+          
           path.data: /usr/share/elasticsearch/data
           path.logs: /usr/share/elasticsearch/logs
+          
+          xpack.security.enabled: false
           EOL
           
-          # healthcheck.sh 파일 생성 - Elasticsearch 상태 확인용 스크립트
           cat > config/elasticsearch/healthcheck.sh <<EOL
           #!/bin/bash
           curl -f "http://localhost:9200/_cat/health" || exit 1
@@ -265,6 +262,35 @@ jobs:
           cat > docker-compose.yml <<EOF
           version: '3.8'
           services:
+            elasticsearch:
+              build:
+                context: .
+                dockerfile: Dockerfile.elasticsearch
+              container_name: syncday-elasticsearch
+              environment:
+                - discovery.type=single-node
+                - xpack.security.enabled=false
+                - ES_JAVA_OPTS=-Xms1g -Xmx1g
+                - bootstrap.memory_lock=true
+              volumes:
+                - /var/app/current/es_data:/usr/share/elasticsearch/data
+              ulimits:
+                memlock:
+                  soft: -1
+                  hard: -1
+                nofile:
+                  soft: 65536
+                  hard: 65536
+              ports:
+                - "9200:9200"
+              networks:
+                - es-network
+              healthcheck:
+                test: ["CMD-SHELL", "/usr/share/elasticsearch/healthcheck.sh"]
+                interval: 30s
+                timeout: 30s
+                retries: 3
+                start_period: 60s
             app:
               build: .
               ports:
@@ -318,36 +344,6 @@ jobs:
                 - "6379:6379"
               networks:
                 - es-network 
-          
-            elasticsearch:
-              build:
-                context: .
-                dockerfile: Dockerfile.elasticsearch
-              container_name: syncday-elasticsearch
-              volumes:
-                - /var/app/current/es_data:/usr/share/elasticsearch/data
-              environment:
-                - discovery.type=single-node
-                - xpack.security.enabled=false
-                - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-                - bootstrap.memory_lock=true
-              ulimits:
-                memlock:
-                  soft: -1
-                  hard: -1
-                nofile:
-                  soft: 65536
-                  hard: 65536
-              ports:
-                - "9200:9200"
-              networks:
-                - es-network
-              healthcheck:
-                test: ["CMD-SHELL", "/usr/share/elasticsearch/healthcheck.sh"]
-                interval: 30s
-                timeout: 30s
-                retries: 3
-                start_period: 60s
           networks:
             es-network:
               driver: bridge
