@@ -88,6 +88,8 @@ jobs:
               mkdir -p /var/app/current/config/elasticsearch/indices
               chown -R 1000:1000 /var/app/current/es_data
               chown -R 1000:1000 /var/app/current/es_logs
+              chown -R 1000:1000 /usr/share/elasticsearch
+              chmod -R 777 /usr/share/elasticsearch
               chmod 777 /var/app/current/es_data
               chmod 777 /var/app/current/es_logs
           02_increase_vm_max_map_count:
@@ -288,8 +290,9 @@ jobs:
               environment:
                 - discovery.type=single-node
                 - xpack.security.enabled=false
-                - ES_JAVA_OPTS=-Xms512m -Xmx512m
+                - ES_JAVA_OPTS=-Xms512m -Xmx512m -Xlog:gc*=info:stderr
                 - bootstrap.memory_lock=true
+                - node.max_local_storage_nodes=10
               volumes:
                 - /var/app/current/es_data:/usr/share/elasticsearch/data:rw
                 - /var/app/current/es_logs:/usr/share/elasticsearch/logs:rw
