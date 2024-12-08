@@ -18,4 +18,5 @@ public class MeetingroomReservation {
      Timestamp endTime;
      Long user;
      String meetingroomPlace;
+     String scheduleParticipant;
 }
