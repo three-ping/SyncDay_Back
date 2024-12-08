@@ -1,9 +1,11 @@
 package com.threeping.syncday.meetingroomreservation.query.aggregate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.threeping.syncday.schedule.query.aggregate.UserInfoDTO;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 public class MeetingroomReservationDTO {
@@ -34,4 +36,6 @@ public class MeetingroomReservationDTO {
 
     @JsonProperty("meetingroom_place")
     String meetingroomPlace;
+
+    List<UserInfoDTO> userInfo;
 }

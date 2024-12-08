@@ -10,6 +10,7 @@ import com.threeping.syncday.projmember.command.domain.repository.ProjMemberRepo
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,6 +77,4 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
             throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 }
