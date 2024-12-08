@@ -86,12 +86,18 @@ jobs:
               mkdir -p /var/app/current/es_data
               mkdir -p /var/app/current/es_logs
               mkdir -p /var/app/current/config/elasticsearch/indices
-              chown -R 1000:1000 /var/app/current/es_data
-              chown -R 1000:1000 /var/app/current/es_logs
-              chown -R 1000:1000 /usr/share/elasticsearch
-              chmod -R 777 /usr/share/elasticsearch
-              chmod 777 /var/app/current/es_data
-              chmod 777 /var/app/current/es_logs
+          
+              chown -R elasticsearch:elasticsearch /var/app/current/es_data
+              chown -R elasticsearch:elasticsearch /var/app/current/es_logs
+              chown -R elasticsearch:elasticsearch /var/app/current/config/elasticsearch
+          
+              chmod -R 755 /usr/share/elasticsearch
+              chmod 775 /var/app/current/es_data
+              chmod 755 /var/app/current/es_logs
+          
+              mkdir -p /usr/share/elasticsearch
+              chown -R elasticsearch:elasticsearch /usr/share/elasticsearch
+              chmod 755 /usr/share/elasticsearch
           02_increase_vm_max_map_count:
             command: |
               echo "vm.max_map_count=262144" >> /etc/sysctl.conf
@@ -459,6 +465,10 @@ jobs:
           
           RUN echo '#!/bin/bash' > /usr/local/bin/docker-entrypoint-custom.sh && \
               echo 'set -e' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo 'mkdir -p /usr/share/elasticsearch/data' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo 'mkdir -p /usr/share/elasticsearch/logs' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo 'chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+              echo 'chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/logs' >> /usr/local/bin/docker-entrypoint-custom.sh && \
               echo '/usr/local/bin/docker-entrypoint.sh elasticsearch -d' >> /usr/local/bin/docker-entrypoint-custom.sh && \
               echo 'until curl -s http://localhost:9200/_cluster/health | grep -q "\"status\":\"green\""; do' >> /usr/local/bin/docker-entrypoint-custom.sh && \
               echo '    echo "Waiting for ElasticSearch to start..."' >> /usr/local/bin/docker-entrypoint-custom.sh && \
@@ -472,7 +482,10 @@ jobs:
           RUN mkdir -p /usr/share/elasticsearch/data && \
               mkdir -p /usr/share/elasticsearch/logs && \
               chown -R elasticsearch:elasticsearch /usr/share/elasticsearch && \
-              chmod 775 /usr/share/elasticsearch/logs && \
+              chmod 755 /usr/share/elasticsearch && \
+              chmod 755 /usr/share/elasticsearch/data && \
+              chmod 755 /usr/share/elasticsearch/logs && \
+              chmod -R 755 /usr/share/elasticsearch/config && \
               chmod +x /usr/share/elasticsearch/config/init-index.sh && \
               chmod +x /usr/share/elasticsearch/healthcheck.sh
                     

@@ -12,9 +12,13 @@ COPY config/elasticsearch/indices/ /usr/share/elasticsearch/config/indices/
 COPY config/elasticsearch/init-index.sh /usr/share/elasticsearch/config/init-index.sh
 COPY config/elasticsearch/healthcheck.sh /usr/share/elasticsearch/
 
-# entrypoint 스크립트 생성 (root 권한으로)
+# entrypoint 스크립트 생성
 RUN echo '#!/bin/bash' > /usr/local/bin/docker-entrypoint-custom.sh && \
     echo 'set -e' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+    echo 'mkdir -p /usr/share/elasticsearch/data' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+    echo 'mkdir -p /usr/share/elasticsearch/logs' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+    echo 'chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data' >> /usr/local/bin/docker-entrypoint-custom.sh && \
+    echo 'chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/logs' >> /usr/local/bin/docker-entrypoint-custom.sh && \
     echo '/usr/local/bin/docker-entrypoint.sh elasticsearch -d' >> /usr/local/bin/docker-entrypoint-custom.sh && \
     echo 'until curl -s http://localhost:9200/_cluster/health | grep -q "\"status\":\"green\""; do' >> /usr/local/bin/docker-entrypoint-custom.sh && \
     echo '    echo "Waiting for ElasticSearch to start..."' >> /usr/local/bin/docker-entrypoint-custom.sh && \
@@ -25,13 +29,14 @@ RUN echo '#!/bin/bash' > /usr/local/bin/docker-entrypoint-custom.sh && \
     echo 'exec /usr/local/bin/docker-entrypoint.sh elasticsearch' >> /usr/local/bin/docker-entrypoint-custom.sh && \
     chmod +x /usr/local/bin/docker-entrypoint-custom.sh
 
-# 디렉토리 생성 및 권한 설정
+# 디렉토리 생성 및 권한 설정 (더 세밀한 권한 관리)
 RUN mkdir -p /usr/share/elasticsearch/data && \
     mkdir -p /usr/share/elasticsearch/logs && \
     chown -R elasticsearch:elasticsearch /usr/share/elasticsearch && \
-    chmod 777 /usr/share/elasticsearch && \
-    chmod 777 /usr/share/elasticsearch/data && \
-    chmod 777 /usr/share/elasticsearch/logs && \
+    chmod 755 /usr/share/elasticsearch && \
+    chmod 755 /usr/share/elasticsearch/data && \
+    chmod 755 /usr/share/elasticsearch/logs && \
+    chmod -R 755 /usr/share/elasticsearch/config && \
     chmod +x /usr/share/elasticsearch/config/init-index.sh && \
     chmod +x /usr/share/elasticsearch/healthcheck.sh
 
@@ -42,7 +47,6 @@ ENV bootstrap.memory_lock=true
 ENV xpack.security.enabled=false
 ENV node.max_local_storage_nodes=10
 
-# 마지막으로 elasticsearch 사용자로 전환
 USER elasticsearch
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint-custom.sh"]
