@@ -62,13 +62,13 @@ public class MongoConfig {
 
             // 채팅방 더미 데이터 생성
             ChatRoom room1 = createChatRoom(
-                    String.join(",", user1.getUserName(), user11.getUserName()),
-                    Arrays.asList(user1.getUserId(), user11.getUserId())
+                    String.join(",", user1.getUserName(), user10.getUserName()),
+                    Arrays.asList(user1.getUserId(), user10.getUserId())
             );
 
             ChatRoom room2 = createChatRoom(
-                    String.join(",", user2.getUserName(), user3.getUserName(), user10.getUserName(), user11.getUserName()),
-                    Arrays.asList(user2.getUserId(), user3.getUserId(), user10.getUserId(), user11.getUserId())
+                    String.join(",", user2.getUserName(), user3.getUserName(), user10.getUserName(), user10.getUserName()),
+                    Arrays.asList(user2.getUserId(), user3.getUserId(), user10.getUserId(), user10.getUserId())
             );
 
             ChatRoom room3 = createChatRoom(
@@ -81,8 +81,8 @@ public class MongoConfig {
             );
 
             ChatRoom room5 = createChatRoom(
-                    String.join(",", user1.getUserName(), user11.getUserName(), user7.getUserName()),
-                    Arrays.asList(user1.getUserId(), user11.getUserId(), user7.getUserId())
+                    String.join(",", user1.getUserName(), user10.getUserName(), user7.getUserName()),
+                    Arrays.asList(user1.getUserId(), user10.getUserId(), user7.getUserId())
             );
 
             ChatRoom room6 = createChatRoom(
@@ -96,8 +96,8 @@ public class MongoConfig {
             );
 
             ChatRoom room8 = createChatRoom(
-                    String.join(",", user10.getUserName(), user11.getUserName()),
-                    Arrays.asList(user10.getUserId(), user11.getUserId())
+                    String.join(",", user10.getUserName(), user10.getUserName()),
+                    Arrays.asList(user10.getUserId(), user10.getUserId())
             );
 
             ChatRoom room9 = createChatRoom(

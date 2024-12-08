@@ -6,11 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 @Table(name="TBL_PROJ_MEMBER")
+@NoArgsConstructor
+@Data
 public class ProjMember {
 
     @Id
