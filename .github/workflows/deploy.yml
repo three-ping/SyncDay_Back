@@ -108,7 +108,7 @@ jobs:
           chmod +x config/elasticsearch/healthcheck.sh
           
           # init-index.sh 파일 생성 - 초기 인덱스 설정 스크립트
-          cat > config/elasticsearch/init-index.sh <<EOL
+          cat > config/elasticsearch/config/init-index.sh <<EOL
           #!/bin/bash
           set -e
           
@@ -150,7 +150,7 @@ jobs:
           echo "Created indices:"
           curl 'http://localhost:9200/_cat/indices?v'
           EOL
-          chmod +x config/elasticsearch/init-index.sh
+          chmod +x config/elasticsearch/config/init-index.sh
 
       # Create application.yml for Spring Boot
       - name: Create application.yml

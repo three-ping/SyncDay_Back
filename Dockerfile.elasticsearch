@@ -1,30 +1,57 @@
+# Elasticsearch 7.17.9 버전을 기본 이미지로 사용
 FROM docker.elastic.co/elasticsearch/elasticsearch:7.17.9
 
+# root 사용자로 전환하여 시스템 설정 수행
 USER root
 
-# 필요한 패키지 설치
+# curl 설치 - healthcheck와 init-index.sh에서 필요
 RUN apt-get update && apt-get install -y curl
 
-# nori 플러그인 설치
+# 한글 분석을 위한 nori 플러그인 설치
 RUN elasticsearch-plugin install analysis-nori
 
-# 설정 파일 복사 및 권한 설정
+# 설정 파일들을 적절한 위치에 복사
 COPY config/elasticsearch/elasticsearch.yml /usr/share/elasticsearch/config/
 COPY config/elasticsearch/indices/ /usr/share/elasticsearch/config/indices/
 COPY config/elasticsearch/init-index.sh /usr/share/elasticsearch/config/init-index.sh
 COPY config/elasticsearch/healthcheck.sh /usr/share/elasticsearch/
 
-# 권한 설정
+# 데이터 디렉토리 생성 및 권한 설정
+# elasticsearch 사용자(UID 1000)가 모든 파일에 접근할 수 있도록 설정
 RUN mkdir -p /usr/share/elasticsearch/data && \
     chown -R elasticsearch:elasticsearch /usr/share/elasticsearch && \
     chmod +x /usr/share/elasticsearch/config/init-index.sh && \
     chmod +x /usr/share/elasticsearch/healthcheck.sh
 
+# 설정이 완료되었으므로 elasticsearch 사용자로 전환
 USER elasticsearch
 
+# Elasticsearch 실행에 필요한 환경 변수 설정
 ENV discovery.type=single-node
 ENV ES_JAVA_OPTS="-Xms1g -Xmx1g"
 ENV bootstrap.memory_lock=true
 ENV xpack.security.enabled=false
 
+# Elasticsearch 실행
 CMD ["elasticsearch"]
+
+COPY --chown=elasticsearch:elasticsearch <<EOF /usr/local/bin/docker-entrypoint-custom.sh
+
+/usr/local/bin/docker-entrypoint.sh elasticsearch -d
+
+# Elasticsearch가 완전히 준비될 때까지 대기
+until curl -s http://localhost:9200/_cluster/health | grep -q '"status":"green"'; do
+    echo "Waiting for ElasticSearch to start..."
+    sleep 5
+done
+
+echo "Elasticsearch is ready. Running init-index.sh..."
+/usr/share/elasticsearch/config/init-index.sh
+
+# Elasticsearch를 포그라운드로 실행
+exec /usr/local/bin/docker-entrypoint.sh elasticsearch
+EOF
+
+RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-custom.sh"]
