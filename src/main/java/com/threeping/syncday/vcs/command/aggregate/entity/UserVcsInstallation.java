@@ -1,0 +1,54 @@
+package com.threeping.syncday.vcs.command.aggregate.entity;
+
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "tbl_user_vcs_installation", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_user_installation", columnNames = {"user_id", "installation_id"})
+})
+@SQLDelete(sql = "UPDATE tbl_user_vcs_installation SET deleted_at = NOW() WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+public class UserVcsInstallation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "installation_id", nullable = false)
+    private VcsInstallation installation;
+
+    @Column(name = "scope", columnDefinition = "TEXT")
+    private String scope;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+}

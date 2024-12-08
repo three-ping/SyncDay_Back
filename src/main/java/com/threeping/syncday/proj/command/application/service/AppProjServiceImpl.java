@@ -52,7 +52,7 @@ public class AppProjServiceImpl implements AppProjService {
             foundProj.setVcsProjUrl(req.vcsProjUrl());
         }
         if (req.githubInstallationId()!=null){
-            foundProj.setGithubInstallationId(req.githubInstallationId());
+            foundProj.setVcsInstallationId(req.githubInstallationId());
         }
 
         Proj updatedProj = projRepository.save(foundProj);
