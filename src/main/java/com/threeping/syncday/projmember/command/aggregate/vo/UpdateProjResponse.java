@@ -10,6 +10,7 @@ public record UpdateProjResponse(@JsonProperty("proj_id") Long projId,
                                  @JsonProperty("start_time") Timestamp startTime,
                                  @JsonProperty("end_time") Timestamp endTime,
                                  @JsonProperty("vcs_type") String vcsType,
-                                 @JsonProperty("vcs_proj_url") String vcsProjUrl) {
+                                 @JsonProperty("vcs_proj_url") String vcsProjUrl,
+                                 @JsonProperty("github_installation_id")Long githubInstallationId) {
 
 }

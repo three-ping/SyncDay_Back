@@ -29,4 +29,7 @@ public class ProjDTO {
     String vcsType;
     @JsonProperty("vcs_proj_url")
     String vcsProjUrl;
+
+    @JsonProperty("github_installation_id")
+    Long githubInstallationId;
 }
