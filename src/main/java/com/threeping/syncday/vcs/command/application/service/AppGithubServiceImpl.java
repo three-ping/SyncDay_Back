@@ -8,14 +8,13 @@ import com.threeping.syncday.vcs.command.aggregate.request.GithubInstallationReq
 import com.threeping.syncday.vcs.command.aggregate.response.GithubInstallationResponse;
 import com.threeping.syncday.vcs.command.domain.repository.UserVcsInstallationRepository;
 import com.threeping.syncday.vcs.command.domain.repository.VcsInstallationRepository;
-import com.threeping.syncday.vcs.command.infrastructure.github.GithubAppClient;
+import com.threeping.syncday.vcs.infrastructure.github.GithubAppClient;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kohsuke.github.GHAppInstallation;
 import org.kohsuke.github.GHTargetType;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.web.codec.CodecCustomizer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

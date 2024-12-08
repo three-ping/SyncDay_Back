@@ -11,7 +11,7 @@ public class VcsInstallationDTO {
     private Long id;
 
     private String vcsType;
-
+    private Long installationId;
     private String accountId;
 
     private String accountName;

@@ -1,4 +1,4 @@
-package com.threeping.syncday.vcs.command.infrastructure.github;
+package com.threeping.syncday.vcs.infrastructure.github;
 
 
 import com.threeping.syncday.vcs.command.utils.GithubFactory;
