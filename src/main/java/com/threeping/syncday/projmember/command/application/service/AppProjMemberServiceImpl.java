@@ -6,6 +6,7 @@ import com.threeping.syncday.proj.command.aggregate.dto.ProjDTO;
 import com.threeping.syncday.projmember.command.aggregate.entity.BookmarkStatus;
 import com.threeping.syncday.projmember.command.aggregate.entity.ParticipationStatus;
 import com.threeping.syncday.projmember.command.aggregate.entity.ProjMember;
+import com.threeping.syncday.projmember.command.aggregate.entity.UpdateProjectMemberReq;
 import com.threeping.syncday.projmember.command.aggregate.vo.UpdateProjRequest;
 import com.threeping.syncday.projmember.command.aggregate.vo.UpdateProjResponse;
 import com.threeping.syncday.projmember.command.aggregate.vo.UpdateWorkspaceRequest;
@@ -98,6 +99,42 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
             throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /* 멤버 초대 */
+    @Override
+    public ProjMember addProjectMember(UpdateProjectMemberReq updateProjectMemberReq) {
+        ProjMember member = projMemberRepository.findByUserIdAndProjId(updateProjectMemberReq.getUserId(), updateProjectMemberReq.getProjId());
+        if (member == null) {
+            throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
+        }
+        else if(!member.getParticipationStatus().equals(ParticipationStatus.OWNER)){
+            throw new CommonException(ErrorCode.PROJ_INVALID_REQUEST);
+        }
+        ProjMember memberToAdd = new ProjMember();
+        memberToAdd.setUserId(updateProjectMemberReq.getUserId());
+        memberToAdd.setProjId(updateProjectMemberReq.getProjId());
+        memberToAdd.setParticipationStatus(ParticipationStatus.PENDING);
+        return projMemberRepository.save(memberToAdd);
+    }
+
+    @Override
+    public Boolean removeProjMember(UpdateProjectMemberReq updateProjectMemberReq) {
+        ProjMember member = projMemberRepository.findByUserIdAndProjId(updateProjectMemberReq.getUserId(), updateProjectMemberReq.getProjId());
+        if (member == null) {
+            throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
+        }
+        else if(!member.getParticipationStatus().equals(ParticipationStatus.OWNER)){
+            throw new CommonException(ErrorCode.PROJ_INVALID_REQUEST);
+        }
+        ProjMember memberToRemove = projMemberRepository.findByUserIdAndProjId(updateProjectMemberReq.getUserId(), updateProjectMemberReq.getProjId());
+        if (memberToRemove == null) {
+            throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
+        }
+        projMemberRepository.delete(memberToRemove);
+        return Boolean.TRUE;
+    }
+
+    /* 멤버 삭제 */
 
     @Override
     public UpdateProjResponse addProj(UpdateProjRequest req) {

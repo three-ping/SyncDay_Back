@@ -18,7 +18,7 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
-    <select id="selectGithubRepositoryByInstallationId" resultMap="githubRepositoryResultMap">
+    <select id="selectGithubRepositoryByInstallationId" resultMap="githubRepositoryResultMap" parameterType="long">
         SELECT
             id,
             installation_id,
@@ -35,6 +35,25 @@
             updated_at
         FROM tbl_github_repository
         WHERE installation_id = #{installationId}
+    </select>
+
+    <select id="selectGithubRepositoryById" resultMap="githubRepositoryResultMap" parameterType="long">
+        SELECT
+            id,
+            installation_id,
+            user_id,
+            repo_id,
+            repo_name,
+            repo_full_name,
+            repo_url,
+            html_url,
+            default_branch,
+            is_private,
+            is_active,
+            created_at,
+            updated_at
+        FROM tbl_github_repository
+        WHERE id = #{repoId}
     </select>
 
 </mapper>

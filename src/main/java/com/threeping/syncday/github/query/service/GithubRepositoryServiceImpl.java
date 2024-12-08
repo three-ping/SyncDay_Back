@@ -1,5 +1,6 @@
 package com.threeping.syncday.github.query.service;
 
+import com.threeping.syncday.github.command.aggregate.entity.GithubRepositoryEntity;
 import com.threeping.syncday.github.query.aggregate.dto.GithubRepositoryDTO;
 import com.threeping.syncday.github.query.repository.GithubRepositoryMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,5 +19,10 @@ public class GithubRepositoryServiceImpl implements GithubRepositoryService {
     public List<GithubRepositoryDTO> getByInstallationId(Long installationId) {
 
         return githubRepositoryMapper.selectGithubRepositoryByInstallationId(installationId);
+    }
+
+    @Override
+    public GithubRepositoryDTO getById(Long repoId) {
+        return githubRepositoryMapper.selectGithubRepositoryById(repoId);
     }
 }
