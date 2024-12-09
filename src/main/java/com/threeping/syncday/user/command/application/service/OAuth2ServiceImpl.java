@@ -1,9 +1,8 @@
 package com.threeping.syncday.user.command.application.service;
 
-import com.threeping.syncday.common.ResponseDTO;
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
-import com.threeping.syncday.user.aggregate.oauth.vo.GithubTokenResponse;
+import com.threeping.syncday.user.command.aggregate.vo.GithubTokenResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,13 +16,10 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
-@Slf4j
 @Service
+@Slf4j
 public class OAuth2ServiceImpl implements OAuth2Service {
-
     @Value("${github.oauth2.client-id}")
     private String clientId;
 
@@ -38,8 +34,6 @@ public class OAuth2ServiceImpl implements OAuth2Service {
         this.restTemplate = restTemplate;
         this.env = env;
     }
-
-
     public GithubTokenResponse getGithubAccessToken(String code) {
         String githubAuthUrl = "https://github.com/login/oauth/access_token";
 
@@ -75,8 +69,6 @@ public class OAuth2ServiceImpl implements OAuth2Service {
             LocalDateTime refreshTokenExpiry = now.plusSeconds(tokenResponse.getRefreshTokenExpiresIn());
 
             // TODO: Store tokens and expiration times in your database
-
-
             return tokenResponse;
 
         } catch (HttpClientErrorException e) {

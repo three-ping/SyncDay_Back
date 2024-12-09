@@ -31,10 +31,15 @@ public class  Proj {
     @Column(name="progress_status")
     private Byte progressStatus;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name="vcs_type")
+    private VcsType vcsType;
 
     @Column(name="vcs_proj_url")
     private String vcsProjUrl;
 
+    @Column(name="vcs_installation_id")
+    private Long vcsInstallationId;
 
     /* 설명. 유저가 입력하지 않아도 알아서 설정 */
     @PrePersist

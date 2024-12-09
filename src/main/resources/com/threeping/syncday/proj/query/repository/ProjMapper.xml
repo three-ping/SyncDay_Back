@@ -12,35 +12,18 @@
         <result property="endTime" column="end_time"/>
         <result property="createdAt" column="created_at"/>
         <result property="progressStatus" column="progress_status"/>
-
+        <result property="vcsType" column="vcs_type"/>
         <result property="vcsProjUrl" column="vcs_proj_url"/>
+        <result property="vcsInstallationId" column="vcs_installation_id"/>
     </resultMap>
 
     <resultMap id="projSearchMap" type="com.threeping.syncday.proj.query.aggregate.dto.ProjectQueryDTO">
         <id property="projectId" column="proj_id"></id>
         <result property="projectName" column="proj_name"></result>
         <result property="createdAt" column="created_at"></result>
-        <result property="vcs_type" column="vcs_type"/>
+        <result property="vcsType" column="vcs_type"/>
     </resultMap>
 
-    <!-- Complex result map for ProjAndWorkspaceDTO -->
-    <resultMap id="projWithWorkspacesResultMap" type="com.threeping.syncday.proj.query.aggregate.dto.ProjAndWorkspaceDTO">
-        <id property="projId" column="proj_id"/>
-        <result property="projName" column="proj_name"/>
-        <result property="startTime" column="start_time"/>
-        <result property="endTime" column="end_time"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="progressStatus" column="progress_status"/>
-        <result property="vcsProjUrl" column="vcs_proj_url"/>
-        <collection property="workspaces" ofType="com.threeping.syncday.workspace.query.aggregate.WorkspaceDTO">
-            <id property="workspaceId" column="workspace_id"/>
-            <result property="workspaceName" column="workspace_name"/>
-            <result property="createdAt" column="workspace_created_at"/>
-            <result property="progressStatus" column="workspace_progress_status"/>
-            <result property="vcsType" column="workspace_vcs_type"/>
-            <result property="vcsRepoUrl" column="workspace_vcs_repo_url"/>
-        </collection>
-    </resultMap>
 
     <!-- Basic select for ProjDTO -->
     <select id="selectAllProjs" resultMap="projResultMap">
@@ -52,7 +35,8 @@
             created_at,
             progress_status,
             vcs_type,
-            vcs_proj_url
+            vcs_proj_url,
+            vcs_installation_id
         FROM TBL_PROJ
         ORDER BY created_at DESC
     </select>
@@ -77,48 +61,7 @@
         FROM TBL_PROJ
     </select>
     <!-- Complex select for ProjAndWorkspaceDTO -->
-    <select id="selectProjectWithWorkspaces" resultMap="projWithWorkspacesResultMap">
-        SELECT
-            p.proj_id,
-            p.proj_name,
-            p.start_time,
-            p.end_time,
-            p.created_at,
-            p.progress_status,
-            p.vcs_type,
-            p.vcs_proj_url,
-            w.workspace_id,
-            w.workspace_name,
-            w.created_at AS workspace_created_at,
-            w.progress_status AS workspace_progress_status,
-            w.vcs_type AS workspace_vcs_type,
-            w.vcs_repo_url AS workspace_vcs_repo_url
-        FROM TBL_PROJ p
-                 LEFT JOIN TBL_WORKSPACE w ON w.proj_id = p.proj_id
-        WHERE p.proj_id = #{projId}
-    </select>
 
-    <!-- Select projects by user id with installation info -->
-    <select id="selectProjectsByUserId" resultMap="projWithWorkspacesResultMap">
-        SELECT
-            p.proj_id,
-            p.proj_name,
-            p.start_time,
-            p.end_time,
-            p.created_at,
-            p.progress_status,
-            p.vcs_type,
-            p.vcs_proj_url,
-            w.workspace_id,
-            w.workspace_name,
-            w.progress_status AS workspace_progress_status,
-
-        FROM TBL_PROJ p
-                 INNER JOIN TBL_PROJ_MEMBER pm ON p.proj_id = pm.proj_id
-                 LEFT JOIN TBL_WORKSPACE w ON w.proj_id = p.proj_id
-        WHERE pm.user_id = #{userId}
-        ORDER BY p.created_at DESC
-    </select>
 
 
 

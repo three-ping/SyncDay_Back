@@ -1,8 +1,10 @@
 package com.threeping.syncday.meetingroomreservation.query.aggregate;
 
+import com.threeping.syncday.schedule.query.aggregate.UserInfoDTO;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 public class MeetingroomReservation {
@@ -18,4 +20,6 @@ public class MeetingroomReservation {
      Timestamp endTime;
      Long user;
      String meetingroomPlace;
+     String scheduleParticipant;
+     List<UserInfoDTO> userInfo;
 }
