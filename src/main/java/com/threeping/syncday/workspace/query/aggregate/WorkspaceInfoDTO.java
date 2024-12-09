@@ -20,7 +20,7 @@ public class WorkspaceInfoDTO {
     @JsonProperty("progress_status")
     private Byte progressStatus;
 
-    @JsonProperty("projId")
+    @JsonProperty("proj_id")
     private Long projId;
 
     @JsonProperty("vcs_type")
