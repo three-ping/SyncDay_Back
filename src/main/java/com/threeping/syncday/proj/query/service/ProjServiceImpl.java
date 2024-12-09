@@ -34,9 +34,5 @@ public class ProjServiceImpl implements ProjService {
     }
 
 
-    @Override
-    public List<ProjAndWorkspaceDTO> getProjInfosByUserId(Long userId) {
 
-        return projMapper.selectProjAndWorkspacesByUserId(userId);
-    }
 }

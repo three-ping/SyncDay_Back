@@ -66,6 +66,7 @@
         <result property="createdAt" column="proj_created_at"/>
         <result property="progressStatus" column="proj_progress_status"/>
         <result property="vcsProjUrl" column="vcs_proj_url"/>
+        <result property="githubInstallationId" column="github_installation_id"/>
         <collection property="workspaces" resultMap="workspaceResultMap"/>
     </resultMap>
 
@@ -90,6 +91,7 @@
             p.progress_status as proj_progress_status,
             p.vcs_type,
             p.vcs_proj_url,
+            p.github_installation_id,
             w.workspace_id,
             w.workspace_name,
             w.created_at as workspace_created_at,
