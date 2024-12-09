@@ -30,61 +30,60 @@ import java.util.Date;
 public class GithubJwtUtils {
     private static final int TOKEN_EXPIRY_MINUTES = 10;
 
-
     @Value("${github.app.id}")
     private String githubAppId;
 
-    @Value("${github.app.private-key-path}")
-    private String privateKeyPath;
+    // private-key-path 대신 private-key를 직접 주입받습니다
+    @Value("${github.app.private-key}")
+    private String privateKeyBase64;
 
-    private final ResourceLoader resourceLoader;
-
-    public GithubJwtUtils(@Qualifier("webApplicationContext") ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
-
-    private PrivateKey getPrivateKey(String keyPath) throws Exception {
-        Resource resource = resourceLoader.getResource(keyPath);
-        byte[] keyBytes;
+    // 메서드 이름을 더 명확하게 변경하고, Base64로 인코딩된 문자열에서 PrivateKey를 생성합니다
+    private PrivateKey getPrivateKeyFromBase64() throws Exception {
         try {
-            keyBytes = Files.readAllBytes(resource.getFile().toPath());
-        } catch (IOException e) {
-            log.error("Failed to read private key file: {}", e.getMessage());
-            throw new RuntimeException("Failed to read private key file", e);
+            // Base64로 인코딩된 문자열을 디코딩하여 바이트 배열로 변환합니다
+            byte[] keyBytes = Base64.getDecoder().decode(privateKeyBase64);
+            log.info("Successfully decoded private key from Base64");
+
+            // PKCS8 형식으로 private key를 생성합니다
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+            KeyFactory kf = KeyFactory.getInstance("RSA");
+            return kf.generatePrivate(spec);
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid Base64 encoding in private key: {}", e.getMessage());
+            throw new RuntimeException("Invalid private key format", e);
+        } catch (Exception e) {
+            log.error("Failed to generate private key: {}", e.getMessage());
+            throw new RuntimeException("Failed to generate private key", e);
         }
-        log.info("keyBytes: {}", keyBytes);
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-        log.info("spec: {}", spec);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        return kf.generatePrivate(spec);
     }
-
-
 
     public String createJwt() {
         try {
-            // Use Instant for accurate timestamps
-            Key privateKey = getPrivateKey(privateKeyPath);
+            // 파일 대신 Base64 문자열에서 private key를 생성합니다
+            Key privateKey = getPrivateKeyFromBase64();
+
+            // GitHub 서버 시간과의 동기화를 위한 시간 차이를 계산합니다
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> response = restTemplate.getForEntity("https://api.github.com/", String.class);
             HttpHeaders headers = response.getHeaders();
             long githubTime = headers.getDate();
             long timeDiff = System.currentTimeMillis() - githubTime;
 
-            log.info("timeDiff: {}", timeDiff);
-            System.out.println("Time difference with GitHub (ms): " + timeDiff);
+            log.info("Time difference with GitHub (ms): {}", timeDiff);
+
+            // JWT 토큰 생성 시간을 설정합니다
             long nowMillis = System.currentTimeMillis() - timeDiff;
-            long expMillis = nowMillis + 10 * 60 * 1000;
-            // Build JWT with numeric timestamps for iat and exp
+            long expMillis = nowMillis + (TOKEN_EXPIRY_MINUTES * 60 * 1000);
+
             String token = Jwts.builder()
                     .setHeaderParam("alg", "RS256")
-                    .claim("iat", new Date(nowMillis))        // Unix timestamp in seconds
-                    .claim("exp", new Date(expMillis)) // Unix timestamp in seconds
-                    .claim("iss", githubAppId)                       // GitHub App ID
+                    .claim("iat", new Date(nowMillis))
+                    .claim("exp", new Date(expMillis))
+                    .claim("iss", githubAppId)
                     .signWith(privateKey, SignatureAlgorithm.RS256)
                     .compact();
 
-            // Debug log the token contents
+            // 디버깅을 위해 토큰 내용을 로깅합니다
             logDecodedToken(token);
 
             return token;
