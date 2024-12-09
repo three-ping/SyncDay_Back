@@ -266,6 +266,18 @@ jobs:
             cors:
               allowed-origins: ${CORS_ALLOWED_ORIGINS}
             frontend-url: ${FRONTEND_URL}
+          
+          springdoc:
+            swagger-ui:
+              path: /swagger-custom-ui.html
+              groups-order: DESC
+              tags-sorter: alpha
+              operations-sorter: method
+              disable-swagger-default-url: true
+              display-request-duration: true
+            show-actuator: true
+            default-consumes-media-type: application/json
+            default-produces-media-type: application/json
   
           token:
             access-expiration-time: 3600000
