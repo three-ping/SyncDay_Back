@@ -3,6 +3,7 @@ package com.threeping.syncday.cardboard.command.application.service;
 import com.threeping.syncday.cardboard.command.aggreate.dto.CardboardDTO;
 import com.threeping.syncday.cardboard.command.aggreate.entity.Cardboard;
 import com.threeping.syncday.cardboard.command.aggreate.vo.AppCardboardVO;
+import com.threeping.syncday.cardboard.command.aggreate.vo.MilestoneToCardboardVO;
 import com.threeping.syncday.cardboard.command.domain.repository.CardboardRepository;
 import com.threeping.syncday.common.exception.CommonException;
 import com.threeping.syncday.common.exception.ErrorCode;
@@ -11,7 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+@Transactional
 @Slf4j
 @Service
 public class AppCardboardServiceImpl implements AppCardboardService {
@@ -28,7 +29,6 @@ public class AppCardboardServiceImpl implements AppCardboardService {
 
 
     @Override
-    @Transactional
     public CardboardDTO addCardboard(AppCardboardVO cardboardVO) {
         Cardboard cardboard = modelMapper.map(cardboardVO, Cardboard.class);
         log.info("cardboard: {}", cardboard);
@@ -37,7 +37,6 @@ public class AppCardboardServiceImpl implements AppCardboardService {
     }
 
     @Override
-    @Transactional
     public CardboardDTO modifyCardboard(AppCardboardVO cardboardVO) {
         Cardboard foundCardboard = cardboardRepository.findById(cardboardVO.getCardboardId()).orElse(null);
         if(foundCardboard == null) {
@@ -49,7 +48,6 @@ public class AppCardboardServiceImpl implements AppCardboardService {
     }
 
     @Override
-    @Transactional
     public CardboardDTO deleteCardboard(Long cardboardId) {
         Cardboard foundCardboard = cardboardRepository.findById(cardboardId).orElse(null);
         if(foundCardboard == null) {
@@ -57,5 +55,11 @@ public class AppCardboardServiceImpl implements AppCardboardService {
         }
         cardboardRepository.delete(foundCardboard);
         return modelMapper.map(foundCardboard, CardboardDTO.class);
+    }
+
+    @Override
+    public MilestoneToCardboardVO convertMilestoneToCardboard(MilestoneToCardboardVO vo) {
+
+        return null;
     }
 }
