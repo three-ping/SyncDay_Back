@@ -11,5 +11,5 @@ public interface AppCardboardService {
 
     CardboardDTO deleteCardboard(Long cardboardId);
 
-    MilestoneToCardboardVO convertMilestoneToCardboard(MilestoneToCardboardVO vo);
+    Long convertMilestoneToCardboard(MilestoneToCardboardVO vo);
 }

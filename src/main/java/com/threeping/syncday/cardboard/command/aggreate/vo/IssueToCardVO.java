@@ -8,9 +8,13 @@ import java.sql.Timestamp;
 
 @Data
 public class IssueToCardVO {
+
+    @JsonProperty("user_id")
+    private Long createdBy;
+
     private String title;
 
-    @JsonProperty("description")
+    @JsonProperty("content")
     private String content;
 
     @JsonProperty("vcs_object_url")
@@ -28,10 +32,5 @@ public class IssueToCardVO {
     @JsonProperty("status")
     private String status;
 
-    @JsonProperty("assignee")
-    private String assignee;
-
-    @JsonProperty("assignee_avatar")
-    private String assigneeAvatar;
 
 }

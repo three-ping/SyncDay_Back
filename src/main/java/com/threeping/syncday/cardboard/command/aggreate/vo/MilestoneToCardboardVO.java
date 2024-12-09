@@ -10,6 +10,8 @@ import java.util.List;
 @Data
 public class MilestoneToCardboardVO {
 
+
+
     @JsonProperty("cardboard_id")
     private Long cardboardId;
 
