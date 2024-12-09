@@ -61,7 +61,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 || path.startsWith("/sse/subscribe")
                 || path.startsWith("/swagger-custom-ui.html")
                 || path.startsWith("/ws")
-                // github webhook
                 || path.startsWith("/api/webhook/github");
     }
 

@@ -40,7 +40,7 @@ class UserQueryServiceTests {
         mockEntity.setPassword("password");
         mockEntity.setUserName("testUser");
         mockEntity.setTeamId(1L);
-        mockEntity.setLastAccessTime(Timestamp.valueOf(LocalDateTime.now()));
+        mockEntity.setLastActivatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
         when(userMapper.findByEmail(email)).thenReturn(mockEntity);
 
@@ -81,7 +81,7 @@ class UserQueryServiceTests {
         mockEntity.setPassword(password);
         mockEntity.setUserName("testUser");
         mockEntity.setTeamId(1L);
-        mockEntity.setLastAccessTime(Timestamp.valueOf(LocalDateTime.now()));
+        mockEntity.setLastActivatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
         when(userMapper.findByEmail(email)).thenReturn(mockEntity);
 

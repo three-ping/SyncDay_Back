@@ -63,7 +63,7 @@ class UserQueryServiceImpl implements UserQueryService {
         userDTO.setPosition(user.getPosition());
         userDTO.setJoinYear(timeStampToString(user.getJoinYear()));
         userDTO.setTeamId(user.getTeamId());
-        userDTO.setLastAccessTime(user.getLastAccessTime().toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME));
+        userDTO.setLastAccessTime(user.getLastActivatedAt().toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME));
 
         return userDTO;
     }
@@ -86,7 +86,7 @@ class UserQueryServiceImpl implements UserQueryService {
         userDTO.setPosition(user.getPosition());
         userDTO.setJoinYear(timeStampToString(user.getJoinYear()));
         userDTO.setTeamId(user.getTeamId());
-        userDTO.setLastAccessTime(user.getLastAccessTime().toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME));
+        userDTO.setLastAccessTime(user.getLastActivatedAt().toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME));
 
         return userDTO;
     }

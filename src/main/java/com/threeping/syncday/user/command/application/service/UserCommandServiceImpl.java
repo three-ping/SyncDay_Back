@@ -51,7 +51,7 @@ public class UserCommandServiceImpl implements UserCommandService {
         user.setPosition(newUser.getPosition());
         user.setPhoneNumber(newUser.getPhoneNumber());
         user.setTeamId(newUser.getTeamId());
-        user.setLastAccessTime(Timestamp.valueOf(LocalDateTime.now()));
+        user.setLastActivatedAt(Timestamp.valueOf(LocalDateTime.now()));
         log.info("새로 등록되는 유저정보 registUser: {}", user);
 
         userRepository.save(user);
@@ -89,7 +89,7 @@ public class UserCommandServiceImpl implements UserCommandService {
             throw new CommonException(ErrorCode.NOT_FOUND_USER);
         }
 
-        existingUser.setLastAccessTime(Timestamp.valueOf(LocalDateTime.now()));
+        existingUser.setLastActivatedAt(Timestamp.valueOf(LocalDateTime.now()));
         userRepository.save(existingUser);
     }
 
