@@ -83,23 +83,6 @@ jobs:
               echo "elasticsearch soft memlock unlimited" >> /etc/security/limits.conf
               echo "elasticsearch hard memlock unlimited" >> /etc/security/limits.conf
           EOL
-          cat > .ebextensions/99-cleanup-nginx.config <<EOL
-          commands:
-            01_cleanup_nginx_conf:
-              command: |
-                rm -f /etc/nginx/conf.d/*.conf
-              ignoreErrors: true
-            02_create_healthd_conf:
-              command: |
-                mkdir -p /etc/nginx/conf.d/elasticbeanstalk/
-                echo 'location /health { access_log off; return 200 "OK"; }' > /etc/nginx/conf.d/elasticbeanstalk/healthd.conf
-              ignoreErrors: true
-            03_copy_nginx_conf:
-              command: |
-                cp /var/app/current/.platform/nginx/nginx.conf /etc/nginx/nginx.conf
-                service nginx restart
-              ignoreErrors: true
-          EOL
 
       - name: Create Elasticsearch configuration
         run: |
@@ -466,16 +449,38 @@ jobs:
 
       - name: Generate deployment package
         run: |
+          # 1. 배포 디렉토리 구조 생성
           mkdir -p deploy/.platform/nginx/conf.d
           mkdir -p deploy/.ebextensions
           
-          # nginx 설정 파일 복사 (플랫폼 설정)
+          # 2. nginx 설정을 위한 .ebextensions 파일 생성
+          cat > deploy/.ebextensions/99-nginx-setup.config <<EOL
+          commands:
+            01_cleanup_nginx_conf:
+              command: |
+                rm -f /etc/nginx/conf.d/*.conf
+                rm -f /etc/nginx/nginx.conf
+              ignoreErrors: true
+            02_create_healthd_conf:
+              command: |
+                mkdir -p /etc/nginx/conf.d/elasticbeanstalk/
+                echo 'location /health { access_log off; return 200 "OK"; }' > /etc/nginx/conf.d/elasticbeanstalk/healthd.conf
+              ignoreErrors: true
+            03_setup_nginx:
+              command: |
+                cp -f /var/app/current/.platform/nginx/nginx.conf /etc/nginx/nginx.conf
+                chmod 644 /etc/nginx/nginx.conf
+                service nginx restart
+              ignoreErrors: true
+          EOL
+          
+          # 3. nginx 설정 파일 복사 (.platform 디렉토리로)
           cp .platform/nginx/nginx.conf deploy/.platform/nginx/
           
-          # .ebextensions 디렉토리 복사
+          # 4. 기존 .ebextensions 파일들 복사
           cp -r .ebextensions/* deploy/.ebextensions/
           
-          # JAR 파일과 다른 필요한 파일들 복사
+          # 5. JAR 파일과 다른 필요한 파일들 복사
           JAR_FILE=$(ls ./build/libs/*SNAPSHOT.jar | grep -v plain)
           if [ -n "$JAR_FILE" ]; then
             cp "$JAR_FILE" deploy/app.jar
@@ -484,18 +489,17 @@ jobs:
             exit 1
           fi
           
-          # Elastic Beanstalk에게 애플리케이션 실행 방법을 알려주는 설정 파일
+          # 6. 기타 필요한 파일들 복사
           echo "web: java -jar app.jar" > deploy/Procfile
-          
           cp Dockerfile deploy/
           cp Dockerfile.elasticsearch deploy/
           cp -r config deploy/
           cp docker-compose.yml deploy/
           
-          # 5. 배포 패키지 생성
+          # 7. 배포 패키지 생성
           cd deploy && zip -r deploy.zip .
           
-          # 디버깅을 위한 배포 패키지 내용 확인
+          # 8. 패키지 내용 확인 (디버깅용)
           echo "Deployment package contents:"
           unzip -l deploy.zip
 
