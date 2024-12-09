@@ -86,6 +86,11 @@ public class ChatService {
         if (chatRoom.getChatRoomName() == null || chatRoom.getChatRoomName().isEmpty()){
             Map<Long,String> userNameMap = getUserNameMap(chatRoom);
             chatRoom.setChatRoomName(getChatRoomName(chatRoom, userNameMap));
+            log.info("채팅방 새로 생성");
+        }
+
+        if(chatRoom.getLastMessage() == null || chatRoom.getLastMessage().isEmpty()) {
+            chatRoom.setLastMessage("새로 채팅방이 만들어졌습니다. 채팅을 시작하세요.");
         }
         return chatRoomRepository.save(chatRoom);
     }
@@ -93,12 +98,13 @@ public class ChatService {
     //  특정 채팅방 퇴장
     public ChatRoom leaveChatRoom(String roomId, Long userId) {
         log.info("유저 {} : {} 채팅방 퇴장", userId, roomId);
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
 
         List<Long> memberIds = new ArrayList<>(chatRoom.getMemberIds());
         memberIds.remove(userId);
         chatRoom.setMemberIds(memberIds);
+        log.info("{} 유저 채팅 멤버 목록에서 삭제됨", userId);
 
         LocalDateTime leaveTime = LocalDateTime.now();
 
@@ -115,7 +121,6 @@ public class ChatService {
         messagingTemplate.convertAndSend("/topic/room/" + roomId + "/leave", updatedRoom);
 
         return updatedRoom;
-
     }
 
     private Map<Long, String> getUserNameMap(ChatRoom chatRoom) {
