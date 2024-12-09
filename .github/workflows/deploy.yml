@@ -45,33 +45,7 @@ jobs:
                   }
                 }
           EOL
-          
-          cat > .ebextensions/02-nginx-proxy.config <<EOL
-          files:
-            "/etc/nginx/conf.d/proxy.conf":
-              mode: "000644"
-              owner: root
-              group: root
-              content: |
-                upstream docker {
-                  server 127.0.0.1:5000;
-                  keepalive 256;
-                }
-          
-                server {
-                  listen 80;
-          
-                  location / {
-                      proxy_pass  http://docker;
-                      proxy_set_header  Connection  "";
-                      proxy_http_version  1.1;
-                      proxy_set_header  Host  \$host;
-                      proxy_set_header  X-Real-IP \$remote_addr;
-                      proxy_set_header  X-Forwarded-For \$proxy_add_x_forwarded_for;
-                  }
-                }
-          EOL
-          cat > .ebextensions/03-sysctl-settings.config <<EOL
+          cat > .ebextensions/02-sysctl-settings.config <<EOL
           commands:
           00_create_elasticsearch_user:
             command: |
@@ -351,7 +325,7 @@ jobs:
                 start_period: 60s
             app:
               build: .
-              container_name: current-app-1
+              container_name: syncday
               ports:
                 - "5000:5000"
               environment:
@@ -383,12 +357,6 @@ jobs:
                   condition: service_healthy
               networks:
                 - es-network 
-              healthcheck:
-                test: ["CMD", "curl", "-f", "http://localhost:5000/actuator/health"]
-                interval: 30s
-                timeout: 10s
-                retries: 3
-                start_period: 40s
           
           
             mongodb:
@@ -469,7 +437,8 @@ jobs:
 
       - name: Generate deployment package
         run: |
-          mkdir -p deploy
+          mkdir -p deploy/.platform/nginx/conf.d
+          cp .platform/nginx/nginx.conf deploy/.platform/nginx/
           
           JAR_FILE=$(ls ./build/libs/*SNAPSHOT.jar | grep -v plain)
           if [ -n "$JAR_FILE" ]; then
