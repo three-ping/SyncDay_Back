@@ -83,6 +83,13 @@ jobs:
               echo "elasticsearch soft memlock unlimited" >> /etc/security/limits.conf
               echo "elasticsearch hard memlock unlimited" >> /etc/security/limits.conf
           EOL
+          cat > .ebextensions/99-cleanup-nginx.config <<EOL
+          commands:
+            01_cleanup_nginx_conf:
+              command: |
+                rm -f /etc/nginx/conf.d/*.conf
+              ignoreErrors: true
+          EOL
 
       - name: Create Elasticsearch configuration
         run: |
@@ -438,8 +445,15 @@ jobs:
       - name: Generate deployment package
         run: |
           mkdir -p deploy/.platform/nginx/conf.d
+          mkdir -p deploy/.ebextensions
+          
+          # nginx 설정 파일 복사 (플랫폼 설정)
           cp .platform/nginx/nginx.conf deploy/.platform/nginx/
           
+          # .ebextensions 디렉토리 복사
+          cp -r .ebextensions/* deploy/.ebextensions/
+          
+          # JAR 파일과 다른 필요한 파일들 복사
           JAR_FILE=$(ls ./build/libs/*SNAPSHOT.jar | grep -v plain)
           if [ -n "$JAR_FILE" ]; then
             cp "$JAR_FILE" deploy/app.jar
@@ -448,13 +462,11 @@ jobs:
             exit 1
           fi
           
-          # 3. Procfile 생성
           # Elastic Beanstalk에게 애플리케이션 실행 방법을 알려주는 설정 파일
           echo "web: java -jar app.jar" > deploy/Procfile
           
           cp Dockerfile deploy/
           cp Dockerfile.elasticsearch deploy/
-          cp -r .ebextensions deploy/.ebextensions
           cp -r config deploy/
           cp docker-compose.yml deploy/
           
