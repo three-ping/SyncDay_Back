@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173","https://1bda-203-234-103-13.ngrok-free.app")
+                        .allowedOrigins("http://syncday-front-env.eba-mgj2hqmj.ap-northeast-2.elasticbeanstalk.com","https://1bda-203-234-103-13.ngrok-free.app")
                         .allowedMethods("GET", "POST", "OPTIONS", "PUT", "DELETE")
                         .allowedHeaders("*")
                         .allowCredentials(true);
