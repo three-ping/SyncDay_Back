@@ -145,7 +145,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
         member.setBookmarkStatus(BookmarkStatus.NONE);
         member.setProjId(proj.getProjId());
         member.setParticipationStatus(ParticipationStatus.OWNER);
-        return new UpdateProjResponse(proj.getProjId(), member.getProjMemberId(), proj.getProjName(), proj.getStartTime(), proj.getEndTime(),proj.getVcsType(), proj.getVcsProjUrl(), proj.getGithubInstallationId());
+        return new UpdateProjResponse(proj.getProjId(), member.getProjMemberId(), proj.getProjName(), proj.getStartTime(), proj.getEndTime(),proj.getVcsType(), proj.getVcsProjUrl(), proj.getVcsInstallationId());
     }
 
     @Override
@@ -158,7 +158,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
         }
         ProjDTO proj = infraProjMemberService.requestUpdateProj(req);
 
-        return new UpdateProjResponse(proj.getProjId(),member.getProjMemberId(), proj.getProjName(),proj.getStartTime(), proj.getEndTime(), proj.getVcsType(), proj.getVcsProjUrl() , proj.getGithubInstallationId());
+        return new UpdateProjResponse(proj.getProjId(),member.getProjMemberId(), proj.getProjName(),proj.getStartTime(), proj.getEndTime(), proj.getVcsType(), proj.getVcsProjUrl() , proj.getVcsInstallationId());
     }
 
     @Override

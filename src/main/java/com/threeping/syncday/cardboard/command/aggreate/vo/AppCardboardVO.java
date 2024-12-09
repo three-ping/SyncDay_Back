@@ -1,10 +1,12 @@
 package com.threeping.syncday.cardboard.command.aggreate.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.threeping.syncday.card.command.aggregate.entity.Card;
 import com.threeping.syncday.cardboard.command.aggreate.entity.VcsType;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 public class AppCardboardVO {
@@ -32,4 +34,5 @@ public class AppCardboardVO {
 
     @JsonProperty("end_time")
     private Timestamp endTime;
+
 }

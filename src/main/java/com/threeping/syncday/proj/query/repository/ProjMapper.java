@@ -11,11 +11,9 @@ import java.util.List;
 public interface ProjMapper {
     List<ProjDTO> selectAllProjs();
 
-    List<ProjDTO> selectProjsByUserId(Long userId);
 
     ProjDTO selectProjById(Long projId);
 
-    List<ProjAndWorkspaceDTO> selectProjAndWorkspacesByUserId(Long userId);
 
     ProjectQueryDTO findProjById(Long projId);
 
