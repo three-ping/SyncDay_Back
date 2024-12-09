@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @EntityListeners(CardEntityListener.class)
-@Table(name="tbl_card")
+@Table(name="TBL_CARD")
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

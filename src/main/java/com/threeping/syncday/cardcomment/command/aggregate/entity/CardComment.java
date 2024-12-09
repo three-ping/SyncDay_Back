@@ -6,7 +6,7 @@ import lombok.Data;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name="tbl_card_comment")
+@Table(name="TBL_CARD_COMMENT")
 @Data
 public class CardComment {
 

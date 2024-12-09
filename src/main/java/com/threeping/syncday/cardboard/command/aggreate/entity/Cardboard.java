@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @EntityListeners(CardboardEntityListener.class)
-@Table(name = "tbl_cardboard")
+@Table(name = "TBL_CARDBOARD")
 public class Cardboard {
     @Id
     @Column(name="cardboard_id")
