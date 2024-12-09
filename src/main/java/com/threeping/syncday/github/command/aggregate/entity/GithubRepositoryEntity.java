@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "tbl_github_repository")
+@Table(name = "TBL_GITHUB_REPOSITORY")
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor

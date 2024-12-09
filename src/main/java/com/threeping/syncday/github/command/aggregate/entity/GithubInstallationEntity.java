@@ -12,7 +12,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.kohsuke.github.GHTargetType;
 
 @Entity
-@Table(name = "tbl_github_installation")
+@Table(name = "TBL_GITHUB_INSTALLATION")
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
