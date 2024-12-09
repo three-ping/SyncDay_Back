@@ -42,7 +42,7 @@ public class ResponseNormalLoginVO {
     @Schema(description = "팀번호", example = "1")
     private Long teamId;
 
-    @JsonProperty("lastAccessTime")
+    @JsonProperty("lastActivatedAt")
     @Schema(description = "마지막 로그인 시각", example = "2024-12-11 15:45:30")
-    private String lastAccessTime;
+    private String lastActivatedAt;
 }

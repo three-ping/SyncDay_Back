@@ -38,5 +38,5 @@ public class UserDTO {
     private Long teamId;
 
     @Schema(description = "마지막 로그인 시각", example = "2024-12-11 14:45:30")
-    private String lastAccessTime;
+    private String lastActivatedAt;
 }

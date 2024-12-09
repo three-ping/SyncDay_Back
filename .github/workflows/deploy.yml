@@ -510,4 +510,4 @@ jobs:
           version_label: "syncday-${{ github.sha }}-${{ steps.current-time.outputs.formattedTime }}"
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
-          wait_for_environment_recovery: 60
+          wait_for_environment_recovery: 300
