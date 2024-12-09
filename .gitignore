@@ -40,3 +40,4 @@ out/
 ### YML ###
 docker-compose.yml
 application-syncday.yml
+*.pem

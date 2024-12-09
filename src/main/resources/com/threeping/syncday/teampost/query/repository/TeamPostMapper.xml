@@ -16,6 +16,20 @@
         <result property="teamBoardId" column="team_board_id"></result>
     </resultMap>
 
+    <resultMap id="mainTeamPostResultMap" type="com.threeping.syncday.teampost.query.aggregate.dto.MainTeamPostDTO">
+        <id property="teamPostId" column="team_post_id"></id>
+        <result property="title" column="title"></result>
+        <result property="content" column="content"></result>
+        <result property="createdAt" column="created_at"></result>
+        <result property="updatedAt" column="updated_at"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="userName" column="username"></result>
+        <result property="userPosition" column="position"></result>
+        <result property="userProfilePhoto" column="profile_photo"></result>
+        <result property="teamBoardId" column="team_board_id"></result>
+        <result property="boardTitle" column="board_title"></result>
+    </resultMap>
+
     <select id="findTeamPostByTeamBoardId" resultMap="teamPostResultMap">
         SELECT A.TEAM_POST_ID
              , A.TITLE
@@ -111,5 +125,34 @@
        INNER JOIN TBL_USER B
           ON A.USER_ID = B.USER_ID
        WHERE TEAM_POST_ID = #{teamPostId}
+    </select>
+
+    <select id="findMyTeamPost" resultMap="mainTeamPostResultMap" parameterType="long">
+        SELECT
+            P.team_post_id,
+            P.title,
+            P.content ,
+            P.created_at ,
+            P.updated_at ,
+            P.comments ,
+            U.username ,
+            U.profile_photo ,
+            B.team_board_id,
+            B.board_title ,
+            T.team_name
+        FROM
+            TBL_TEAM_POST P
+                INNER JOIN
+            TBL_TEAM_BOARD B ON P.team_board_id = B.team_board_id
+                INNER JOIN
+            TBL_TEAM T ON B.team_id = T.team_id
+                INNER JOIN
+            TBL_USER U ON P.user_id = U.user_id
+        WHERE
+            T.team_id = (SELECT team_id FROM TBL_USER WHERE user_id = #{userId})
+        ORDER BY
+            P.created_at DESC
+            LIMIT 10
+
     </select>
 </mapper>

@@ -38,6 +38,8 @@ public class  Proj {
     @Column(name="vcs_proj_url")
     private String vcsProjUrl;
 
+    @Column(name="github_installation_id")
+    private Long githubInstallationId;
 
     /* 설명. 유저가 입력하지 않아도 알아서 설정 */
     @PrePersist
