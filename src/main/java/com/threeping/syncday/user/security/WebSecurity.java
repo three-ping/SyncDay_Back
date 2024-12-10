@@ -19,6 +19,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -46,13 +51,51 @@ public class WebSecurity {
         this.jwtUtil = jwtUtil;
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // 허용할 Origin 설정
+        configuration.setAllowedOrigins(Arrays.asList(
+                "https://syncday.me",
+                "https://www.syncday.me",
+                "https://1bda-203-234-103-13.ngrok-free.app"
+        ));
+
+        // 허용할 HTTP 메서드 설정
+        configuration.setAllowedMethods(Arrays.asList(
+                "GET", "POST", "PUT", "DELETE", "OPTIONS"
+        ));
+
+        // 자격 증명(Credentials) 허용
+        configuration.setAllowCredentials(true);
+
+        // 허용할 헤더 설정
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+
+        // 노출할 응답 헤더 설정 (JWT 토큰과 관련된 헤더들)
+        configuration.setExposedHeaders(Arrays.asList(
+                "Authorization",
+                "refreshToken",
+                "Set-Cookie"
+        ));
+
+        // PreFlight 요청의 캐시 시간 설정 (1시간)
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+
     // 인가(Authorization) method, filter chain을 덧붙일 예정
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // restAPI의 경우 JWT만 사용해서 Authorization Header에 토큰을 전송하는 방식만을 사용하되,(차후 restAPI는 왜 jwt만으로 충분한지 공부)
         // Https(우리 서비스의 경우 ACM을 통한 https 통신이 가능하므로)와 토큰 정책을 통한 보안만으로 충분하다고 판단
         // 따라서 csrf token 방식은 사용하지 않기로 정함
-        http.cors(cors -> cors.configure(http))
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf((csrf) -> csrf.disable());
 
         // 로그인 시, http에 추가될 authenticationManager
