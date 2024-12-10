@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CommentRepository extends ElasticsearchRepository<CommentSearchDocument, Long> {
+public interface CommentSearchRepository extends ElasticsearchRepository<CommentSearchDocument, Long> {
     @Query("{" +
             "  \"bool\": {" +
             "    \"should\": [" +

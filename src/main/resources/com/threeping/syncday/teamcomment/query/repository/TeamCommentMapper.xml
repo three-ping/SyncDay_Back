@@ -14,6 +14,18 @@
         <result property="userPosition" column="position"></result>
     </resultMap>
 
+    <resultMap id="commentSearchMap" type="com.threeping.syncday.teamcomment.query.aggregate.dto.CommentQueryDTO">
+        <id property="commentId" column="team_comment_id"></id>
+        <result property="content" column="content"></result>
+        <result property="authorId" column="user_id"></result>
+        <result property="authorName" column="username"></result>
+        <result property="position" column="position"></result>
+        <result property="postId" column="team_post_id"></result>
+        <result property="postTitle" column="title"></result>
+        <result property="createdAt" column="created_at"></result>
+        <result property="updatedAt" column="updated_at"></result>
+    </resultMap>
+
     <select id="findTeamCommentByTeamPostId" resultMap="teamCommentResultMap" parameterType="long">
         SELECT A.TEAM_COMMENT_ID
              , A.CONTENT
@@ -28,5 +40,49 @@
             ON A.USER_ID = B.USER_ID
          WHERE TEAM_POST_ID = #{teamPostId}
          ORDER BY A.TEAM_COMMENT_ID DESC
+    </select>
+
+    <select id="findCommentById" resultMap="commentSearchMap" parameterType="long">
+        SELECT
+        a.team_comment_id AS team_comment_id,
+        a.content AS content,
+        a.created_at AS created_at,
+        a.updated_at AS updated_at,
+        a.team_post_id AS team_post_id,
+        a.user_id AS user_id,
+        b.username AS username,
+        b.position AS position,
+        c.title AS post_title
+        FROM
+        TBL_TEAM_COMMENT a
+        INNER JOIN
+        TBL_USER b ON a.user_id = b.user_id
+        INNER JOIN
+        TBL_TEAM_POST c ON a.team_post_id = c.team_post_id
+        WHERE
+        a.team_comment_id = #{commentId}
+        ORDER BY
+        a.team_comment_id DESC
+    </select>
+
+    <select id="findAllComments" resultMap="commentSearchMap">
+        SELECT
+        a.team_comment_id AS team_comment_id,
+        a.content AS content,
+        a.created_at AS created_at,
+        a.updated_at AS updated_at,
+        a.team_post_id AS team_post_id,
+        a.user_id AS user_id,
+        b.username AS username,
+        b.position AS position,
+        c.title AS post_title
+        FROM
+        TBL_TEAM_COMMENT a
+        INNER JOIN
+        TBL_USER b ON a.user_id = b.user_id
+        INNER JOIN
+        TBL_TEAM_POST c ON a.team_post_id = c.team_post_id
+        ORDER BY
+        a.team_comment_id DESC
     </select>
 </mapper>
