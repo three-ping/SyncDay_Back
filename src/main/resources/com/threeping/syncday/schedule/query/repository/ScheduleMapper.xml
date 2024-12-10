@@ -92,28 +92,17 @@
     </select>
 
     <select id="selectOthersSchedulesBySearchUserId" resultMap="scheduleResultMap" parameterType="long">
-        SELECT S.SCHEDULE_ID
-             , S.TITLE
-             , S.CONTENT
-             , S.START_TIME
-             , S.END_TIME
-             , S.UPDATE_TIME
-             , S.PUBLIC_STATUS
-             , S.SCHEDULE_REPEAT_ID
-             , S.REPEAT_ORDER
-             , S.MEETING_STATUS
-             , S.MEETINGROOM_ID
-             , S.USER_ID
-             , U.USERNAME
-          FROM TBL_SCHEDULE S
-          LEFT JOIN TBL_USER U ON S.USER_ID = U.USER_ID
-         WHERE S.USER_ID = #{userId}
-            OR S.SCHEDULE_ID IN (
-               SELECT US.SCHEDULE_ID
-                 FROM TBL_USER_SCHEDULE US
-                WHERE US.USER_ID = #{userId}
-                  AND US.STATUS = 'ATTEND'
-        )
+        SELECT s.schedule_id,
+               s.title,
+               s.content,
+               s.start_time,
+               s.end_time
+          FROM TBL_USER_SCHEDULE us
+          JOIN TBL_SCHEDULE s
+            ON us.schedule_id = s.schedule_id
+         WHERE us.user_id = #{searchUserId}
+           AND us.status != 'ABSENT'
+           AND s.public_status = 'PUBLIC'
     </select>
 
     <select id="selectMyDetailSchedulesByUserIdAndScheduleId" resultMap="scheduleDetailResultMap" parameterType="map">
