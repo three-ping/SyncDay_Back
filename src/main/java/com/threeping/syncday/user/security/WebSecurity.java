@@ -77,7 +77,9 @@ public class WebSecurity {
         configuration.setExposedHeaders(Arrays.asList(
                 "Authorization",
                 "refreshToken",
-                "Set-Cookie"
+                "Set-Cookie",
+                "Last-Event-ID",    // SSE 이벤트 식별을 위해 필요
+                "Cache-Control"
         ));
 
         // PreFlight 요청의 캐시 시간 설정 (1시간)
@@ -118,6 +120,7 @@ public class WebSecurity {
                         .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/swagger-custom-ui.html")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/docs/login")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/sse/notification/subscribe/**")).authenticated()
                         .requestMatchers("/auth/**", "/ws/**").permitAll()
                         .anyRequest().authenticated())
 
