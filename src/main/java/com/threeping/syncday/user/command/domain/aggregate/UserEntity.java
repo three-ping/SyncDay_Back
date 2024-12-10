@@ -45,6 +45,6 @@ public class UserEntity {
     @Column(name = "team_id", nullable = false)
     private Long teamId;
 
-    @Column(name = "last_access_time")
+    @Column(name = "last_activated_at")
     private Timestamp lastAccessTime;
 }
