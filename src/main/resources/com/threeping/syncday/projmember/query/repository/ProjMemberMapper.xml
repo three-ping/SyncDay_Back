@@ -46,11 +46,8 @@
     <resultMap id="workspaceResultMap" type="com.threeping.syncday.workspace.query.aggregate.WorkspaceDTO">
         <id property="workspaceId" column="workspace_id"/>
         <result property="workspaceName" column="workspace_name"/>
-        <result property="createdAt" column="workspace_created_at"/>
-        <result property="progressStatus" column="workspace_progress_status"/>
-        <result property="vcsType" column="workspace_vcs_type"/>
-        <result property="vcsRepoUrl" column="workspace_vcs_repo_url"/>
-        <result property="projId" column="workspace_proj_id"/>
+
+        <result property="projId" column="ws_proj_id"/>
     </resultMap>
 
     <!-- ResultMap for ProjMemberInfoDTO -->
@@ -65,8 +62,9 @@
         <result property="endTime" column="end_time"/>
         <result property="createdAt" column="proj_created_at"/>
         <result property="progressStatus" column="proj_progress_status"/>
+        <result property="vcsType" column="vcs_type"/>
         <result property="vcsProjUrl" column="vcs_proj_url"/>
-        <result property="githubInstallationId" column="github_installation_id"/>
+        <result property="vcsInstallationId" column="vcs_installation_id"/>
         <collection property="workspaces" resultMap="workspaceResultMap"/>
     </resultMap>
 
@@ -91,13 +89,10 @@
             p.progress_status as proj_progress_status,
             p.vcs_type,
             p.vcs_proj_url,
-            p.github_installation_id,
+            p.vcs_installation_id,
             w.workspace_id,
             w.workspace_name,
-            w.created_at as workspace_created_at,
-            w.progress_status as workspace_progress_status,
-            w.vcs_repo_url as workspace_vcs_repo_url,
-            w.proj_id as workspace_proj_id
+            w.proj_id as ws_proj_id
         FROM
             TBL_PROJ_MEMBER pm
                 INNER JOIN TBL_PROJ p ON pm.proj_id = p.proj_id

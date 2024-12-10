@@ -103,7 +103,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
     /* 멤버 초대 */
     @Override
     public ProjMember addProjectMember(UpdateProjectMemberReq updateProjectMemberReq) {
-        ProjMember member = projMemberRepository.findByUserIdAndProjId(updateProjectMemberReq.getUserId(), updateProjectMemberReq.getProjId());
+        ProjMember member = projMemberRepository.findByUserIdAndProjId(updateProjectMemberReq.getUserToUpdate(), updateProjectMemberReq.getProjId());
         if (member == null) {
             throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
         }
@@ -113,17 +113,18 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
         ProjMember memberToAdd = new ProjMember();
         memberToAdd.setUserId(updateProjectMemberReq.getUserId());
         memberToAdd.setProjId(updateProjectMemberReq.getProjId());
-        memberToAdd.setParticipationStatus(ParticipationStatus.PENDING);
+        memberToAdd.setParticipationStatus(ParticipationStatus.MEMBER);
         return projMemberRepository.save(memberToAdd);
     }
 
     @Override
     public Boolean removeProjMember(UpdateProjectMemberReq updateProjectMemberReq) {
-        ProjMember member = projMemberRepository.findByUserIdAndProjId(updateProjectMemberReq.getUserId(), updateProjectMemberReq.getProjId());
+        ProjMember member = projMemberRepository.findByUserIdAndProjId(updateProjectMemberReq.getUserToUpdate(), updateProjectMemberReq.getProjId());
         if (member == null) {
             throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
         }
         else if(!member.getParticipationStatus().equals(ParticipationStatus.OWNER)){
+            log.info("{}" , member.getParticipationStatus());
             throw new CommonException(ErrorCode.PROJ_INVALID_REQUEST);
         }
         ProjMember memberToRemove = projMemberRepository.findByUserIdAndProjId(updateProjectMemberReq.getUserId(), updateProjectMemberReq.getProjId());
@@ -144,7 +145,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
         member.setBookmarkStatus(BookmarkStatus.NONE);
         member.setProjId(proj.getProjId());
         member.setParticipationStatus(ParticipationStatus.OWNER);
-        return new UpdateProjResponse(proj.getProjId(), member.getProjMemberId(), proj.getProjName(), proj.getStartTime(), proj.getEndTime(),proj.getVcsType(), proj.getVcsProjUrl(), proj.getGithubInstallationId());
+        return new UpdateProjResponse(proj.getProjId(), member.getProjMemberId(), proj.getProjName(), proj.getStartTime(), proj.getEndTime(),proj.getVcsType(), proj.getVcsProjUrl(), proj.getVcsInstallationId());
     }
 
     @Override
@@ -157,7 +158,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
         }
         ProjDTO proj = infraProjMemberService.requestUpdateProj(req);
 
-        return new UpdateProjResponse(proj.getProjId(),member.getProjMemberId(), proj.getProjName(),proj.getStartTime(), proj.getEndTime(), proj.getVcsType(), proj.getVcsProjUrl() , proj.getGithubInstallationId());
+        return new UpdateProjResponse(proj.getProjId(),member.getProjMemberId(), proj.getProjName(),proj.getStartTime(), proj.getEndTime(), proj.getVcsType(), proj.getVcsProjUrl() , proj.getVcsInstallationId());
     }
 
     @Override

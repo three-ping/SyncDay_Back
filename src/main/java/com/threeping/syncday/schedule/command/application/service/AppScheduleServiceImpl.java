@@ -45,8 +45,6 @@ public class AppScheduleServiceImpl implements AppScheduleService{
         newSchedule.setEndTime(newScheduleDTO.getEndTime());
         newSchedule.setUpdateTime(Timestamp.from(Instant.now()));
         newSchedule.setPublicStatus(newScheduleDTO.getPublicStatus());
-        newSchedule.setScheduleRepeatId(newScheduleDTO.getScheduleRepeatId());
-        newSchedule.setRepeatOrder(newScheduleDTO.getRepeatOrder());
         newSchedule.setMeetingStatus(newScheduleDTO.getMeetingStatus());
         newSchedule.setMeetingroomId(newScheduleDTO.getMeetingroomId());
         newSchedule.setUserId(newScheduleDTO.getUserId());
@@ -80,8 +78,6 @@ public class AppScheduleServiceImpl implements AppScheduleService{
         newSchedule.setEndTime(scheduleDTO.getEndTime());
         newSchedule.setUpdateTime(Timestamp.from(Instant.now()));
         newSchedule.setPublicStatus(scheduleDTO.getPublicStatus());
-        newSchedule.setScheduleRepeatId(scheduleDTO.getScheduleRepeatId());
-        newSchedule.setRepeatOrder(scheduleDTO.getRepeatOrder());
         newSchedule.setMeetingStatus(scheduleDTO.getMeetingStatus());
         newSchedule.setMeetingroomId(scheduleDTO.getMeetingroomId());
         newSchedule.setUserId(scheduleDTO.getUserId());
