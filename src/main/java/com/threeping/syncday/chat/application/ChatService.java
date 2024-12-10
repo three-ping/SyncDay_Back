@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -86,6 +87,11 @@ public class ChatService {
         if (chatRoom.getChatRoomName() == null || chatRoom.getChatRoomName().isEmpty()){
             Map<Long,String> userNameMap = getUserNameMap(chatRoom);
             chatRoom.setChatRoomName(getChatRoomName(chatRoom, userNameMap));
+            log.info("채팅방 새로 생성");
+        }
+
+        if(chatRoom.getLastMessage() == null || chatRoom.getLastMessage().isEmpty()) {
+            chatRoom.setLastMessage("새로 채팅방이 만들어졌습니다. 채팅을 시작하세요.");
         }
         return chatRoomRepository.save(chatRoom);
     }
@@ -93,14 +99,15 @@ public class ChatService {
     //  특정 채팅방 퇴장
     public ChatRoom leaveChatRoom(String roomId, Long userId) {
         log.info("유저 {} : {} 채팅방 퇴장", userId, roomId);
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
 
         List<Long> memberIds = new ArrayList<>(chatRoom.getMemberIds());
         memberIds.remove(userId);
         chatRoom.setMemberIds(memberIds);
+        log.info("{} 유저 채팅 멤버 목록에서 삭제됨", userId);
 
-        LocalDateTime leaveTime = LocalDateTime.now();
+        Date leaveTime = new Date();
 
         ChatMessage leaveRoom = new ChatMessage();
         leaveRoom.setRoomId(roomId);
@@ -115,7 +122,6 @@ public class ChatService {
         messagingTemplate.convertAndSend("/topic/room/" + roomId + "/leave", updatedRoom);
 
         return updatedRoom;
-
     }
 
     private Map<Long, String> getUserNameMap(ChatRoom chatRoom) {
@@ -148,7 +154,7 @@ public class ChatService {
             enterMessage.setSenderId(userId);
             enterMessage.setContent(user.getUserName() + "님이 입장하셨습니다.");
             enterMessage.setChatType(ChatType.ENTER);
-            enterMessage.setSentTime(LocalDateTime.now());
+            enterMessage.setSentTime(Timestamp.valueOf(LocalDateTime.now().plusMinutes(30)));
             ChatMessage savedMessage = chatMessageRepository.save(enterMessage);
 
             // 입장 메시지를 WebSocket을 통해 전송
@@ -199,7 +205,7 @@ public class ChatService {
             message.setSenderId(chatMessage.getSenderId());
             message.setSenderName(chatMessage.getSenderName());
             message.setContent(chatMessage.getContent());
-            message.setSentTime(LocalDateTime.now());
+            message.setSentTime(new Date());
             message.setChatType(ChatType.valueOf(chatMessage.getChatType().name()));
             chatMessageRepository.save(message);
 
@@ -220,6 +226,7 @@ public class ChatService {
         chatMessage.setSenderId(message.getSenderId());
         chatMessage.setSenderName(message.getSenderName());
         chatMessage.setChatType(ChatType.valueOf(message.getChatType().name()));
+        chatMessage.setSentTime(message.getSentTime());
         return chatMessage;
     }
 

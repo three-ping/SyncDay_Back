@@ -87,19 +87,12 @@ public class ChatController {
 
         String roomId = UUID.randomUUID().toString();
         chatRoom.setRoomId(roomId);
-//        String chatRoomName = chatRoom.getChatRoomName();
-//        List<Long> memberIds = chatRoom.getMemberIds();
 
-//        ChatRoom room = new ChatRoom();
-//        room.setRoomId(roomId);
-//        room.setChatRoomName(chatRoomName);
-//        room.setMemberIds(memberIds);
         ChatRoom createRoom = chatService.createChatRoom(chatRoom);
         Map<String, Object> response = new HashMap<>();
         response.put("data",createRoom);
 
         return ResponseEntity.ok(response);
-//        return chatService.createChatRoom(chatRoom);
     }
 
     // 채팅방 나가기
@@ -109,7 +102,7 @@ public class ChatController {
         return chatService.leaveChatRoom(roomId, userId);
     }
 
-//    // 채팅방 이름 수정
+    // 채팅방 이름 수정
 //    @PutMapping("/room/{roomId}/name")
 //    public ChatRoom updateRoomName(
 //            @PathVariable String roomId,

@@ -4,7 +4,7 @@ import com.threeping.syncday.chat.entity.ChatType;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -16,7 +16,7 @@ public class ChatMessageDTO {
     private String senderName;
     private String userProfileImg;
     private ChatType chatType;
-    private LocalDateTime sentTime;
+    private Date sentTime;
 
 //    private FileUploadDTO file;
 }

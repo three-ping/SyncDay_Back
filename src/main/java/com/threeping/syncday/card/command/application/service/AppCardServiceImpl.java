@@ -36,7 +36,10 @@ public class AppCardServiceImpl implements AppCardService {
         log.info("cardToAdd: {}", cardToAdd);
         cardToAdd.setCreatedBy(newCard.getUserId());
         Card addedCard = cardRepository.save(cardToAdd);
-        return modelMapper.map(addedCard, CardDTO.class);
+        log.info("addedCard: {}", addedCard);
+        CardDTO result = modelMapper.map(addedCard, CardDTO.class);
+        log.info("result: {}", result);
+        return result;
     }
 
     @Override
