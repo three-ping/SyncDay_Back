@@ -32,6 +32,7 @@ public class AppProjMemberController {
     }
     @PutMapping("/bookmark")
     public ResponseDTO<?> updateProjBookmark(@RequestParam Long projMemberId) {
+        log.info("projMemberId: {}", projMemberId);
 
         return ResponseDTO.ok(appProjMemberService.updateProjBookmark(projMemberId));
 

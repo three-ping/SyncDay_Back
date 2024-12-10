@@ -45,6 +45,6 @@ public class Cardboard {
     @PrePersist
     public void prePersist(){
         this.createdAt = new Timestamp(System.currentTimeMillis());
-        this.progressStatus = 0;
+//        this.progressStatus = 0;
     }
 }
