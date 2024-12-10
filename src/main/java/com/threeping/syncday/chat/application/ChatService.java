@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -106,7 +107,7 @@ public class ChatService {
         chatRoom.setMemberIds(memberIds);
         log.info("{} 유저 채팅 멤버 목록에서 삭제됨", userId);
 
-        LocalDateTime leaveTime = LocalDateTime.now();
+        Date leaveTime = new Date();
 
         ChatMessage leaveRoom = new ChatMessage();
         leaveRoom.setRoomId(roomId);
@@ -153,7 +154,7 @@ public class ChatService {
             enterMessage.setSenderId(userId);
             enterMessage.setContent(user.getUserName() + "님이 입장하셨습니다.");
             enterMessage.setChatType(ChatType.ENTER);
-            enterMessage.setSentTime(LocalDateTime.now());
+            enterMessage.setSentTime(Timestamp.valueOf(LocalDateTime.now().plusMinutes(30)));
             ChatMessage savedMessage = chatMessageRepository.save(enterMessage);
 
             // 입장 메시지를 WebSocket을 통해 전송
@@ -204,7 +205,7 @@ public class ChatService {
             message.setSenderId(chatMessage.getSenderId());
             message.setSenderName(chatMessage.getSenderName());
             message.setContent(chatMessage.getContent());
-            message.setSentTime(LocalDateTime.now());
+            message.setSentTime(new Date());
             message.setChatType(ChatType.valueOf(chatMessage.getChatType().name()));
             chatMessageRepository.save(message);
 
@@ -225,6 +226,7 @@ public class ChatService {
         chatMessage.setSenderId(message.getSenderId());
         chatMessage.setSenderName(message.getSenderName());
         chatMessage.setChatType(ChatType.valueOf(message.getChatType().name()));
+        chatMessage.setSentTime(message.getSentTime());
         return chatMessage;
     }
 
