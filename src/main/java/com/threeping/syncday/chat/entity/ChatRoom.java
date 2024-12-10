@@ -17,4 +17,5 @@ public class ChatRoom {
     private String roomId = UUID.randomUUID().toString();
     private List<Long> memberIds;
     private String chatRoomName;
+    private String lastMessage;
 }

@@ -1,5 +1,6 @@
 package com.threeping.syncday.chat.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.bson.types.ObjectId;
@@ -7,9 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
+import java.util.Date;
 
 @Document(collection = "chat")
 @Getter
@@ -26,6 +25,6 @@ public class ChatMessage {
     private String senderName;
     private ChatType chatType;
 
-    @CreatedDate
-    private LocalDateTime sentTime;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private Date sentTime;
 }
