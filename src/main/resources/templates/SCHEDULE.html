@@ -139,11 +139,11 @@
         <!-- Action Buttons -->
         <div class="buttons">
             <a
-                    th:href="@{'http://syncday-front-env.eba-mgj2hqmj.ap-northeast-2.elasticbeanstalk.com/invitation/mail-link?scheduleId=' + ${scheduleId} + '&status=ATTEND'}"
+                    th:href="@{'https://syncday.me' + ${scheduleId} + '&status=ATTEND'}"
                     class="accept-button"> 참석
             </a>
             <a
-                    th:href="@{'http://syncday-front-env.eba-mgj2hqmj.ap-northeast-2.elasticbeanstalk.com/invitation/mail-link?scheduleId=' + ${scheduleId} + '&status=ABSENT'}"
+                    th:href="@{'https://syncday.me' + ${scheduleId} + '&status=ABSENT'}"
                     class="decline-button"> 불참
             </a>
         </div>

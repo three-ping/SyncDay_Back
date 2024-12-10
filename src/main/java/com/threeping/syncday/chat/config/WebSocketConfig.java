@@ -21,7 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws") // 웹소켓 핸드쉐이크를 위한 주소. handler 처리 안 할 수 있음
-                .setAllowedOriginPatterns("http://syncday-front-env.eba-mgj2hqmj.ap-northeast-2.elasticbeanstalk.com")
+                .setAllowedOriginPatterns("https://syncday.me", "https://www.syncday.me")
 //                .setAllowedOriginPatterns("*")  // 일단 모두 허용
                 .withSockJS();  // SockJs 설정
     }
