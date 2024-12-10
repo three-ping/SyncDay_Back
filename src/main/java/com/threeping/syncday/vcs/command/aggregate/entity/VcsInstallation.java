@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name="TBL_GITHUB_INSTALLATION")
+@Table(name="TBL_VCS_INSTALLATION")
 @Where(clause = "deleted_at IS NULL")
 public class VcsInstallation {
     @Id
