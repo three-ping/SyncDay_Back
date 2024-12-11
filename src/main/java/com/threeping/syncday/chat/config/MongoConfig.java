@@ -108,9 +108,49 @@ public class MongoConfig {
                     String.join(" ", user6.getUserName(), user4.getUserName(), user3.getUserName(), user11.getUserName()),
                     Arrays.asList(user6.getUserId(), user4.getUserId(), user3.getUserId(), user11.getUserId())
             );
+            ChatRoom room11 = createChatRoom(
+                    String.join(" ", user2.getUserName(), user4.getUserName(), user3.getUserName(), user11.getUserName()),
+                    Arrays.asList(user2.getUserId(), user4.getUserId(), user3.getUserId(), user11.getUserId())
+            );
+            ChatRoom room12 = createChatRoom(
+                    String.join(" ", user1.getUserName(), user4.getUserName(), user3.getUserName(), user11.getUserName()),
+                    Arrays.asList(user1.getUserId(), user4.getUserId(), user3.getUserId(), user11.getUserId())
+            );
+            ChatRoom room13 = createChatRoom(
+                    String.join(" ", user1.getUserName(), user3.getUserName()),
+                    Arrays.asList(user1.getUserId(), user3.getUserId())
+            );
+            ChatRoom room14 = createChatRoom(
+                    String.join(" ", user7.getUserName(), user2.getUserName()),
+                    Arrays.asList(user7.getUserId(), user2.getUserId())
+            );
+            ChatRoom room15 = createChatRoom(
+                    String.join(" ", user6.getUserName(), user4.getUserName()),
+                    Arrays.asList(user6.getUserId(), user4.getUserId())
+            );
+            ChatRoom room16 = createChatRoom(
+                    String.join(" ", user1.getUserName(), user2.getUserName(), user3.getUserName()),
+                    Arrays.asList(user1.getUserId(), user2.getUserId(), user3.getUserId())
+            );
+            ChatRoom room17 = createChatRoom(
+                    String.join(" ", user6.getUserName(), user4.getUserName()),
+                    Arrays.asList(user6.getUserId(), user4.getUserId())
+            );
+            ChatRoom room18 = createChatRoom(
+                    String.join(" ", user11.getUserName(),user3.getUserName()),
+                    Arrays.asList(user11.getUserId(),user3.getUserId())
+            );
+            ChatRoom room19 = createChatRoom(
+                    String.join(" ", user1.getUserName(), user4.getUserName()),
+                    Arrays.asList(user1.getUserId(), user4.getUserId())
+            );
+            ChatRoom room20 = createChatRoom(
+                    String.join(" ", user6.getUserName(), user11.getUserName()),
+                    Arrays.asList(user6.getUserId(), user11.getUserId())
+            );
 
-
-            chatRoomRepository.saveAll(Arrays.asList(room1, room2, room3, room4,room5,room6,room7,room8,room9,room10));
+            chatRoomRepository.saveAll(Arrays.asList(room1, room2, room3, room4,room5,room6,room7,room8,room9,room10,
+                    room11, room12, room13, room14,room15,room16,room17,room18,room19,room20));
 
             // MongoDB 채팅 메시지 더미 데이터 생성
 // MongoDB 채팅 메시지 더미 데이터 생성
@@ -194,8 +234,75 @@ public class MongoConfig {
                     createChatMessage(room10.getRoomId(), user3.getUserId(), user3.getUserName(), "버그 수정은 꽤 시간이 걸렸죠? 대체로 어떻게 해결했나요?",
                             new Date(System.currentTimeMillis() - 60 * 60 * 1000), ChatType.TALK),
                     createChatMessage(room10.getRoomId(), user11.getUserId(), user11.getUserName(), "수정한 부분은 로그 분석을 통해 해결했습니다. 코드 리뷰 후 반영할게요.",
-                            new Date(System.currentTimeMillis() - 60 * 60 * 1000), ChatType.TALK)
-            );
+                            new Date(System.currentTimeMillis() - 60 * 60 * 1000), ChatType.TALK),
+
+
+            // ChatRoom 11
+            createChatMessage(room11.getRoomId(), user2.getUserId(), user2.getUserName(), "스프린트 백로그 리뷰를 이번 주에 진행하는 게 좋을 것 같습니다.",
+                    new Date(System.currentTimeMillis() - 50 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room11.getRoomId(), user4.getUserId(), user4.getUserName(), "좋습니다. 백로그 항목 우선순위 정리가 필요하겠네요.",
+                            new Date(System.currentTimeMillis() - 45 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room11.getRoomId(), user3.getUserId(), user3.getUserName(), "회의 일정을 캘린더에 등록해둘게요. 금요일 오후 어떨까요?",
+                            new Date(System.currentTimeMillis() - 40 * 60 * 1000), ChatType.TALK),
+
+                    // ChatRoom 12
+                    createChatMessage(room12.getRoomId(), user1.getUserId(), user1.getUserName(), "데이터베이스 인덱싱 최적화 작업은 어느 정도 완료되었습니다.",
+                            new Date(System.currentTimeMillis() - 60 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room12.getRoomId(), user4.getUserId(), user4.getUserName(), "API 요청 속도 테스트 결과가 어떠셨나요?",
+                            new Date(System.currentTimeMillis() - 55 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room12.getRoomId(), user3.getUserId(), user3.getUserName(), "성능 개선이 눈에 띄네요. 배포 일정만 잡으면 될 것 같습니다.",
+                            new Date(System.currentTimeMillis() - 50 * 60 * 1000), ChatType.TALK),
+
+                    // ChatRoom 13
+                    createChatMessage(room13.getRoomId(), user1.getUserId(), user1.getUserName(), "이번 프로젝트 코드 리뷰 진행 시간 가능하신가요?",
+                            new Date(System.currentTimeMillis() - 90 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room13.getRoomId(), user3.getUserId(), user3.getUserName(), "다음 주 화요일 오전에 가능할 것 같습니다.",
+                            new Date(System.currentTimeMillis() - 85 * 60 * 1000), ChatType.TALK),
+
+                    // ChatRoom 14
+                    createChatMessage(room14.getRoomId(), user7.getUserId(), user7.getUserName(), "이번 프로젝트 UI 디자인 초안 공유드립니다. 피드백 부탁드려요.",
+                            new Date(System.currentTimeMillis() - 120 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room14.getRoomId(), user2.getUserId(), user2.getUserName(), "확인했습니다. 몇 가지 수정 요청 사항 코멘트로 남겼습니다.",
+                            new Date(System.currentTimeMillis() - 115 * 60 * 1000), ChatType.TALK),
+
+                    // ChatRoom 15
+                    createChatMessage(room15.getRoomId(), user6.getUserId(), user6.getUserName(), "로그인 인증 모듈 통합 작업은 어떻게 되고 있나요?",
+                            new Date(System.currentTimeMillis() - 180 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room15.getRoomId(), user4.getUserId(), user4.getUserName(), "OAuth 인증 추가로 인해 예상보다 시간이 더 걸리고 있습니다.",
+                            new Date(System.currentTimeMillis() - 175 * 60 * 1000), ChatType.TALK),
+
+                    // ChatRoom 16
+                    createChatMessage(room16.getRoomId(), user1.getUserId(), user1.getUserName(), "API 문서 자동화 툴 적용해보셨나요?",
+                            new Date(System.currentTimeMillis() - 240 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room16.getRoomId(), user2.getUserId(), user2.getUserName(), "Swagger 기반으로 적용을 완료했습니다.",
+                            new Date(System.currentTimeMillis() - 235 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room16.getRoomId(), user3.getUserId(), user3.getUserName(), "전체 팀원들에게 사용 방법을 안내해주시면 좋겠습니다.",
+                            new Date(System.currentTimeMillis() - 230 * 60 * 1000), ChatType.TALK),
+
+                    // ChatRoom 17
+                    createChatMessage(room17.getRoomId(), user6.getUserId(), user6.getUserName(), "CI/CD 파이프라인 문제 해결했습니다.",
+                            new Date(System.currentTimeMillis() - 300 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room17.getRoomId(), user4.getUserId(), user4.getUserName(), "수정된 설정 파일 공유 부탁드립니다.",
+                            new Date(System.currentTimeMillis() - 295 * 60 * 1000), ChatType.TALK),
+
+                    // ChatRoom 18
+                    createChatMessage(room18.getRoomId(), user11.getUserId(), user11.getUserName(), "배포 프로세스 점검이 필요합니다.",
+                            new Date(System.currentTimeMillis() - 400 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room18.getRoomId(), user3.getUserId(), user3.getUserName(), "네, 배포 일정과 계획 문서를 작성 중입니다.",
+                            new Date(System.currentTimeMillis() - 395 * 60 * 1000), ChatType.TALK),
+
+                    // ChatRoom 19
+                    createChatMessage(room19.getRoomId(), user1.getUserId(), user1.getUserName(), "이번 테스트 시나리오 작성 중에 막히는 부분이 있습니다.",
+                            new Date(System.currentTimeMillis() - 500 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room19.getRoomId(), user4.getUserId(), user4.getUserName(), "어떤 부분인지 알려주시면 도와드리겠습니다.",
+                            new Date(System.currentTimeMillis() - 495 * 60 * 1000), ChatType.TALK),
+
+                    // ChatRoom 20
+                    createChatMessage(room20.getRoomId(), user6.getUserId(), user6.getUserName(), "서버 부하 테스트는 언제 진행할 계획인가요?",
+                            new Date(System.currentTimeMillis() - 600 * 60 * 1000), ChatType.TALK),
+                    createChatMessage(room20.getRoomId(), user11.getUserId(), user11.getUserName(), "다음 주 월요일 오후로 일정을 잡아두었습니다.",
+                            new Date(System.currentTimeMillis() - 595 * 60 * 1000), ChatType.TALK)
+);
 
             chatMessageRepository.saveAll(messages);
         };
