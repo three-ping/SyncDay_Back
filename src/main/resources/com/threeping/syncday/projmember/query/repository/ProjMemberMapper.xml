@@ -46,7 +46,9 @@
     <resultMap id="workspaceResultMap" type="com.threeping.syncday.workspace.query.aggregate.WorkspaceDTO">
         <id property="workspaceId" column="workspace_id"/>
         <result property="workspaceName" column="workspace_name"/>
-
+        <result property="vcsRepoUrl" column="vcs_repo_url"></result>
+        <result property="vcsType" column="vcs_type"></result>
+        <result property="progressStatus" column="progress_status"></result>
         <result property="projId" column="ws_proj_id"/>
     </resultMap>
 
@@ -92,6 +94,9 @@
             p.vcs_installation_id,
             w.workspace_id,
             w.workspace_name,
+            w.vcs_repo_url,
+            w.vcs_type,
+            w.progress_status,
             w.proj_id as ws_proj_id
         FROM
             TBL_PROJ_MEMBER pm
