@@ -22,7 +22,7 @@
         }
 
         .header {
-            background-color: #FF9D85;
+            background-color: #85cc5d;
             color: white;
             padding: 16px;
             text-align: center;
@@ -87,7 +87,7 @@
         }
 
         .accept-button {
-            background-color: #FE5D86;
+            background-color: #47c513;
             cursor: pointer;
         }
 
@@ -143,7 +143,7 @@
                     class="accept-button"> 참석
             </a>
             <a
-                    th:href="@{'http://www.syncday.me/invitation/mail-link?scheduleId=' + ${scheduleId} + '&status=ABSENT'}"
+                    th:href="@{'https://www.syncday.me/invitation/mail-link?scheduleId=' + ${scheduleId} + '&status=ABSENT'}"
                     class="decline-button"> 불참
             </a>
         </div>

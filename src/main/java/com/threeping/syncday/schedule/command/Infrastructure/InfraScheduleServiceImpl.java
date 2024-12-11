@@ -66,7 +66,7 @@ public class InfraScheduleServiceImpl implements InfraScheduleService{
                             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
                             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
                             helper.setTo(email);
-                            helper.setSubject(title);
+                                helper.setSubject(title);
                             helper.setText(setContext(varMap),true);
                             return mimeMessage;
                         } catch (MessagingException e) {
