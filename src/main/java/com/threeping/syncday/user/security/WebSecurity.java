@@ -114,12 +114,17 @@ public class WebSecurity {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/user/regist")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/user/health")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/user/login")).permitAll()
-                        // Swagger UI 관련 경로 추가
+                        // Swagger UI 관련 경로 추가 - 더 포괄적인 패턴 사용
                         .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/swagger-resources/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/swagger-ui.html")).permitAll()  // 기본 Swagger UI 페이지
                         .requestMatchers(new AntPathRequestMatcher("/swagger-custom-ui.html")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/docs/login")).permitAll()
+                        // Swagger UI에서 사용하는 추가 리소스들 허용
+                        .requestMatchers(new AntPathRequestMatcher("/webjars/**")).permitAll()  // Swagger UI 웹자르
+                        .requestMatchers(new AntPathRequestMatcher("/configuration/**")).permitAll()  // Swagger 설정
+                        .requestMatchers(new AntPathRequestMatcher("/swagger-ui/*")).permitAll()  // Swagger UI 관련 모든 파일
                         .requestMatchers(new AntPathRequestMatcher("/sse/notification/subscribe/**")).authenticated()
                         .requestMatchers("/auth/**", "/ws/**").permitAll()
                         .anyRequest().authenticated())

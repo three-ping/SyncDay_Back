@@ -50,18 +50,25 @@ public class JwtFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
         log.info("현재 요청 path {}: " + path);
-        return path.startsWith("/api/user/login")
-                || path.startsWith("/api/user/regist")
-                || path.startsWith("/api/user/health")
-                // Swagger UI 관련 모든 경로 허용
-                || path.startsWith("/swagger-ui")
-                || path.startsWith("/swagger-resources")
-                || path.startsWith("/v3/api-docs")
-                || path.startsWith("/api/docs/login")
-                || path.startsWith("/sse/subscribe")
-                || path.startsWith("/swagger-custom-ui.html")
-                || path.startsWith("/ws")
-                || path.startsWith("/api/webhook/github");
+
+        // 기본적인 인증이 필요없는 API 엔드포인트들
+        return path.startsWith("/api/user/login")           // 로그인 API
+                || path.startsWith("/api/user/regist")      // 회원가입 API
+                || path.startsWith("/api/user/health")      // 헬스체크 API
+
+                // Swagger UI와 관련된 모든 정적 리소스들
+                || path.startsWith("/swagger-ui")           // Swagger UI 메인 페이지와 관련 리소스
+                || path.startsWith("/swagger-resources")     // Swagger 설정 및 리소스 정보
+                || path.startsWith("/v3/api-docs")          // OpenAPI 스펙 문서
+                || path.startsWith("/webjars")              // Swagger UI에서 사용하는 외부 라이브러리들
+                || path.startsWith("/configuration")        // Swagger 설정 정보
+                || path.startsWith("/swagger-custom-ui.html") // 커스텀 Swagger UI 페이지
+
+                // 기타 인증이 필요없는 특수 엔드포인트들
+                || path.startsWith("/api/docs/login")       // API 문서 로그인
+                || path.startsWith("/sse/subscribe")        // SSE 구독
+                || path.startsWith("/ws")                   // WebSocket 연결
+                || path.startsWith("/api/webhook/github");  // GitHub 웹훅
     }
 
     @Override
