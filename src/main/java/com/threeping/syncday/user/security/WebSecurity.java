@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -122,6 +123,7 @@ public class WebSecurity {
         // 회원가입만 열기
         http.authorizeHttpRequests((auth) ->
                 auth.requestMatchers(new AntPathRequestMatcher("/api/user/regist")).permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/sse/**").permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/user/health")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/user/login")).permitAll()
                         // Swagger UI 관련 경로 추가 - 더 포괄적인 패턴 사용
