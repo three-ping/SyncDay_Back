@@ -37,6 +37,12 @@ public class ScheduleDetailDTO {
     @JsonProperty("meetingroom_id")
     Long meetingroomId;
 
+    @JsonProperty("meetingroom_name")
+    String meetingroomName;
+
+    @JsonProperty("meetingroom_place")
+    String meetingroomPlace;
+
     @JsonProperty("owner_user_id")
     Long ownerUserId;
 

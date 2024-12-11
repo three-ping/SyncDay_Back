@@ -34,6 +34,9 @@
         <result property="publicStatus" column="public_status"></result>
         <result property="meetingStatus" column="meeting_status"></result>
         <result property="meetingroomId" column="meetingroom_id"></result>
+        <result property="meetingroomPlace" column="meetingroom_place"></result>
+        <result property="meetingroomName" column="meetingroom_name"></result>
+
         <result property="ownerUserId" column="owner_user_id"></result>
         <result property="ownerUsername" column="owner_username"></result>
         <result property="myNotificationTime" column="my_notification_time"></result>
@@ -129,7 +132,11 @@
             US.USER_ID AS USER_ID_FROM_PARTICIPANT,
             UP.USERNAME AS USERNAME_FROM_USER,
             US.STATUS,
-            US.NOTIFICATION_TIME AS PARTICIPATION_NOTIFICATION_TIME
+            US.NOTIFICATION_TIME AS PARTICIPATION_NOTIFICATION_TIME,
+
+            -- 회의실 정보 추가
+            MR.MEETINGROOM_NAME,
+            MR.MEETINGROOM_PLACE
         FROM
             TBL_SCHEDULE S
                 -- 소유자 정보 (필수)
@@ -139,8 +146,11 @@
                 -- 참석자 정보 (옵션)
                 LEFT JOIN TBL_USER_SCHEDULE US ON S.SCHEDULE_ID = US.SCHEDULE_ID
                 LEFT JOIN TBL_USER UP ON US.USER_ID = UP.USER_ID
+                -- 회의실 정보 추가 (필수)
+                LEFT JOIN TBL_MEETINGROOM MR ON S.MEETINGROOM_ID = MR.MEETINGROOM_ID
         WHERE
             S.SCHEDULE_ID = #{scheduleId}
+
     </select>
 
     <select id="selectByScheduleId" resultMap="scheduleResultMap" parameterType="long">
