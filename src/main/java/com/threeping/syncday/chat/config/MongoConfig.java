@@ -113,7 +113,7 @@ public class MongoConfig {
             chatRoomRepository.saveAll(Arrays.asList(room1, room2, room3, room4,room5,room6,room7,room8,room9,room10));
 
             // MongoDB 채팅 메시지 더미 데이터 생성
-// MongoDB 채팅 메시지 더미 데이터 생성
+//      MongoDB 채팅 메시지 더미 데이터 생성
             List<ChatMessage> messages = Arrays.asList(
                     createChatMessage(room1.getRoomId(), user1.getUserId(), user1.getUserName(), "오늘 팀 미팅 준비 다 되셨나요?",
                             new Date(System.currentTimeMillis() - 60 * 60 * 1000), ChatType.TALK),

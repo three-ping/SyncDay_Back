@@ -51,7 +51,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public SseEmitter createEmitter(Long userId) {
-
+        log.info("유저를 위한 emitter 생성 중: {} ", userId);
         SseEmitter emitter = new SseEmitter(0L);
         SseEmitter oldEmitter = emitters.put(userId, emitter);
 
