@@ -164,7 +164,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
 
     @Override
     public WorkspaceDTO updateWorkspace(UpdateWorkspaceRequest updateWorkspaceRequest) {
-        ProjMember member = projMemberRepository.findById(updateWorkspaceRequest.projMemberId()).orElse(null);
+        ProjMember member = projMemberRepository.findByUserIdAndProjId(updateWorkspaceRequest.getUserId(), updateWorkspaceRequest.getProjId());
         if (member == null) {
             throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
         }
@@ -172,7 +172,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
             throw new CommonException(ErrorCode.PROJ_INVALID_REQUEST);
         }
 
-        WorkspaceVO vo = new WorkspaceVO(updateWorkspaceRequest.workspaceId(), updateWorkspaceRequest.workspaceName(), VcsType.GITHUB, updateWorkspaceRequest.vcsRepoName(), updateWorkspaceRequest.vcsRepoUrl());
+        WorkspaceVO vo = new WorkspaceVO(updateWorkspaceRequest.getWorkspaceId(), updateWorkspaceRequest.getWorkspaceName(), VcsType.GITHUB, updateWorkspaceRequest.getVcsRepoName(), updateWorkspaceRequest.getVcsRepoUrl(), updateWorkspaceRequest.getProjId());
         log.info("vo: {}", vo);
         WorkspaceDTO updatedWorkspace = infraProjMemberService.requestUpdateWorkspace(vo);
         return updatedWorkspace;
