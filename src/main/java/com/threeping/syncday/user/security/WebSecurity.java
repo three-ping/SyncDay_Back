@@ -72,7 +72,14 @@ public class WebSecurity {
         configuration.setAllowCredentials(true);
 
         // 허용할 헤더 설정
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList(
+                "Authorization",
+                "Content-Type",
+                "Accept",
+                "X-Requested-With",
+                "Cache-Control",
+                "Last-Event-ID"
+        ));
 
         // 노출할 응답 헤더 설정 (JWT 토큰과 관련된 헤더들)
         configuration.setExposedHeaders(Arrays.asList(
@@ -90,9 +97,6 @@ public class WebSecurity {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
-        // SSE 엔드포인트에 대해 동일한 CORS 설정 적용
-        source.registerCorsConfiguration("/sse/**", configuration);
-
         return source;
     }
 
@@ -105,11 +109,7 @@ public class WebSecurity {
         // Https(우리 서비스의 경우 ACM을 통한 https 통신이 가능하므로)와 토큰 정책을 통한 보안만으로 충분하다고 판단
         // 따라서 csrf token 방식은 사용하지 않기로 정함
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf((csrf) -> csrf
-            // SSE 엔드포인트에 대해 CSRF 검사 제외
-                    .ignoringRequestMatchers("/sse/**")
-                    .disable()
-            );
+            .csrf((csrf) -> csrf.disable());
 
         // 로그인 시, http에 추가될 authenticationManager
         AuthenticationManagerBuilder authenticationManagerBuilder =
