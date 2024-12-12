@@ -31,9 +31,9 @@
             i.updated_at,
             i.deleted_at
         FROM
-            tbl_vcs_installation i
+            TBL_VCS_INSTALLATION i
                 INNER JOIN
-            tbl_user_vcs_installation ui ON i.id = ui.installation_id
+            TBL_USER_VCS_INSTALLATION ui ON i.id = ui.installation_id
         WHERE
             ui.user_id = #{userId}
           AND i.vcs_type = #{vcsType}

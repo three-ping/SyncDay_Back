@@ -33,7 +33,7 @@
             is_active,
             created_at,
             updated_at
-        FROM tbl_github_repository
+        FROM TBL_GITHUB_REPOSITORY
         WHERE installation_id = #{installationId}
     </select>
 
@@ -52,7 +52,7 @@
             is_active,
             created_at,
             updated_at
-        FROM tbl_github_repository
+        FROM TBL_GITHUB_REPOSITORY
         WHERE id = #{repoId}
     </select>
 

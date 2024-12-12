@@ -50,9 +50,9 @@
             vi.updated_at as vi_updated_at,
             vi.deleted_at as vi_deleted_at
         FROM
-            tbl_user_vcs_installation uvi
+            TBL_USER_VCS_INSTALLATION uvi
                 JOIN
-            tbl_vcs_installation vi
+            TBL_VCS_INSTALLATION vi
             ON uvi.installation_id = vi.id
         WHERE
             uvi.user_id = #{userId}
