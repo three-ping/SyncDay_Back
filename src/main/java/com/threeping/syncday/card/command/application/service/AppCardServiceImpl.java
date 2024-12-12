@@ -2,6 +2,7 @@ package com.threeping.syncday.card.command.application.service;
 
 import com.threeping.syncday.card.command.aggregate.dto.CardDTO;
 import com.threeping.syncday.card.command.aggregate.entity.Card;
+import com.threeping.syncday.card.command.aggregate.entity.VCSOBJECTTYPE;
 import com.threeping.syncday.card.command.aggregate.vo.RequestDeleteCardVO;
 import com.threeping.syncday.card.command.aggregate.vo.RequestUpdateCardVO;
 import com.threeping.syncday.card.command.domain.repository.CardRepository;
@@ -80,6 +81,7 @@ public class AppCardServiceImpl implements AppCardService {
                 .map(card->{
                     Card cardToAdd = modelMapper.map(card, Card.class);
                     cardToAdd.setCardboardId(cardboardId);
+                    cardToAdd.setVcsObjectType(VCSOBJECTTYPE.ISSUE);
                     return cardToAdd;
                 }).toList();
         cardRepository.saveAll(cardsToAdd);
