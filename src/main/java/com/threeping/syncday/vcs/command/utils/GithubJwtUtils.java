@@ -35,14 +35,18 @@ public class GithubJwtUtils {
 
     // private-key-path 대신 private-key를 직접 주입받습니다
     @Value("${github.app.private-key}")
-    private String privateKeyBase64;
-
+    private String privateKeyString;
 
     // 메서드 이름을 더 명확하게 변경하고, Base64로 인코딩된 문자열에서 PrivateKey를 생성합니다
     private PrivateKey getPrivateKeyFromBase64() throws Exception {
         try {
+            String privateKeyContent = privateKeyString
+                    .replace("-----BEGIN RSA PRIVATE KEY-----", "")
+                    .replace("-----END RSA PRIVATE KEY-----", "")
+                    .replaceAll("\\s", ""); // 모든 공백 제거
+
             // Base64로 인코딩된 문자열을 디코딩하여 바이트 배열로 변환합니다
-            byte[] keyBytes = Base64.getDecoder().decode(privateKeyBase64);
+            byte[] keyBytes = Base64.getDecoder().decode(privateKeyContent);
             log.info("Successfully decoded private key from Base64");
 
             // PKCS8 형식으로 private key를 생성합니다
