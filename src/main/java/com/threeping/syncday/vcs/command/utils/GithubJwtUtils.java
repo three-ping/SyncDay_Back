@@ -37,6 +37,7 @@ public class GithubJwtUtils {
     @Value("${github.app.private-key}")
     private String privateKeyBase64;
 
+
     // 메서드 이름을 더 명확하게 변경하고, Base64로 인코딩된 문자열에서 PrivateKey를 생성합니다
     private PrivateKey getPrivateKeyFromBase64() throws Exception {
         try {
