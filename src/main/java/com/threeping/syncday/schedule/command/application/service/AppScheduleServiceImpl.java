@@ -115,6 +115,9 @@ public class AppScheduleServiceImpl implements AppScheduleService{
                     return userDTO.getEmail();
                 }
         ).toList();
+        if (createdScheduleDTO.getTitle() == null || createdScheduleDTO.getTitle().isEmpty()) {
+            createdScheduleDTO.setTitle("무제");
+        }
         UserDTO userDTO = infraScheduleService.findUserById(createdScheduleDTO.getUserId());
         String userName = userDTO.getUserName();
         String userPosition = userDTO.getPosition();

@@ -139,9 +139,10 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
 
     @Override
     public UpdateProjResponse addProj(UpdateProjRequest req) {
+        log.info("req: {}", req);
         ProjDTO proj = infraProjMemberService.requestAddProj(req);
         ProjMember member = new ProjMember();
-        member.setUserId(req.userId());
+        member.setUserId(req.getUserId());
         member.setBookmarkStatus(BookmarkStatus.NONE);
         member.setProjId(proj.getProjId());
         member.setParticipationStatus(ParticipationStatus.OWNER);
@@ -150,7 +151,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
 
     @Override
     public UpdateProjResponse updateProj(UpdateProjRequest req) {
-        ProjMember member = projMemberRepository.findById(req.projMemberId()).orElse(null);
+        ProjMember member = projMemberRepository.findById(req.getProjId()).orElse(null);
         if (member == null) {
             throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
         } else if(!member.getParticipationStatus().equals(ParticipationStatus.OWNER)) {
@@ -163,7 +164,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
 
     @Override
     public WorkspaceDTO updateWorkspace(UpdateWorkspaceRequest updateWorkspaceRequest) {
-        ProjMember member = projMemberRepository.findById(updateWorkspaceRequest.projMemberId()).orElse(null);
+        ProjMember member = projMemberRepository.findByUserIdAndProjId(updateWorkspaceRequest.getUserId(), updateWorkspaceRequest.getProjId());
         if (member == null) {
             throw new CommonException(ErrorCode.PROJ_MEMBER_NOT_FOUND);
         }
@@ -171,7 +172,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
             throw new CommonException(ErrorCode.PROJ_INVALID_REQUEST);
         }
 
-        WorkspaceVO vo = new WorkspaceVO(updateWorkspaceRequest.workspaceId(), updateWorkspaceRequest.workspaceName(), VcsType.GITHUB, updateWorkspaceRequest.vcsRepoName(), updateWorkspaceRequest.vcsRepoUrl());
+        WorkspaceVO vo = new WorkspaceVO(updateWorkspaceRequest.getWorkspaceId(), updateWorkspaceRequest.getWorkspaceName(), VcsType.GITHUB, updateWorkspaceRequest.getVcsRepoName(), updateWorkspaceRequest.getVcsRepoUrl(), updateWorkspaceRequest.getProjId());
         log.info("vo: {}", vo);
         WorkspaceDTO updatedWorkspace = infraProjMemberService.requestUpdateWorkspace(vo);
         return updatedWorkspace;
