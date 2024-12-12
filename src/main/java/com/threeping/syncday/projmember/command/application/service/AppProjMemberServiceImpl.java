@@ -146,6 +146,7 @@ public class AppProjMemberServiceImpl implements AppProjMemberService {
         member.setBookmarkStatus(BookmarkStatus.NONE);
         member.setProjId(proj.getProjId());
         member.setParticipationStatus(ParticipationStatus.OWNER);
+        projMemberRepository.save(member);
         return new UpdateProjResponse(proj.getProjId(), member.getProjMemberId(), proj.getProjName(), proj.getStartTime(), proj.getEndTime(),proj.getVcsType(), proj.getVcsProjUrl(), proj.getVcsInstallationId());
     }
 
