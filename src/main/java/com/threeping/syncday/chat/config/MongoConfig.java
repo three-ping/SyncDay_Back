@@ -201,7 +201,6 @@ public class MongoConfig {
                            new Date(System.currentTimeMillis() - 60 * 60 * 1000), ChatType.TALK),
                     createChatMessage(room6.getRoomId(), user4.getUserId(), user4.getUserName(), "우리는 우선, 로그인 기능부터 시작하는 게 좋을 것 같습니다.",
                            new Date(System.currentTimeMillis() - 60 * 60 * 1000), ChatType.TALK),
-                    createChatMessage(room6.getRoomId(), user6.getUserId(), user6.getUserName(), "로그인 후에는 대시보드 페이지를 개발해야 할 것 같습니다.",
                            new Date(System.currentTimeMillis() - 60 * 60 * 1000), ChatType.TALK),
 
                     // ChatRoom 7
