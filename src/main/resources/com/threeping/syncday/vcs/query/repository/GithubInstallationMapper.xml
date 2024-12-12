@@ -28,7 +28,7 @@
                created_at,
                updated_at,
                user_id
-        FROM tbl_github_installation
+        FROM TBL_GITHUB_INSTALLATION
         WHERE user_id = #{userId}
           AND status = 'ACTIVE'
         ORDER BY created_at DESC

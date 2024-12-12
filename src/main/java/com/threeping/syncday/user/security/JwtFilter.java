@@ -66,7 +66,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 // 기타 인증이 필요없는 특수 엔드포인트들
                 || path.startsWith("/api/docs/login")       // API 문서 로그인
-                || path.startsWith("/sse/subscribe")        // SSE 구독
+                || path.startsWith("/sse/notification")        // SSE 구독
                 || path.startsWith("/ws")                   // WebSocket 연결
                 || path.startsWith("/api/webhook/github");  // GitHub 웹훅
     }
