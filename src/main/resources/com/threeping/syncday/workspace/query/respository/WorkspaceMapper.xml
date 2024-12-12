@@ -136,7 +136,7 @@
                vcs_type,
                vcs_milestone_url,
                workspace_id
-        FROM TBL_cardboard
+        FROM TBL_CARDBOARD
         WHERE workspace_id = #{workspaceId}
         ORDER BY created_at DESC
     </select>
