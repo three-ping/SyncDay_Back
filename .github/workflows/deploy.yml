@@ -267,7 +267,8 @@ jobs:
           github:
             app:
               id: ${APP_ID}
-              private-key: ${APP_PRIVATE_KEY}
+              private-key: |-
+                ${APP_PRIVATE_KEY}
             webhook:
               secret: ${WEBHOOK_SECRET}
             oauth2:
