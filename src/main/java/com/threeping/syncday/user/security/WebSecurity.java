@@ -138,6 +138,9 @@ public class WebSecurity {
                         .requestMatchers(new AntPathRequestMatcher("/configuration/**")).permitAll()  // Swagger 설정
                         .requestMatchers(new AntPathRequestMatcher("/swagger-ui/*")).permitAll()  // Swagger UI 관련 모든 파일
                         .requestMatchers(new AntPathRequestMatcher("/sse/notification/subscribe/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/github/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/webhook/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/oauth/**")).permitAll()
                         .requestMatchers("/auth/**", "/ws/**").permitAll()
                         .anyRequest().authenticated())
 
