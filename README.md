@@ -356,21 +356,21 @@ SyncDay는 "Sync(동기화)"와 "Day(일)"의 결합으로, 하루의 일정과 
 ### 8.2 회의실
 
 <details>
-  <summary>공지게시글</summary>
+  <summary>회의실 예약하기</summary>
+
+  ![회의실 예약하기](https://github.com/user-attachments/assets/0e9afa2b-045f-466e-9a99-94fb1c090d1a)
 
 - <details>
 
-    <summary>공지게시글  조회</summary>
-
-  ![테스트](./docs/gif/board/공지게시글조회.gif)
-
-  </details>
+    <summary>회의실 예약정보 조회</summary>
+    
+    ![회의실 예약 정보 확인](https://github.com/user-attachments/assets/478ba727-e240-438d-9ac0-d7c720e9e182)
 
 - <details>
+    <summary>회의실 예약정보 삭제</summary>
+  
+    ![회의실 예약정보 삭제](https://github.com/user-attachments/assets/e636181c-4c44-498a-970a-d54864cccd5a)
 
-    <summary>공지게시글 백엔드</summary>
-
-  ![테스트](./docs/gif/board/공지백엔드.gif)
 
   </details>
 
