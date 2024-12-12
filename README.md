@@ -4,7 +4,7 @@
 
 
 ## 🤝TEAM
-| <img src="docs/img/profile/김시우.png" width="200" height = "160"> |<img src="docs/img/profile/이효진.png" width="200" height = "160">|<img src="docs/img/profile/김서현.png" width="200" height = "160">|<img src="docs/img/profile/이우진.jpeg" width="200" height = "160">|<img src="docs/img/profile/김동혁.jpg" width="200" height = "160">|<img src="docs/img/profile/김정모.jpg" width="200" height = "160"> |
+| <img src="https://github.com/user-attachments/assets/8720124e-a14f-4bac-bc28-766e0a74e667" width="200" height = "160"> |<img src="https://github.com/user-attachments/assets/20f1a6af-6a60-4ab9-8ed7-f184cebfada7" width="200" height = "160">|<img src="docs/img/profile/김서현.png" width="200" height = "160">|<img src="https://github.com/user-attachments/assets/ea36c628-e6bf-4355-b029-f75cd8f4583a" width="200" height = "160">|<img src="docs/img/profile/김동혁.jpg" width="200" height = "160">|<img src="https://github.com/user-attachments/assets/7c630eb9-203e-444a-bda1-db66ef2ffc7b" width="200" height = "160"> |
 |:---------------------------------------------------------------:| :-----------------------------------: | :-----------------------------------: | :--------------------------------------: | :-----------------------------------: | :------------------------------------------: |
 |               [신예진 멘토님](docs/img/profile/멘토님.jpg)               | [김동혁](docs/img/profile/김동혁2.png) | [김서현](https://github.com/1etterh) | [김시우](docs/img/profile/김시우2.jpg) | [김정모](https://github.com/mojeeeeong) | [이우진](docs/img/profile/이우진2.png) | [이효진](https://github.com/jinjin0528) |
 
