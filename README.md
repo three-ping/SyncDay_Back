@@ -102,6 +102,40 @@
 
 ![요구사항명세서](./docs/img/요구사항명세서.png)
 
+<details>
+  <summary>회원</summary>
+ <img src="https://github.com/user-attachments/assets/b359959e-c6ba-447d-a43e-ee9506582fc4" alt="회원">
+- </details>
+
+<details>
+  <summary>회의실</summary>
+ <img src="https://github.com/user-attachments/assets/62621b24-11a2-4288-ab6c-29b23e46a915" alt="회의실">
+- </details>
+<details>
+  <summary>팀</summary>
+ <img src="https://github.com/user-attachments/assets/ed4e8f7f-7bc5-4508-bef3-3f9c3fa7cf91" alt="팀">
+- </details>
+<details>
+  <summary>일정</summary>
+ <img src="https://github.com/user-attachments/assets/fb4d7faa-5044-410b-b4b0-af9c8f422163" alt="일정">
+- </details>
+<details>
+  <summary>비서</summary>
+ <img src="https://github.com/user-attachments/assets/2bfb1a9b-5732-461a-a3b0-fe381a8a5488" alt="비서">
+- </details>
+<details>
+  <summary>프로젝트</summary>
+ <img src="https://github.com/user-attachments/assets/fa976430-c1eb-4076-8761-1a7ec21b5d86" alt="프로젝트">
+- </details>
+<details>
+  <summary>카드</summary>
+ <img src="https://github.com/user-attachments/assets/c5b92ff3-1c13-41d4-bbe9-244703124cac" alt="카드">
+- </details>
+<details>
+  <summary>채팅</summary>
+ <img src="https://github.com/user-attachments/assets/12c169db-3fdf-4ae0-ab3d-5d245dfe05f1" alt="채팅">
+- </details>
+
 
 ---
 
@@ -143,10 +177,52 @@
 ---
 ### 5.1 논리 모델링
 
-![논리모델링](./docs/img/논리.png)
+<details>
+  <summary>회원</summary>
+ <img src="https://github.com/user-attachments/assets/7f7a1c0c-0dd8-458b-9dac-a795aafc1c70" alt="회원">
+- </details>
+<details>
+  <summary>회의실</summary>
+ <img src="https://github.com/user-attachments/assets/c657aa61-7060-4454-b766-ccd968951761" alt="회의실">
+- </details>
+<details>
+  <summary>팀</summary>
+ <img src="https://github.com/user-attachments/assets/c3bc4021-b0c7-41e1-a790-b921f80732d5" alt="팀">
+- </details>
+<details>
+  <summary>일정</summary>
+ <img src="https://github.com/user-attachments/assets/066037fe-0afa-4709-a5db-026e5cf2a935" alt="일정">
+- </details>
+<details>
+  <summary>프로젝트&팀</summary>
+ <img src="https://github.com/user-attachments/assets/92fb9c0c-98d8-4096-b84a-46c0139b5d89" alt="프로젝트&카드">
+- </details>
+
 --- 
 ### 5.2 물리 모델링
-![물리모델링](./docs/img/물리.png)
+<details>
+  <summary>회원</summary>
+ <img src="https://github.com/user-attachments/assets/7f7a1c0c-0dd8-458b-9dac-a795aafc1c70" alt="회원">
+- </details>
+<details>
+  <summary>회의실</summary>
+ <img src="https://github.com/user-attachments/assets/c657aa61-7060-4454-b766-ccd968951761" alt="회의실">
+- </details>
+<details>
+  <summary>팀</summary>
+ <img src="https://github.com/user-attachments/assets/c3bc4021-b0c7-41e1-a790-b921f80732d5" alt="팀">
+- </details>
+<details>
+  <summary>일정</summary>
+ <img src="https://github.com/user-attachments/assets/066037fe-0afa-4709-a5db-026e5cf2a935" alt="일정">
+- </details>
+<details>
+  <summary>프로젝트&팀</summary>
+ <img src="https://github.com/user-attachments/assets/92fb9c0c-98d8-4096-b84a-46c0139b5d89" alt="프로젝트&카드">
+- </details>
+
+
+
 ---
 
 ## 🍀6. UI 설계
