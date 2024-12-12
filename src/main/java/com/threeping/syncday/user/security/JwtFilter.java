@@ -68,7 +68,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 || path.startsWith("/api/docs/login")       // API 문서 로그인
                 || path.startsWith("/sse/notification")        // SSE 구독
                 || path.startsWith("/ws")                   // WebSocket 연결
-                || path.startsWith("/api/webhook/github");  // GitHub 웹훅
+                || path.startsWith("/api/webhook/github")   // GitHub 웹훅
+                || path.startsWith("/api/oauth/github")   // GitHub 웹훅
+                || path.startsWith("/api/github/install");  // GitHub 웹훅
     }
 
     @Override
