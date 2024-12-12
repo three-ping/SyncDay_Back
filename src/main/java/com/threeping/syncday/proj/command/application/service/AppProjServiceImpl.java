@@ -33,26 +33,26 @@ public class AppProjServiceImpl implements AppProjService {
     public ProjDTO updateProj(UpdateProjRequest req) {
         log.info("req: {}", req);
 
-        Proj foundProj = projRepository.findById(req.projId())
+        Proj foundProj = projRepository.findById(req.getProjId())
                 .orElseThrow(() -> new CommonException(ErrorCode.PROJ_NOT_FOUND));
-        foundProj.setVcsType(req.vcsType());
-        if (req.projName() != null) {
-            foundProj.setProjName(req.projName());
+        foundProj.setVcsType(req.getVcsType());
+        if (req.getProjName() != null) {
+            foundProj.setProjName(req.getProjName());
         }
-        if (req.startTime() != null) {
-            foundProj.setStartTime(req.startTime());
+        if (req.getProjName() != null) {
+            foundProj.setStartTime(req.getStartTime());
         }
-        if (req.endTime() != null) {
-            foundProj.setEndTime(req.endTime());
+        if (req.getEndTime() != null) {
+            foundProj.setEndTime(req.getEndTime());
         }
-        if(req.vcsType() != null) {
-            foundProj.setVcsType(req.vcsType());
+        if(req.getVcsType() != null) {
+            foundProj.setVcsType(req.getVcsType());
         }
-        if (req.vcsProjUrl() != null) {
-            foundProj.setVcsProjUrl(req.vcsProjUrl());
+        if (req.getVcsProjUrl() != null) {
+            foundProj.setVcsProjUrl(req.getVcsProjUrl());
         }
-        if (req.githubInstallationId()!=null){
-            foundProj.setVcsInstallationId(req.githubInstallationId());
+        if (req.getVcsInstallationId()!=null){
+            foundProj.setVcsInstallationId(req.getVcsInstallationId());
         }
 
         Proj updatedProj = projRepository.save(foundProj);
