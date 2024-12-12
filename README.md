@@ -596,41 +596,19 @@ SyncDay는 "Sync(동기화)"와 "Day(일)"의 결합으로, 하루의 일정과 
 
 ### 8.7 채팅
 <details>
-  <summary>커스텀티켓</summary>
-   <details>
-     <summary>커스텀티켓 생성</summary>
-     <img src="./docs/gif/customticket/customticketCreate.gif" alt="테스트">
-
+  <summary>채팅방 생성</summary>
+<img src="https://github.com/user-attachments/assets/079a9485-1eaa-4154-a9b1-9da99ae4271b">
+<img src="https://github.com/user-attachments/assets/881415ec-6ec3-4c74-87e9-00128808adec">
+<img src="https://github.com/user-attachments/assets/df5224e4-0e85-46eb-9473-4aea88418267">
    </details>
 
    <details>
-     <summary>커스텀티켓 생성 백엔드</summary>
-     <img src="./docs/gif/customticket/customticketCreateTest.gif" alt="테스트">
+     <summary>채팅 메세지 발송 및 수신</summary>
+     <img src="https://github.com/user-attachments/assets/5a7f858c-067b-4150-8e95-b91001b34eb0" alt="테스트">
+     <img src="https://github.com/user-attachments/assets/3df3fe01-65c0-47dc-800d-ce8a45331ba3" alt="테스트">
 
    </details>
 
-   <details>
-     <summary>커스텀티켓 조회</summary>
-      <img src="./docs/gif/customticket/customticket.gif" alt="테스트">
-
-   </details>
-
-   <details>
-     <summary>커스텀티켓 조회 백엔드</summary>
-     <img src="./docs/gif/customticket/customticketTest.gif" alt="테스트">
-
-   </details>
-
-   <details>
-     <summary>커스텀티켓 삭제</summary>
-     <img src="./docs/gif/customticket/customticketDelete.gif" alt="테스트">
-   </details>
-
-   <details>
-     <summary>커스텀티켓 삭제 백엔드</summary>
-     <img src="./docs/gif/customticket/customticketDeleteTest.gif" alt="테스트">
-   </details>
-</details>
 
 ---
 
