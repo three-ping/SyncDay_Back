@@ -581,15 +581,27 @@ SyncDay는 "Sync(동기화)"와 "Day(일)"의 결합으로, 하루의 일정과 
 ### 8.6 일정
 
 <details>
-  <summary>캘린더</summary>
+  <summary>일정 생성</summary>
 
-- <details>
+  ![테스트](./docs/gif/schedule/add_schedule.gif)
+  ![일정 생성 테스트코드](https://github.com/user-attachments/assets/e2af106b-918a-413d-8248-c8e9ab3c994e)
+  
+</details>
 
-    <summary>캘린더 테마 조회</summary>
+<details>
+  <summary>일정 수정</summary>
 
-  ![테스트](./docs/gif/calendar/캘린더테마.gif)
+  ![테스트](./docs/gif/schedule/update_schedule.gif)
+  ![일정 수정 테스트코드](https://github.com/user-attachments/assets/647272e8-3f24-4cac-8eea-209c427e3bce)
 
-  </details>
+</details>
+
+<details>
+  <summary>일정 삭제</summary>
+
+  ![테스트](./docs/gif/schedule/delete_schedule.gif)
+  ![일정 삭제 테스트코드](https://github.com/user-attachments/assets/d4fc93d4-339e-4b0c-8c17-13a6b5658784)
+
 </details>
 
 ---
