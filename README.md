@@ -137,7 +137,7 @@ SyncDay는 "Sync(동기화)"와 "Day(일)"의 결합으로, 하루의 일정과 
 
 ## 🍀3. WBS
 
-![WBS](https://github.com/user-attachments/assets/bb21d3d1-aa6e-44bd-a12c-2578bbdaf1e2)
+<img width="1312" alt="스크린샷 2024-12-18 오후 1 08 42" src="https://github.com/user-attachments/assets/2bfa4aa6-87f1-4ac0-b552-2323c495b0e5" />
 
 ---
 
